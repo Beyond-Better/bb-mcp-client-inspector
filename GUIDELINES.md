@@ -18,6 +18,8 @@ The **MCP Server Client Inspector** is a comprehensive testing platform for MCP 
 - Runtime: Deno 2.5+
 - MCP Framework: bb-mcp-server library
 - UI Framework: Deno Fresh with Preact Islands
+- UI Components: DaisyUI (Tailwind CSS-based component library)
+- CSS Framework: Tailwind CSS
 - Storage: Deno KV
 - Language: TypeScript with strict mode
 
@@ -227,6 +229,247 @@ try {
 - @beyondbetter/bb-mcp-server
 - Deno Fresh framework
 - Deno KV (built-in)
+- DaisyUI (UI component library)
+- Tailwind CSS (utility-first CSS framework)
+
+## UI Components and DaisyUI
+
+### DaisyUI Component Framework
+
+**Overview**:
+- DaisyUI is the primary component library for fresh-ui
+- Built on top of Tailwind CSS utility classes
+- Provides semantic, accessible components with consistent theming
+- No JavaScript required for most components (perfect for Fresh components)
+- Interactive components work seamlessly with Fresh islands
+
+**DaisyUI MCP Server**:
+This project has access to a DaisyUI MCP server with the following tools:
+- `fetch_daisyui_documentation_daisyui` - Fetch entire documentation files
+- `search_daisyui_documentation_daisyui` - Semantic search within DaisyUI docs
+- `search_daisyui_code_daisyui` - Search DaisyUI repository code
+- `fetch_generic_url_content_daisyui` - Fetch referenced URLs from documentation
+
+**When to Use DaisyUI Tools**:
+- Before creating new UI components, search DaisyUI docs for appropriate components
+- When unsure about component APIs or available variants
+- To find code examples and usage patterns
+- To discover theming and customization options
+
+### Component Implementation Guidelines
+
+**Fresh Components (Static)**:
+```typescript
+// components/MessageCard.tsx
+import { JSX } from "preact";
+
+interface MessageCardProps {
+  message: string;
+  type: "info" | "success" | "warning" | "error";
+}
+
+export function MessageCard({ message, type }: MessageCardProps): JSX.Element {
+  return (
+    <div class={`alert alert-${type}`}>
+      <span>{message}</span>
+    </div>
+  );
+}
+```
+
+**Fresh Islands (Interactive)**:
+```typescript
+// islands/ConsoleControls.tsx
+import { useState } from "preact/hooks";
+import { JSX } from "preact";
+
+export default function ConsoleControls(): JSX.Element {
+  const [isActive, setIsActive] = useState(false);
+  
+  return (
+    <div class="card bg-base-100 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title">Console Controls</h2>
+        <div class="card-actions justify-end">
+          <button 
+            class={`btn ${isActive ? 'btn-success' : 'btn-primary'}`}
+            onClick={() => setIsActive(!isActive)}
+          >
+            {isActive ? 'Active' : 'Inactive'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+```
+
+### DaisyUI Component Categories
+
+**Layout Components**:
+- `container`, `navbar`, `footer`, `hero`, `drawer`, `divider`
+- Use for page structure and navigation
+
+**Data Display**:
+- `card`, `badge`, `alert`, `stat`, `table`, `timeline`, `kbd`
+- Use for displaying messages, statistics, and data
+
+**Actions**:
+- `button`, `dropdown`, `modal`, `swap`, `tooltip`
+- Use for user interactions and confirmations
+
+**Form Controls**:
+- `input`, `textarea`, `select`, `checkbox`, `radio`, `toggle`, `range`
+- Use for sampling and elicitation test controls
+
+**Feedback**:
+- `loading`, `progress`, `radial-progress`, `toast`, `alert`
+- Use for showing operation status and user feedback
+
+### Styling Guidelines
+
+**DaisyUI Class Patterns**:
+```html
+<!-- Component base class + variant -->
+<button class="btn btn-primary">Primary Button</button>
+<button class="btn btn-success btn-outline">Success Outline</button>
+
+<!-- Size modifiers -->
+<button class="btn btn-xs">Tiny</button>
+<button class="btn btn-sm">Small</button>
+<button class="btn btn-lg">Large</button>
+
+<!-- State classes -->
+<button class="btn btn-disabled">Disabled</button>
+<button class="btn loading">Loading</button>
+```
+
+**Combining with Tailwind**:
+```html
+<!-- DaisyUI components + Tailwind utilities -->
+<div class="card bg-base-100 shadow-xl max-w-md mx-auto mt-4">
+  <div class="card-body space-y-4">
+    <!-- Content -->
+  </div>
+</div>
+```
+
+**Theming**:
+- DaisyUI includes multiple built-in themes
+- Configure theme in `fresh.config.ts` or HTML data attributes
+- Use semantic color names: `primary`, `secondary`, `accent`, `neutral`, `base-100`, etc.
+- Theme switching can be added as a future feature
+
+### Component Development Workflow
+
+1. **Research Component** (use DaisyUI MCP tools):
+   ```typescript
+   // Example: Search for alert component documentation
+   await search_daisyui_documentation_daisyui({
+     query: "alert component API"
+   });
+   ```
+
+2. **Create Static Component First**:
+   - Build non-interactive version in `components/`
+   - Use DaisyUI classes for styling
+   - Test rendering with sample data
+
+3. **Add Interactivity if Needed**:
+   - Move to `islands/` if user interaction required
+   - Keep island minimal, load child components statically
+   - Use Preact hooks for state management
+
+4. **Test Responsiveness**:
+   - DaisyUI components are responsive by default
+   - Test on mobile, tablet, desktop viewports
+   - Use Tailwind responsive prefixes if needed: `sm:`, `md:`, `lg:`, `xl:`
+
+5. **Document Usage**:
+   - Add JSDoc comments to component props
+   - Include usage examples in component file or tests
+   - Note any DaisyUI components used
+
+### Common Patterns for This Project
+
+**Message Display**:
+```typescript
+// Use alert component for system messages
+<div class="alert alert-info">
+  <svg>...</svg>
+  <span>WebSocket connected</span>
+</div>
+```
+
+**Message List**:
+```typescript
+// Use card or timeline for message history
+<div class="timeline timeline-vertical">
+  <div class="timeline-item">
+    <div class="timeline-middle">
+      <svg>...</svg>
+    </div>
+    <div class="timeline-end card">
+      <div class="card-body">
+        <h3 class="card-title">Sampling Request</h3>
+        <p>Request content...</p>
+      </div>
+    </div>
+  </div>
+</div>
+```
+
+**Control Panel**:
+```typescript
+// Use card with form controls
+<div class="card bg-base-200">
+  <div class="card-body">
+    <h2 class="card-title">Test Controls</h2>
+    <div class="form-control">
+      <label class="label">
+        <span class="label-text">Notification Type</span>
+      </label>
+      <select class="select select-bordered">
+        <option>Tools Changed</option>
+        <option>Resources Changed</option>
+        <option>Prompts Changed</option>
+      </select>
+    </div>
+    <div class="card-actions justify-end">
+      <button class="btn btn-primary">Trigger Notification</button>
+    </div>
+  </div>
+</div>
+```
+
+**Loading States**:
+```typescript
+// Use loading spinner or progress
+<button class="btn btn-primary loading">Sending...</button>
+<progress class="progress progress-primary w-full"></progress>
+```
+
+### Accessibility
+
+- DaisyUI components include ARIA attributes by default
+- Ensure proper semantic HTML structure
+- Add descriptive labels for form controls
+- Include focus indicators (DaisyUI handles this)
+- Test keyboard navigation in islands
+- Use semantic color combinations (DaisyUI themes are WCAG compliant)
+
+### Performance Considerations
+
+**Tailwind CSS Setup**:
+- Configure Tailwind to purge unused styles in production
+- DaisyUI adds minimal overhead (~30KB gzipped)
+- Use Fresh's built-in CSS optimization
+
+**Component Loading**:
+- Keep islands small and focused
+- Load heavy components lazily if needed
+- Use Fresh's island hydration selectively
+- Static components have zero JavaScript overhead
 
 ## Protocol and Integration
 

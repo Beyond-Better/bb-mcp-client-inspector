@@ -8,17 +8,14 @@
     "test": "deno test --allow-all --unstable-kv tests/",
     "test:watch": "deno test --allow-all --unstable-kv --watch tests/",
     "check": "deno check main.ts src/**/*.ts",
+    "check:all": "deno fmt --check . && deno lint . && deno check main.ts src/**/*.ts",
     "lint": "deno lint",
     "fmt": "deno fmt"
   },
-  // use `importMap` for local testing
-  "importMap": "./import_map.json",
-  // use `imports` in real app
-  //"imports": {
-  //  "@beyondbetter/bb-mcp-server": "jsr:@beyondbetter/bb-mcp-server@^0.1.16",
-  //  "@std/path": "jsr:@std/path@^1.1.2",
-  //  "zod": "npm:zod@^3.22.4"
-  //},
+  // Local development: use import_map.dev.json (points to local bb-mcp-server)
+  "importMap": "../import_map.dev.json",
+  // Production: use import_map.json (points to jsr:@beyondbetter/bb-mcp-server)
+  // "importMap": "../import_map.json",
   "compilerOptions": {
     "lib": ["deno.window", "deno.unstable"],
     "strict": true

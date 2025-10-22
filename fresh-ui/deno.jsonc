@@ -1,11 +1,13 @@
 {
-  "nodeModulesDir": "auto",
   "tasks": {
-    "check": "deno fmt --check . && deno lint . && deno check",
+    "check": "deno check",
+    "check:all": "deno fmt --check . && deno lint . && deno check",
     "dev": "vite",
     "build": "vite build",
     "start": "deno serve -A _fresh/server.js",
-    "update": "deno run -A -r jsr:@fresh/update ."
+    "update": "deno run -A -r jsr:@fresh/update .",
+    "lint": "deno lint",
+    "fmt": "deno fmt"
   },
   "lint": {
     "rules": {
@@ -19,22 +21,31 @@
     "**/_fresh/*"
   ],
   "imports": {
+    "@shared/types/": "../shared/types/",
     "fresh": "jsr:@fresh/core@^2.1.2",
     "preact": "npm:preact@^10.27.2",
+    "preact/jsx-runtime": "npm:preact@^10.27.2/jsx-runtime",
     "@preact/signals": "npm:@preact/signals@^2.3.1",
     "@fresh/plugin-vite": "jsr:@fresh/plugin-vite@^1.0.5",
     "vite": "npm:vite@^7.1.3",
     "tailwindcss": "npm:tailwindcss@^4.1.10",
-    "@tailwindcss/vite": "npm:@tailwindcss/vite@^4.1.12"
+    "@tailwindcss/vite": "npm:@tailwindcss/vite@^4.1.12",
+    "daisyui": "npm:daisyui@^5.3.8",
+    "json-schema": "https://esm.sh/v135/@types/json-schema@7.0.15/index.d.ts",
+    "zod": "npm:zod@^3.22.4",
+    "zod-to-json-schema": "npm:zod-to-json-schema@^3.24.6"
   },
+  "nodeModulesDir": "auto",
   "compilerOptions": {
     "lib": [
       "dom",
-      "dom.asynciterable",
       "dom.iterable",
-      "deno.ns"
+      "dom.asynciterable",
+      "deno.ns",
+      "deno.unstable"
     ],
     "jsx": "precompile",
+    //"jsx": "react-jsx",
     "jsxImportSource": "preact",
     "jsxPrecompileSkipElements": [
       "a",

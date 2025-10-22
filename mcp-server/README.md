@@ -1,6 +1,7 @@
 # MCP Server Client Inspector - MCP Server
 
-This is the MCP server component of the MCP Client Inspector. It provides inspector tools and console integration for testing MCP client implementations.
+This is the MCP server component of the MCP Client Inspector. It provides
+inspector tools and console integration for testing MCP client implementations.
 
 ## Quick Start
 
@@ -28,12 +29,14 @@ MCP_TRANSPORT=http deno task dev
 ### Available Tools
 
 #### Testing Tools
+
 - **echo**: Echo back messages with optional delay and transformations
 - **delay_response**: Test timeout handling with configurable delays
 - **random_data**: Generate random test data
 - **trigger_error**: Intentionally trigger errors for testing
 
 #### Utility Tools
+
 - **convert_date**: Convert dates between formats and timezones
 - **calculate**: Perform basic arithmetic operations
 
@@ -47,7 +50,9 @@ The server consists of:
 
 ### WebSocket Console
 
-The server provides a WebSocket endpoint at `/ws/console` for real-time console integration:
+The server provides a WebSocket endpoint at `/ws/console` for real-time console
+integration:
+
 - Real-time message broadcasting
 - Command handling (notifications, sampling, elicitation)
 - Client tracking and session management

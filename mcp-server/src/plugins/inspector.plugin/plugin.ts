@@ -1,6 +1,6 @@
 /**
  * Inspector Plugin
- * 
+ *
  * Provides testing and utility tools for inspecting MCP client implementations.
  * Includes tools for testing sampling, elicitation, error handling, and basic utilities.
  */
@@ -11,33 +11,35 @@ import type {
   ToolRegistry,
   WorkflowBase,
   WorkflowRegistry,
-} from '@beyondbetter/bb-mcp-server';
+} from "@beyondbetter/bb-mcp-server";
 
-import { getTools as getEchoTools } from './tools/echo.ts';
-import { getTools as getConvertDateTools } from './tools/convertDate.ts';
-import { getTools as getCalculateTools } from './tools/calculate.ts';
-import { getTools as getDelayResponseTools } from './tools/delayResponse.ts';
-import { getTools as getRandomDataTools } from './tools/randomData.ts';
-import { getTools as getTriggerErrorTools } from './tools/triggerError.ts';
+//import { getTools as getEchoTools } from './tools/echo.ts';
+import { getTools as getConvertDateTools } from "./tools/convertDate.ts";
+import { getTools as getCalculateTools } from "./tools/calculate.ts";
+import { getTools as getDelayResponseTools } from "./tools/delayResponse.ts";
+import { getTools as getRandomDataTools } from "./tools/randomData.ts";
+import { getTools as getTriggerErrorTools } from "./tools/triggerError.ts";
 
 export default {
-  name: 'inspector',
-  version: '1.0.0',
-  description: 'Inspector tools for testing MCP client implementations',
+  name: "inspector",
+  version: "1.0.0",
+  description: "Inspector tools for testing MCP client implementations",
 
   workflows: [] as WorkflowBase[],
   tools: [] as ToolRegistration[],
 
+  // deno-lint-ignore require-await
   async initialize(
+    // deno-lint-ignore no-explicit-any
     dependencies: any,
     toolRegistry: ToolRegistry,
-    workflowRegistry: WorkflowRegistry,
+    _workflowRegistry: WorkflowRegistry,
   ): Promise<void> {
     const logger = dependencies.logger;
 
     // Collect all tools from the tool modules
     const allTools = [
-      ...getEchoTools(dependencies),
+      //...getEchoTools(dependencies),
       ...getConvertDateTools(dependencies),
       ...getCalculateTools(dependencies),
       ...getDelayResponseTools(dependencies),
@@ -55,9 +57,9 @@ export default {
       );
     }
 
-    logger.info('Inspector plugin initialized with tools:', {
+    logger.info("Inspector plugin initialized with tools:", {
       toolCount: allTools.length,
-      tools: allTools.map(t => t.name),
+      tools: allTools.map((t) => t.name),
     });
   },
 } as AppPlugin;

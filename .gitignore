@@ -1,0 +1,5 @@
+.bb/
+.trash/
+.BBEditLSPWorkspaceConfig.json
+
+node_modules

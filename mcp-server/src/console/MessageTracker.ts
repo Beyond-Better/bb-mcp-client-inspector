@@ -1,13 +1,19 @@
 /**
  * Message Tracker
- * 
+ *
  * Tracks and stores MCP protocol messages for debugging and inspection.
  * Uses Deno KV for persistence with configurable retention and limits.
  */
 
-import type { Logger } from '@beyondbetter/bb-mcp-server';
-import { toError } from '@beyondbetter/bb-mcp-server';
-import type { McpMessage, MessageEntry, ClientInfo } from './types.ts';
+import type { Logger } from "@beyondbetter/bb-mcp-server";
+import type {
+  ClientId,
+  ClientInfo,
+  McpMessage,
+  MessageEntry,
+  SessionId,
+} from "@shared/types/index.ts";
+import { toError } from "@shared/types/index.ts";
 
 export class MessageTracker {
   private kv: Deno.Kv;
@@ -18,10 +24,14 @@ export class MessageTracker {
   constructor(kv: Deno.Kv, logger: Logger) {
     this.kv = kv;
     this.logger = logger;
-    this.messageLimit = parseInt(Deno.env.get('MESSAGE_HISTORY_LIMIT') || '1000');
-    this.retentionDays = parseInt(Deno.env.get('MESSAGE_HISTORY_RETENTION_DAYS') || '7');
+    this.messageLimit = parseInt(
+      Deno.env.get("MESSAGE_HISTORY_LIMIT") || "1000",
+    );
+    this.retentionDays = parseInt(
+      Deno.env.get("MESSAGE_HISTORY_RETENTION_DAYS") || "7",
+    );
 
-    this.logger.info('MessageTracker initialized', {
+    this.logger.info("MessageTracker: initialized", {
       messageLimit: this.messageLimit,
       retentionDays: this.retentionDays,
     });
@@ -31,8 +41,8 @@ export class MessageTracker {
    * Track MCP protocol message
    */
   async trackMessage(
-    sessionId: string,
-    direction: 'incoming' | 'outgoing',
+    sessionId: SessionId,
+    direction: "incoming" | "outgoing",
     message: McpMessage,
   ): Promise<void> {
     const entry: MessageEntry = {
@@ -46,22 +56,28 @@ export class MessageTracker {
     try {
       // Store message with composite key for efficient querying
       await this.kv.set(
-        ['messages', sessionId, entry.timestamp.toString(), entry.id],
+        ["messages", sessionId, entry.timestamp.toString(), entry.id],
         entry,
       );
 
-      this.logger.debug('Tracked message', {
+      this.logger.debug("MessageTracker: Tracked message", {
         direction,
-        method: message.method || 'response',
+        method: message.method || "response",
         sessionId,
       });
 
       // Clean up old messages if needed (async, don't wait)
-      this.cleanupOldMessages(sessionId).catch(error => {
-        this.logger.error('Error during message cleanup:', toError(error));
+      this.cleanupOldMessages(sessionId).catch((error) => {
+        this.logger.error(
+          "MessageTracker: Error during message cleanup:",
+          toError(error),
+        );
       });
     } catch (error) {
-      this.logger.error('Error tracking message:', toError(error));
+      this.logger.error(
+        "MessageTracker: Error tracking message:",
+        toError(error),
+      );
     }
   }
 
@@ -69,14 +85,14 @@ export class MessageTracker {
    * Get message history for session
    */
   async getMessages(
-    sessionId: string,
+    sessionId: SessionId,
     limit: number = 100,
   ): Promise<MessageEntry[]> {
     const messages: MessageEntry[] = [];
 
     try {
       const iter = this.kv.list<MessageEntry>({
-        prefix: ['messages', sessionId],
+        prefix: ["messages", sessionId],
       });
 
       for await (const entry of iter) {
@@ -87,7 +103,10 @@ export class MessageTracker {
       // Sort by timestamp (ascending)
       return messages.sort((a, b) => a.timestamp - b.timestamp);
     } catch (error) {
-      this.logger.error('Error getting messages:', toError(error));
+      this.logger.error(
+        "MessageTracker: Error getting messages:",
+        toError(error),
+      );
       return [];
     }
   }
@@ -95,19 +114,25 @@ export class MessageTracker {
   /**
    * Track MCP client connection
    */
-  async trackClient(clientId: string, info: ClientInfo): Promise<void> {
+  async trackClient(clientId: ClientId, info: ClientInfo): Promise<void> {
     try {
       await this.kv.set(
-        ['clients', clientId],
+        ["clients", clientId],
         {
           ...info,
           lastSeen: Date.now(),
         },
       );
 
-      this.logger.info('Tracked client', { clientId, sessionId: info.sessionId });
+      this.logger.info("MessageTracker: Tracked client", {
+        clientId,
+        sessionId: info.sessionId,
+      });
     } catch (error) {
-      this.logger.error('Error tracking client:', toError(error));
+      this.logger.error(
+        "MessageTracker: Error tracking client:",
+        toError(error),
+      );
     }
   }
 
@@ -119,7 +144,7 @@ export class MessageTracker {
 
     try {
       const iter = this.kv.list<ClientInfo>({
-        prefix: ['clients'],
+        prefix: ["clients"],
       });
 
       for await (const entry of iter) {
@@ -128,7 +153,10 @@ export class MessageTracker {
 
       return clients;
     } catch (error) {
-      this.logger.error('Error getting clients:', toError(error));
+      this.logger.error(
+        "MessageTracker: Error getting clients:",
+        toError(error),
+      );
       return [];
     }
   }
@@ -136,24 +164,28 @@ export class MessageTracker {
   /**
    * Remove client tracking
    */
-  async removeClient(clientId: string): Promise<void> {
+  async removeClient(clientId: ClientId): Promise<void> {
     try {
-      await this.kv.delete(['clients', clientId]);
-      this.logger.info('Removed client tracking', { clientId });
+      await this.kv.delete(["clients", clientId]);
+      this.logger.info("MessageTracker: Removed client tracking", { clientId });
     } catch (error) {
-      this.logger.error('Error removing client:', toError(error));
+      this.logger.error(
+        "MessageTracker: Error removing client:",
+        toError(error),
+      );
     }
   }
 
   /**
    * Clean up old messages (private helper)
    */
-  private async cleanupOldMessages(sessionId: string): Promise<void> {
+  private async cleanupOldMessages(sessionId: SessionId): Promise<void> {
     try {
-      const cutoffTime = Date.now() - (this.retentionDays * 24 * 60 * 60 * 1000);
+      const cutoffTime = Date.now() -
+        (this.retentionDays * 24 * 60 * 60 * 1000);
 
       const iter = this.kv.list<MessageEntry>({
-        prefix: ['messages', sessionId],
+        prefix: ["messages", sessionId],
       });
 
       let count = 0;
@@ -172,7 +204,7 @@ export class MessageTracker {
       }
 
       if (toDelete.length > 0) {
-        this.logger.info('Cleaned up old messages', {
+        this.logger.info("MessageTracker: Cleaned up old messages", {
           sessionId,
           deleted: toDelete.length,
         });
@@ -185,30 +217,33 @@ export class MessageTracker {
 
         for (let i = 0; i < toDeleteCount && i < messages.length; i++) {
           await this.kv.delete([
-            'messages',
+            "messages",
             sessionId,
             messages[i].timestamp.toString(),
             messages[i].id,
           ]);
         }
 
-        this.logger.info('Trimmed message history', {
+        this.logger.info("MessageTracker: Trimmed message history", {
           sessionId,
           deleted: toDeleteCount,
         });
       }
     } catch (error) {
-      this.logger.error('Error cleaning up messages:', toError(error));
+      this.logger.error(
+        "MessageTracker: Error cleaning up messages:",
+        toError(error),
+      );
     }
   }
 
   /**
    * Clear all messages for a session
    */
-  async clearSession(sessionId: string): Promise<void> {
+  async clearSession(sessionId: SessionId): Promise<void> {
     try {
       const iter = this.kv.list<MessageEntry>({
-        prefix: ['messages', sessionId],
+        prefix: ["messages", sessionId],
       });
 
       let count = 0;
@@ -217,9 +252,15 @@ export class MessageTracker {
         count++;
       }
 
-      this.logger.info('Cleared session messages', { sessionId, count });
+      this.logger.info("MessageTracker: Cleared session messages", {
+        sessionId,
+        count,
+      });
     } catch (error) {
-      this.logger.error('Error clearing session:', toError(error));
+      this.logger.error(
+        "MessageTracker: Error clearing session:",
+        toError(error),
+      );
     }
   }
 
@@ -236,7 +277,7 @@ export class MessageTracker {
       const sessions = new Set<string>();
 
       const messageIter = this.kv.list<MessageEntry>({
-        prefix: ['messages'],
+        prefix: ["messages"],
       });
 
       for await (const entry of messageIter) {
@@ -245,7 +286,7 @@ export class MessageTracker {
       }
 
       const clientIter = this.kv.list<ClientInfo>({
-        prefix: ['clients'],
+        prefix: ["clients"],
       });
 
       let totalClients = 0;
@@ -259,7 +300,10 @@ export class MessageTracker {
         sessionsWithMessages: sessions.size,
       };
     } catch (error) {
-      this.logger.error('Error getting statistics:', toError(error));
+      this.logger.error(
+        "MessageTracker: Error getting statistics:",
+        toError(error),
+      );
       return {
         totalMessages: 0,
         totalClients: 0,

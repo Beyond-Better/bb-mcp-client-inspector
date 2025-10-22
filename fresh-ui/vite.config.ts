@@ -4,4 +4,11 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   plugins: [fresh(), tailwindcss()],
+  css: {
+    preprocessorOptions: {
+      // css: {
+      //   // Load tailwind config
+      // },
+    },
+  },
 });

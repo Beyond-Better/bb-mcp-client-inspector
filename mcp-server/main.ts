@@ -2,53 +2,68 @@
 
 /**
  * MCP Server Client Inspector
- * 
+ *
  * An MCP server for testing and inspecting MCP client implementations.
  * Provides basic tools and console integration for testing sampling,
  * elicitation, and notification handling.
  */
 
-import { AppServer } from '@beyondbetter/bb-mcp-server';
-import { createInspectorDependencies } from './src/dependencyHelper.ts';
+import { AppServer, Logger } from "@beyondbetter/bb-mcp-server";
+import { createInspectorDependencies } from "./src/dependencyHelper.ts";
 
 async function main(): Promise<void> {
   try {
-    console.log('🔍 Starting MCP Client Inspector Server...');
-    
+    const tempLogger = new Logger();
+    tempLogger.info("InspectorApp: 🔍 Starting MCP Client Inspector Server...");
+
     // Create AppServer with inspector dependencies
     const appServer = await AppServer.create(createInspectorDependencies);
-    
+    const logger = appServer.logger;
+
     // Start the server
     await appServer.start();
-    
-    const transport = Deno.env.get('MCP_TRANSPORT') || 'stdio';
-    const port = Deno.env.get('HTTP_PORT') || '3000';
-    
-    console.log('✅ MCP Client Inspector Server started successfully!');
-    console.log(`📡 Transport: ${transport}`);
-    
-    if (transport === 'http') {
-      console.log(`🌐 HTTP endpoint: http://localhost:${port}/mcp`);
-      console.log(`🔌 WebSocket console: ws://localhost:${port}/ws/console`);
+
+    const transport = Deno.env.get("MCP_TRANSPORT") || "stdio";
+    const port = Deno.env.get("HTTP_PORT") || "3000";
+
+    logger.info(
+      "InspectorApp: ✅ MCP Client Inspector Server started successfully!",
+    );
+
+    logger.info("InspectorApp: 🛠️  Inspector tools loaded:", [
+      "echo",
+      "convert_date",
+      "calculate",
+      "delay_response",
+      "random_data",
+      "trigger_error",
+    ]);
+
+    logger.info(`InspectorApp: 📡 Transport: ${transport}`);
+
+    if (transport === "http") {
+      logger.info(
+        `InspectorApp: 🌐 HTTP endpoint: http://localhost:${port}/mcp`,
+      );
+      logger.info(
+        `InspectorApp: 🔌 WebSocket console: ws://localhost:${port}/ws/console`,
+      );
     }
-    
-    console.log('🛠️  Inspector tools loaded:');
-    console.log('   - echo');
-    console.log('   - convert_date');
-    console.log('   - calculate');
-    console.log('   - delay_response');
-    console.log('   - random_data');
-    console.log('   - trigger_error');
-    
   } catch (error) {
-    console.error('❌ Failed to start MCP Client Inspector Server:', error);
+    console.error(
+      "InspectorApp: ❌ Failed to start MCP Client Inspector Server:",
+      error,
+    );
     Deno.exit(1);
   }
 }
 
 // Handle clean shutdown
-Deno.addSignalListener('SIGINT', () => {
-  console.log('\n🛑 Shutting down MCP Client Inspector Server...');
+Deno.addSignalListener("SIGINT", () => {
+  const tempLogger = new Logger();
+  tempLogger.info(
+    "InspectorApp: 🛑 Shutting down MCP Client Inspector Server...",
+  );
   Deno.exit(0);
 });
 

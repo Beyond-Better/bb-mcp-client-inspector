@@ -6,6 +6,7 @@
     "build": "vite build",
     "start": "deno serve -A _fresh/server.js",
     "update": "deno run -A -r jsr:@fresh/update ."
+    "mcp-inspector": "npx @modelcontextprotocol/inspector",
     "check-types": "deno task -c mcp-server/deno.jsonc check && deno task -c fresh-ui/deno.jsonc check",
     "tool:check-types": "deno task -c mcp-server/deno.jsonc check && deno task -c fresh-ui/deno.jsonc check",
     "tool:check-types:mcp-server": "deno task -c mcp-server/deno.jsonc check",
@@ -17,12 +18,17 @@
     "tool:test:file": "deno test ",
     "tool:format": "deno task -c mcp-server/deno.jsonc format && deno task -c fresh-ui/deno.jsonc format",
   },
+  // Local development: use import_map.dev.json (points to local bb-mcp-server)
+  "importMap": "./import_map.dev.json",
+  // Production: use import_map.json (points to jsr:@beyondbetter/bb-mcp-server)
+  // "importMap": "./import_map.json",
   "compilerOptions": {
     "lib": [
       "dom",
       "dom.asynciterable",
       "dom.iterable",
-      "deno.ns"
+      "deno.ns",
+      "deno.unstable"
     ],
     "jsx": "precompile",
     "jsxImportSource": "preact"
