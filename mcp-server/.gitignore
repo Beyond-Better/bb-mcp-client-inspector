@@ -1,0 +1,30 @@
+# Environment files
+.env
+.env.local
+
+# Deno
+.deno/
+
+# Data storage
+data/
+*.db
+*.db-shm
+*.db-wal
+
+# Logs
+logs/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage/

@@ -1,0 +1,30 @@
+{
+  "nodeModulesDir": "auto",
+  "tasks": {
+    "check": "deno fmt --check . && deno lint . && deno check",
+    "dev": "vite",
+    "build": "vite build",
+    "start": "deno serve -A _fresh/server.js",
+    "update": "deno run -A -r jsr:@fresh/update ."
+    "check-types": "deno task -c mcp-server/deno.jsonc check && deno task -c fresh-ui/deno.jsonc check",
+    "tool:check-types": "deno task -c mcp-server/deno.jsonc check && deno task -c fresh-ui/deno.jsonc check",
+    "tool:check-types:mcp-server": "deno task -c mcp-server/deno.jsonc check",
+    "tool:check-types:fresh-ui": "deno task -c fresh-ui/deno.jsonc check",
+    "tool:test": "deno task -c mcp-server/deno.jsonc test && deno task -c fresh-ui/deno.jsonc test",
+    "tool:test:all": "deno task -c mcp-server/deno.jsonc --check test && deno task -c fresh-ui/deno.jsonc --check test",
+    "tool:test:mcp-server": "deno task -c mcp-server/deno.jsonc test",
+    "tool:test:fresh-ui": "deno task -c fresh-ui/deno.jsonc test",
+    "tool:test:file": "deno test ",
+    "tool:format": "deno task -c mcp-server/deno.jsonc format && deno task -c fresh-ui/deno.jsonc format",
+  },
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "dom.asynciterable",
+      "dom.iterable",
+      "deno.ns"
+    ],
+    "jsx": "precompile",
+    "jsxImportSource": "preact"
+  }
+}
