@@ -62,8 +62,5 @@ jobs:
       - name: Generate version.ts from deno.jsonc
         run: deno task update-version
 
-      - name: Generate version.ts from deno.jsonc
-        run: deno task -c fresh-ui/deno.jsonc build
-
       - name: Publish to JSR
         run: deno publish --allow-dirty
