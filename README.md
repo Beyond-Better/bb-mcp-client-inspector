@@ -68,6 +68,7 @@ server for testing clients.
 You'll need two terminal windows:
 
 **Terminal 1 - MCP Server:**
+
 ```bash
 cd mcp-server
 deno task dev
@@ -76,6 +77,7 @@ deno task dev
 The MCP server will start on `http://localhost:3000`
 
 **Terminal 2 - Fresh UI:**
+
 ```bash
 cd fresh-ui
 deno task dev
