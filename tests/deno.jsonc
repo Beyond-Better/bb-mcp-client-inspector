@@ -27,9 +27,9 @@
     "../../bb-mcp-server/"
   ],
   // Local development: use import_map.dev.json (points to local bb-mcp-server)
-  "importMap": "../import_map.dev.json",
+  // "importMap": "../import_map.dev.json",
   // Production: use import_map.json (points to jsr:@beyondbetter/bb-mcp-server)
-  // "importMap": "../import_map.json",
+  "importMap": "../import_map.json",
   "compilerOptions": {
     "lib": [
       "dom",

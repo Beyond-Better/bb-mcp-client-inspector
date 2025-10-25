@@ -10,7 +10,7 @@
  *   deno task update-version
  */
 
-import { parse } from 'jsr:@std/jsonc';
+import { parse } from '@std/jsonc';
 
 const DENO_CONFIG_PATH = './deno.jsonc';
 const VERSION_FILE_PATH = './shared/version.ts';

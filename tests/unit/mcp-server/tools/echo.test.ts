@@ -6,7 +6,7 @@ import { assertEquals, assertExists } from '@std/assert';
 import { describe, it } from '@std/testing/bdd';
 import { getTools } from '../../../../mcp-server/src/plugins/inspector.plugin/tools/echo.ts';
 import { createMockToolDependencies } from '../../../utils/mocks.ts';
-import { delay } from '../../../utils/test-helpers.ts';
+//import { delay } from '../../../utils/test-helpers.ts';
 
 describe('Echo Tool', () => {
   const dependencies = createMockToolDependencies();

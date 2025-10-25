@@ -73,6 +73,7 @@ function parseArguments(): LaunchOptions | null {
   };
 }
 
+// deno-lint-ignore require-await
 async function launchMcpServer(
   options: LaunchOptions,
 ): Promise<Deno.ChildProcess> {
@@ -101,6 +102,7 @@ async function launchMcpServer(
   return command.spawn();
 }
 
+// deno-lint-ignore require-await
 async function launchFreshUi(
   options: LaunchOptions,
 ): Promise<Deno.ChildProcess> {

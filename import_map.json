@@ -3,8 +3,8 @@
     "@shared/types/": "./shared/types/",
     "@shared/version.ts": "./shared/version.ts",
 
-    "@beyondbetter/bb-mcp-server": "jsr:@beyondbetter/bb-mcp-server@^0.1.16",
-    "@beyondbetter/bb-mcp-server/": "jsr:@beyondbetter/bb-mcp-server@^0.1.16/",
+    "@beyondbetter/bb-mcp-server": "jsr:@beyondbetter/bb-mcp-server@^0.1.17",
+    "@beyondbetter/bb-mcp-server/": "jsr:@beyondbetter/bb-mcp-server@^0.1.17/",
 
     "mcp": "npm:@modelcontextprotocol/sdk@1.18.2",
     "mcp/client/": "npm:@modelcontextprotocol/sdk@1.18.2/client/",
