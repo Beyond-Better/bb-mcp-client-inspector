@@ -5,6 +5,8 @@
 ![MCP Client](https://img.shields.io/badge/MCP-Client-blue?style=flat&logo=modelcontextprotocol&logoSize=auto&logoColor=black&labelColor=beige)
 [![MCP Server](https://img.shields.io/badge/MCP-Beyond%20Better-blue?style=flat&logo=modelcontextprotocol&logoSize=auto&logoColor=black&labelColor=beige)](https://github.com/Beyond-Better/bb-mcp-server)
 
+[![JSR](https://jsr.io/badges/@beyondbetter/bb-mcp-client-inspector)](https://jsr.io/@beyondbetter/bb-mcp-client-inspector)
+[![JSR Score](https://jsr.io/badges/@beyondbetter/bb-mcp-client-inspector/score)](https://jsr.io/@beyondbetter/bb-mcp-client-inspector)
 [![JSR Scope](https://jsr.io/badges/@beyondbetter)](https://jsr.io/@beyondbetter)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -31,6 +33,64 @@ server for testing clients.
 - 🌐 **Web Console**: Interactive Fresh UI for testing
 
 ![Inspector Console](./screenshot.png)
+
+## Installation
+
+### Prerequisites
+
+- **Deno 2.5+** - [Install Deno](https://deno.land/)
+- **Git** - For cloning the repository
+
+### Quick Setup
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Beyond-Better/bb-mcp-server-client-inspector.git
+   cd bb-mcp-server-client-inspector
+   ```
+
+2. **Set up the MCP Server:**
+   ```bash
+   cd mcp-server
+   cp .env.example .env
+   # Edit .env if needed (defaults work for local development)
+   ```
+
+3. **Set up the Fresh UI:**
+   ```bash
+   cd ../fresh-ui
+   cp .env.example .env
+   # Edit .env if needed (defaults work for local development)
+   ```
+
+### Running the Servers
+
+You'll need two terminal windows:
+
+**Terminal 1 - MCP Server:**
+```bash
+cd mcp-server
+deno task dev
+```
+
+The MCP server will start on `http://localhost:3000`
+
+**Terminal 2 - Fresh UI:**
+```bash
+cd fresh-ui
+deno task dev
+```
+
+The Fresh UI will start on `http://localhost:8000`
+
+### Verification
+
+1. Open your browser to `http://localhost:8000`
+2. You should see the MCP Client Inspector interface
+3. The console should show "WebSocket connected" when the connection is established
+4. Try the inspector tools to verify everything is working
+
+> **📖 Detailed Instructions:** For configuration options, troubleshooting, and advanced setup, see [INSTALLATION.md](./INSTALLATION.md)
 
 ## Architecture
 
