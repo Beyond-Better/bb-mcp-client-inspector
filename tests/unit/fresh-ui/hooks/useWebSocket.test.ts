@@ -3,18 +3,17 @@
  */
 
 import { assertEquals, assertExists } from '@std/assert';
-import { afterEach, beforeEach, describe, it } from '@std/testing/bdd';
+import { afterEach, describe, it } from '@std/testing/bdd';
 import {
   clearMessages,
   closeWebSocket,
-  initWebSocket,
   sendCommand,
   wsConnected,
   wsConnectionId,
   wsError,
   wsMessages,
 } from '../../../../fresh-ui/hooks/useWebSocket.ts';
-import { delay } from '../../../utils/test-helpers.ts';
+
 import type { ConsoleMessage } from '@shared/types/index.ts';
 
 describe('useWebSocket Hook', () => {

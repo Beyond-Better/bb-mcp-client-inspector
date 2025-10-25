@@ -2,7 +2,7 @@
  * MessageTracker Tests
  */
 
-import { assertEquals, assertExists } from '@std/assert';
+import { assertEquals } from '@std/assert';
 import { afterEach, beforeEach, describe, it } from '@std/testing/bdd';
 import { MessageTracker } from '../../../../mcp-server/src/console/MessageTracker.ts';
 import {

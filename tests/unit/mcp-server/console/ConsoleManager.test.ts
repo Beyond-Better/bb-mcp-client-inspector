@@ -6,9 +6,8 @@ import { assertEquals, assertExists } from '@std/assert';
 import { afterEach, beforeEach, describe, it } from '@std/testing/bdd';
 import { ConsoleManager } from '../../../../mcp-server/src/console/ConsoleManager.ts';
 import { MockBeyondMcpServer, MockMessageTracker } from '../../../utils/mocks.ts';
-import { createTestLogger, waitFor } from '../../../utils/test-helpers.ts';
+import { createTestLogger } from '../../../utils/test-helpers.ts';
 import {
-  getClientsCommand,
   notificationPayload,
   requestElicitationCommand,
   requestSamplingCommand,
@@ -299,7 +298,7 @@ describe('ConsoleManager', () => {
       assertEquals(parseError, true);
     });
 
-    it('should validate command structure', async () => {
+    it('should validate command structure', () => {
       // Test that commands must have correct structure
       const validCommand = triggerNotificationCommand;
       assertExists(validCommand.type);

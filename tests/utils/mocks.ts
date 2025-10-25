@@ -18,6 +18,7 @@ export class MockBeyondMcpServer implements Partial<BeyondMcpServer> {
   private samplingRequests: Array<{ messages: unknown[]; sessionId?: string }> = [];
   private elicitationRequests: Array<{ message: string; sessionId?: string }> = [];
 
+  // deno-lint-ignore require-await
   async sendNotification(
     params: { level: string; logger?: string; data: unknown },
     sessionId?: string,
@@ -25,6 +26,7 @@ export class MockBeyondMcpServer implements Partial<BeyondMcpServer> {
     this.notifications.push({ ...params, sessionId });
   }
 
+  // deno-lint-ignore require-await
   async createMessage(
     request: { model?: string; messages: unknown[]; maxTokens?: number },
     sessionId?: string,
@@ -43,6 +45,7 @@ export class MockBeyondMcpServer implements Partial<BeyondMcpServer> {
     };
   }
 
+  // deno-lint-ignore require-await
   async elicitInput(
     request: { message: string; requestedSchema?: unknown },
     sessionId?: string,
@@ -134,6 +137,7 @@ export class MockMessageTracker {
   private messages: Map<SessionId, MessageEntry[]> = new Map();
   private clients: Map<ClientId, ClientInfo> = new Map();
 
+  // deno-lint-ignore require-await
   async trackMessage(
     sessionId: SessionId,
     direction: 'incoming' | 'outgoing',
@@ -152,6 +156,7 @@ export class MockMessageTracker {
     this.messages.set(sessionId, sessionMessages);
   }
 
+  // deno-lint-ignore require-await
   async getMessages(
     sessionId: SessionId,
     limit?: number,
@@ -160,22 +165,27 @@ export class MockMessageTracker {
     return limit ? messages.slice(0, limit) : messages;
   }
 
+  // deno-lint-ignore require-await
   async trackClient(clientId: ClientId, info: ClientInfo): Promise<void> {
     this.clients.set(clientId, info);
   }
 
+  // deno-lint-ignore require-await
   async getClients(): Promise<ClientInfo[]> {
     return Array.from(this.clients.values());
   }
 
+  // deno-lint-ignore require-await
   async removeClient(clientId: ClientId): Promise<void> {
     this.clients.delete(clientId);
   }
 
+  // deno-lint-ignore require-await
   async clearSession(sessionId: SessionId): Promise<void> {
     this.messages.delete(sessionId);
   }
 
+  // deno-lint-ignore require-await
   async getStatistics(): Promise<{
     totalMessages: number;
     totalClients: number;

@@ -19,12 +19,9 @@ export async function createTestKV(): Promise<Deno.Kv> {
 /**
  * Create test logger with configurable output
  */
-export function createTestLogger(options?: {
-  silent?: boolean;
-  level?: string;
-}): Logger {
-  const silent = options?.silent ?? true;
-  const level = options?.level ?? 'error';
+export function createTestLogger(_options?: Record<PropertyKey, never>): Logger {
+  //const silent = options?.silent ?? true;
+  //const level = options?.level ?? 'error';
 
   // Create logger without invalid config
   const logger = new Logger();

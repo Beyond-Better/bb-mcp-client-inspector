@@ -3,6 +3,8 @@
     "test": "deno test --allow-all --unstable-kv",
     "test:watch": "deno test --allow-all --unstable-kv --watch",
     "test:unit": "deno test --allow-all --unstable-kv unit/",
+    "test:unit:fresh-ui": "deno test --allow-all --unstable-kv unit/fresh-ui",
+    "test:unit:mcp-server": "deno test --allow-all --unstable-kv unit/mcp-server",
     "test:integration": "deno test --allow-all --unstable-kv integration/",
     "test:coverage": "deno test --allow-all --unstable-kv --coverage=coverage",
     "coverage": "deno coverage coverage/ --exclude='.*bb-mcp-server/.*'",
@@ -39,5 +41,10 @@
     ],
     "jsx": "precompile",
     "jsxImportSource": "preact"
+  },
+  "lint": {
+    "rules": {
+      "exclude": ["no-explicit-any"]
+    }
   }
 }

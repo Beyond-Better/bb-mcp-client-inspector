@@ -8,13 +8,13 @@ import { assertEquals, assertExists } from '@std/assert';
 import { afterEach, beforeEach, describe, it } from '@std/testing/bdd';
 import { ConsoleManager } from '../../mcp-server/src/console/ConsoleManager.ts';
 import { MessageTracker } from '../../mcp-server/src/console/MessageTracker.ts';
-import { MockBeyondMcpServer, MockServerWebSocket, MockWebSocketServer } from '../utils/mocks.ts';
+import { MockBeyondMcpServer, MockWebSocketServer } from '../utils/mocks.ts';
 import { createTestKV, createTestLogger } from '../utils/test-helpers.ts';
 import type { ConsoleCommand, ConsoleMessage } from '@shared/types/index.ts';
 
 describe('WebSocket Communication Integration', () => {
   let kv: Deno.Kv;
-  let consoleManager: ConsoleManager;
+  let _consoleManager: ConsoleManager;
   let mockServer: MockBeyondMcpServer;
   let messageTracker: MessageTracker;
   let wsServer: MockWebSocketServer;
@@ -24,7 +24,7 @@ describe('WebSocket Communication Integration', () => {
     const logger = createTestLogger();
     messageTracker = new MessageTracker(kv, logger);
     mockServer = new MockBeyondMcpServer();
-    consoleManager = new ConsoleManager(messageTracker, logger);
+    _consoleManager = new ConsoleManager(messageTracker, logger);
     wsServer = new MockWebSocketServer();
   });
 
@@ -64,8 +64,8 @@ describe('WebSocket Communication Integration', () => {
 
   describe('message broadcasting', () => {
     it('should broadcast message to all clients', () => {
-      const socket1 = wsServer.createConnection('conn-1');
-      const socket2 = wsServer.createConnection('conn-2');
+      const _socket1 = wsServer.createConnection('conn-1');
+      const _socket2 = wsServer.createConnection('conn-2');
 
       const message: ConsoleMessage = {
         type: 'notification_sent',
