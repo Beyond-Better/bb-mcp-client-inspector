@@ -1,4 +1,12 @@
-# MCP Server Client Inspector
+# Beyond MCP Client Inspector
+
+[![Beyond Better](https://img.shields.io/badge/Beyond-Better-blue?style=flat&labelColor=6FD99C&color=0C1F3E)](https://beyondbetter.app)
+![MCP Server](https://img.shields.io/badge/MCP-Server-blue?style=flat&logo=modelcontextprotocol&logoSize=auto&logoColor=black&labelColor=beige)
+![MCP Client](https://img.shields.io/badge/MCP-Client-blue?style=flat&logo=modelcontextprotocol&logoSize=auto&logoColor=black&labelColor=beige)
+[![MCP Server](https://img.shields.io/badge/MCP-Beyond%20Better-blue?style=flat&logo=modelcontextprotocol&logoSize=auto&logoColor=black&labelColor=beige)](https://github.com/Beyond-Better/bb-mcp-server)
+
+[![JSR Scope](https://jsr.io/badges/@beyondbetter)](https://jsr.io/@beyondbetter)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **A comprehensive testing platform for MCP (Model Context Protocol) client implementations**
 
@@ -15,6 +23,9 @@ The MCP Server Client Inspector provides an interactive web console for testing 
 - 🛠️ **Inspector Tools**: Six utility tools for testing scenarios
 - 📊 **Multi-Client Support**: Test multiple clients simultaneously (HTTP mode)
 - 🌐 **Web Console**: Interactive Fresh UI for testing
+
+![Inspector Console](./screenshot.png)
+
 
 ## Architecture
 
@@ -51,7 +62,7 @@ The MCP Server Client Inspector provides an interactive web console for testing 
 **Fresh UI**:
 - Framework: Deno Fresh
 - UI: Preact Islands
-- Styling: Tailwind CSS
+- Styling: Tailwind CSS + DaisyUI
 - Language: TypeScript + JSX
 
 ## Project Structure
@@ -149,27 +160,28 @@ Trigger and verify notifications:
 
 ### Version 1.0 (Initial Release)
 
-**Phase 1: Foundation** (Week 1)
+**Phase 1: Foundation** (Day 1)
 - ✅ MCP server with bb-mcp-server
 - ✅ Basic inspector tools
 - ✅ Message storage (Deno KV)
 - ✅ Fresh UI foundation
 
-**Phase 2: Core Features** (Week 2)
+**Phase 2: Core Features** (Day 2)
 - ✅ WebSocket communication
 - ✅ Sampling request/response
 - ✅ Elicitation request/response
 - ✅ Notification triggering
 - ✅ Message viewer
 
-**Phase 3: Polish** (Week 3)
+**Phase 3: Polish** (Day 3)
 - ✅ Multi-client support
 - ✅ UI refinement
 - ✅ Error handling
 - ✅ Performance optimization
 
-**Phase 4: Release** (Week 4)
+**Phase 4: Release** (Day 4)
 - ✅ Complete documentation
+- ✅ Message filtering in UI
 - ✅ Comprehensive testing
 - ✅ Example scenarios
 - ✅ Deployment preparation
@@ -177,8 +189,8 @@ Trigger and verify notifications:
 ### Roadmap (Future Versions)
 
 - 🔄 Multi-turn sampling conversations
+- 🔄 Full suite of MCP features (prompts/roots/resources)
 - 🔄 Streaming response support
-- 🔄 Message filtering in UI
 - 🔄 Pre-configured test scenarios
 - 🔄 Session export/import
 - 🔄 Client metrics and analytics
@@ -333,13 +345,13 @@ For implementers:
 
 ## Repository
 
-**GitHub**: `beyond-better/bb-mcp-server-client-inspector` (planned)
+**GitHub**: `beyond-better/bb-mcp-server-client-inspector`
 
 **JSR Package**: `@beyondbetter/mcp-client-inspector` (planned)
 
 ---
 
-**Project Version**: 1.0.0 (Design)
+**Project Version**: 0.1.0 (Design)
 **Documentation Version**: 1.0
 **Last Updated**: 2025-10-22
 **Status**: Design Complete - Ready for Implementation
