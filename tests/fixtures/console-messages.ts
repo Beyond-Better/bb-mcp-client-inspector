@@ -1,6 +1,6 @@
 /**
  * Console WebSocket Message Fixtures
- * 
+ *
  * Sample console messages for testing WebSocket communication.
  */
 
@@ -11,17 +11,17 @@ import type {
   ElicitationPayload,
   NotificationPayload,
   SamplingPayload,
-} from "@shared/types/index.ts";
-import type { ClientId, SessionId } from "@shared/types/index.ts";
+} from '@shared/types/index.ts';
+import type { ClientId, SessionId } from '@shared/types/index.ts';
 
 /**
  * Sample connection established message
  */
 export const connectionEstablished: ConsoleMessage = {
-  type: "connection_established",
+  type: 'connection_established',
   payload: {
-    connectionId: "conn-123" as string,
-    serverVersion: "1.0.0",
+    connectionId: 'conn-123' as string,
+    serverVersion: '1.0.0',
     timestamp: 1234567890,
   },
   timestamp: 1234567890,
@@ -31,15 +31,15 @@ export const connectionEstablished: ConsoleMessage = {
  * Sample client info
  */
 export const sampleClientInfo: ClientInfo = {
-  clientId: "client-1" as ClientId,
-  sessionId: "session-1" as SessionId,
+  clientId: 'client-1' as ClientId,
+  sessionId: 'session-1' as SessionId,
   connectedAt: 1234567890,
   lastSeen: 1234567900,
-  transport: "http",
+  transport: 'http',
   metadata: {
     clientInfo: {
-      name: "Test Client",
-      version: "1.0.0",
+      name: 'Test Client',
+      version: '1.0.0',
     },
   },
 };
@@ -48,7 +48,7 @@ export const sampleClientInfo: ClientInfo = {
  * Sample client list message
  */
 export const clientListMessage: ConsoleMessage = {
-  type: "client_list",
+  type: 'client_list',
   payload: {
     clients: [sampleClientInfo],
   },
@@ -59,16 +59,16 @@ export const clientListMessage: ConsoleMessage = {
  * Sample notification payload
  */
 export const notificationPayload: NotificationPayload = {
-  level: "info",
-  logger: "test",
-  data: "Test notification message",
+  level: 'info',
+  logger: 'test',
+  data: 'Test notification message',
 };
 
 /**
  * Sample trigger notification command
  */
 export const triggerNotificationCommand: ConsoleCommand = {
-  type: "trigger_notification",
+  type: 'trigger_notification',
   payload: notificationPayload,
 };
 
@@ -76,11 +76,11 @@ export const triggerNotificationCommand: ConsoleCommand = {
  * Sample notification sent message
  */
 export const notificationSent: ConsoleMessage = {
-  type: "notification_sent",
+  type: 'notification_sent',
   payload: {
-    level: "info",
-    logger: "test",
-    data: "Test notification message",
+    level: 'info',
+    logger: 'test',
+    data: 'Test notification message',
   },
   timestamp: 1234567890,
 };
@@ -91,10 +91,10 @@ export const notificationSent: ConsoleMessage = {
 export const samplingPayload: SamplingPayload = {
   messages: [
     {
-      role: "user",
+      role: 'user',
       content: {
-        type: "text",
-        text: "What is 2+2?",
+        type: 'text',
+        text: 'What is 2+2?',
       },
     },
   ],
@@ -106,7 +106,7 @@ export const samplingPayload: SamplingPayload = {
  * Sample request sampling command
  */
 export const requestSamplingCommand: ConsoleCommand = {
-  type: "request_sampling",
+  type: 'request_sampling',
   payload: samplingPayload,
 };
 
@@ -114,14 +114,14 @@ export const requestSamplingCommand: ConsoleCommand = {
  * Sample sampling response message
  */
 export const samplingResponseMessage: ConsoleMessage = {
-  type: "sampling_response",
+  type: 'sampling_response',
   payload: {
     content: {
-      type: "text",
-      text: "2+2 equals 4.",
+      type: 'text',
+      text: '2+2 equals 4.',
     },
-    model: "test-model",
-    stopReason: "endTurn",
+    model: 'test-model',
+    stopReason: 'endTurn',
   },
   timestamp: 1234567890,
 };
@@ -130,10 +130,10 @@ export const samplingResponseMessage: ConsoleMessage = {
  * Sample sampling error message
  */
 export const samplingErrorMessage: ConsoleMessage = {
-  type: "sampling_error",
+  type: 'sampling_error',
   payload: {
-    message: "Sampling request failed",
-    error: "Client not available",
+    message: 'Sampling request failed',
+    error: 'Client not available',
   },
   timestamp: 1234567890,
 };
@@ -142,16 +142,16 @@ export const samplingErrorMessage: ConsoleMessage = {
  * Sample elicitation payload
  */
 export const elicitationPayload: ElicitationPayload = {
-  message: "Please confirm the action",
+  message: 'Please confirm the action',
   requestedSchema: {
-    type: "object",
+    type: 'object',
     properties: {
       confirmed: {
-        type: "boolean",
-        description: "User confirmation",
+        type: 'boolean',
+        description: 'User confirmation',
       },
     },
-    required: ["confirmed"],
+    required: ['confirmed'],
   },
 };
 
@@ -159,7 +159,7 @@ export const elicitationPayload: ElicitationPayload = {
  * Sample request elicitation command
  */
 export const requestElicitationCommand: ConsoleCommand = {
-  type: "request_elicitation",
+  type: 'request_elicitation',
   payload: elicitationPayload,
 };
 
@@ -167,9 +167,9 @@ export const requestElicitationCommand: ConsoleCommand = {
  * Sample elicitation response message (accept)
  */
 export const elicitationResponseMessage: ConsoleMessage = {
-  type: "elicitation_response",
+  type: 'elicitation_response',
   payload: {
-    action: "accept",
+    action: 'accept',
     content: {
       confirmed: true,
     },
@@ -181,10 +181,10 @@ export const elicitationResponseMessage: ConsoleMessage = {
  * Sample elicitation error message
  */
 export const elicitationErrorMessage: ConsoleMessage = {
-  type: "elicitation_error",
+  type: 'elicitation_error',
   payload: {
-    message: "Elicitation request failed",
-    error: "Client declined",
+    message: 'Elicitation request failed',
+    error: 'Client declined',
   },
   timestamp: 1234567890,
 };
@@ -193,17 +193,17 @@ export const elicitationErrorMessage: ConsoleMessage = {
  * Sample get clients command
  */
 export const getClientsCommand: ConsoleCommand = {
-  type: "get_clients",
+  type: 'get_clients',
 };
 
 /**
  * Sample error message
  */
 export const errorMessage: ConsoleMessage = {
-  type: "error",
+  type: 'error',
   payload: {
-    message: "Invalid command format",
-    details: "Missing required field",
+    message: 'Invalid command format',
+    details: 'Missing required field',
   },
   timestamp: 1234567890,
 };

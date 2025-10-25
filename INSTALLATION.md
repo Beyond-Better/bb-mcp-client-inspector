@@ -2,7 +2,8 @@
 
 ## From JSR (Recommended)
 
-The MCP Client Inspector is published to JSR and can be run directly without installation.
+The MCP Client Inspector is published to JSR and can be run directly without
+installation.
 
 ### Run Both Components
 
@@ -13,6 +14,7 @@ deno run -A jsr:@beyondbetter/mcp-client-inspector
 ```
 
 This will start:
+
 - **MCP Server** on `http://localhost:3000`
 - **Web UI** on `http://localhost:8000`
 
@@ -23,6 +25,7 @@ deno run -A jsr:@beyondbetter/mcp-client-inspector --mcp-port 3001 --ui-port 808
 ```
 
 Available options:
+
 - `--mcp-port <port>` - Port for MCP server (default: 3000)
 - `--ui-port <port>` - Port for Fresh UI (default: 8000)
 - `--mcp-host <host>` - Host for MCP server (default: localhost)
@@ -76,7 +79,8 @@ deno task dev:ui     # Development
 
 ### Environment Configuration
 
-Both components can be configured via environment variables. Copy the example files:
+Both components can be configured via environment variables. Copy the example
+files:
 
 ```bash
 # MCP Server configuration
@@ -89,6 +93,7 @@ cp fresh-ui/.env.example fresh-ui/.env
 Edit the `.env` files to customize:
 
 **MCP Server (`mcp-server/.env`)**:
+
 ```bash
 MCP_SERVER_PORT=3000
 MCP_SERVER_HOST=localhost
@@ -97,6 +102,7 @@ LOG_LEVEL=info
 ```
 
 **Web UI (`fresh-ui/.env`)**:
+
 ```bash
 PORT=8000
 HOST=localhost
@@ -121,12 +127,14 @@ After starting the servers, verify they're running:
 ### Port Already in Use
 
 If you get a "port already in use" error, either:
+
 1. Stop the process using that port
 2. Use custom ports with `--mcp-port` and `--ui-port` flags
 
 ### Connection Failed
 
 If the Web UI can't connect to the MCP Server:
+
 1. Verify the MCP Server is running
 2. Check that ports match in both components
 3. Check your firewall settings
@@ -134,7 +142,8 @@ If the Web UI can't connect to the MCP Server:
 
 ### Permission Errors
 
-The `-A` flag grants all permissions. For production use, you can be more specific:
+The `-A` flag grants all permissions. For production use, you can be more
+specific:
 
 ```bash
 deno run \
@@ -154,4 +163,5 @@ Once installed and running:
 3. **Start testing** - trigger sampling, elicitation, and notifications
 4. **View messages** in the console in real-time
 
-See the main [README.md](README.md) for detailed usage instructions and testing examples.
+See the main [README.md](README.md) for detailed usage instructions and testing
+examples.

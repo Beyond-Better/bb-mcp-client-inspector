@@ -2,7 +2,9 @@
 
 ## Overview
 
-This document provides detailed implementation specifications for the MCP Server component of the Client Inspector. The server uses the bb-mcp-server library (AppServer pattern) with the MCP TypeScript SDK v1.18.2.
+This document provides detailed implementation specifications for the MCP Server
+component of the Client Inspector. The server uses the bb-mcp-server library
+(AppServer pattern) with the MCP TypeScript SDK v1.18.2.
 
 ## Project Structure
 
@@ -42,7 +44,7 @@ mcp-server/
 
 /**
  * MCP Server Client Inspector
- * 
+ *
  * An MCP server for testing and inspecting MCP client implementations.
  * Provides basic tools and console integration for testing sampling,
  * elicitation, and notification handling.
@@ -54,24 +56,24 @@ import { createInspectorDependencies } from './src/dependencyHelper.ts';
 async function main(): Promise<void> {
   try {
     console.log('🔍 Starting MCP Client Inspector Server...');
-    
+
     // Create AppServer with inspector dependencies
     const appServer = await AppServer.create(createInspectorDependencies);
-    
+
     // Start the server
     await appServer.start();
-    
+
     const transport = Deno.env.get('MCP_TRANSPORT') || 'stdio';
     const port = Deno.env.get('HTTP_PORT') || '3000';
-    
+
     console.log('✅ MCP Client Inspector Server started successfully!');
     console.log(`📡 Transport: ${transport}`);
-    
+
     if (transport === 'http') {
       console.log(`🌐 HTTP endpoint: http://localhost:${port}/mcp`);
       console.log(`🔌 WebSocket console: ws://localhost:${port}/ws/console`);
     }
-    
+
     console.log('🛠️  Inspector tools loaded:');
     console.log('   - echo');
     console.log('   - convert_date');
@@ -79,7 +81,6 @@ async function main(): Promise<void> {
     console.log('   - delay_response');
     console.log('   - random_data');
     console.log('   - trigger_error');
-    
   } catch (error) {
     console.error('❌ Failed to start MCP Client Inspector Server:', error);
     Deno.exit(1);
@@ -104,10 +105,10 @@ if (import.meta.main) {
 
 import {
   AppServerDependencies,
-  ConfigManager,
-  Logger,
   AuditLogger,
+  ConfigManager,
   KVManager,
+  Logger,
 } from '@beyondbetter/bb-mcp-server';
 import { ConsoleManager } from './console/ConsoleManager.ts';
 import { MessageTracker } from './console/MessageTracker.ts';
@@ -122,11 +123,13 @@ interface InspectorDependencies extends AppServerDependencies {
 
 /**
  * Create dependencies for Inspector server
- * 
+ *
  * This follows the bb-mcp-server pattern but adds console-specific
  * dependencies for the inspector functionality.
  */
-export async function createInspectorDependencies(): Promise<InspectorDependencies> {
+export async function createInspectorDependencies(): Promise<
+  InspectorDependencies
+> {
   // Create logger
   const logger = new Logger({
     level: Deno.env.get('LOG_LEVEL') || 'info',
@@ -659,14 +662,14 @@ export const triggerErrorTool = {
 ```typescript
 // src/console/ConsoleManager.ts
 
-import { Logger, BeyondMcpServer } from '@beyondbetter/bb-mcp-server';
+import { BeyondMcpServer, Logger } from '@beyondbetter/bb-mcp-server';
 import { MessageTracker } from './MessageTracker.ts';
 import {
-  ConsoleMessage,
   ConsoleCommand,
+  ConsoleMessage,
+  ElicitationPayload,
   NotificationPayload,
   SamplingPayload,
-  ElicitationPayload,
 } from './types.ts';
 
 export class ConsoleManager {
@@ -745,32 +748,37 @@ export class ConsoleManager {
   /**
    * Handle incoming message from console
    */
-  private async handleMessage(connectionId: string, data: string): Promise<void> {
+  private async handleMessage(
+    connectionId: string,
+    data: string,
+  ): Promise<void> {
     try {
       const command = JSON.parse(data) as ConsoleCommand;
       this.logger.debug(`Console command from ${connectionId}:`, command.type);
 
       switch (command.type) {
         case 'trigger_notification':
-          await this.triggerNotification(command.payload as NotificationPayload);
+          await this.triggerNotification(
+            command.payload as NotificationPayload,
+          );
           break;
-        
+
         case 'request_sampling':
           await this.requestSampling(command.payload as SamplingPayload);
           break;
-        
+
         case 'request_elicitation':
           await this.requestElicitation(command.payload as ElicitationPayload);
           break;
-        
+
         case 'get_clients':
           await this.sendClientList(connectionId);
           break;
-        
+
         case 'get_message_history':
           await this.sendMessageHistory(connectionId, command.payload);
           break;
-        
+
         default:
           this.logger.warn(`Unknown command type: ${command.type}`);
       }
@@ -789,7 +797,9 @@ export class ConsoleManager {
   /**
    * Trigger notification to MCP clients
    */
-  private async triggerNotification(payload: NotificationPayload): Promise<void> {
+  private async triggerNotification(
+    payload: NotificationPayload,
+  ): Promise<void> {
     try {
       await this.mcpServer.sendNotification(
         payload.method,
@@ -925,7 +935,7 @@ export class ConsoleManager {
    */
   broadcastMessage(message: ConsoleMessage): void {
     const payload = JSON.stringify(message);
-    
+
     for (const [id, ws] of this.wsConnections) {
       if (ws.readyState === WebSocket.OPEN) {
         try {
@@ -942,7 +952,7 @@ export class ConsoleManager {
    */
   private sendToClient(connectionId: string, message: ConsoleMessage): void {
     const ws = this.wsConnections.get(connectionId);
-    
+
     if (ws && ws.readyState === WebSocket.OPEN) {
       try {
         ws.send(JSON.stringify(message));
@@ -967,7 +977,7 @@ export class ConsoleManager {
 // src/console/MessageTracker.ts
 
 import { Logger } from '@beyondbetter/bb-mcp-server';
-import { McpMessage, MessageEntry, ClientInfo } from './types.ts';
+import { ClientInfo, McpMessage, MessageEntry } from './types.ts';
 
 export class MessageTracker {
   private kv: Deno.Kv;
@@ -978,8 +988,12 @@ export class MessageTracker {
   constructor(kv: Deno.Kv, logger: Logger) {
     this.kv = kv;
     this.logger = logger;
-    this.messageLimit = parseInt(Deno.env.get('MESSAGE_HISTORY_LIMIT') || '1000');
-    this.retentionDays = parseInt(Deno.env.get('MESSAGE_HISTORY_RETENTION_DAYS') || '7');
+    this.messageLimit = parseInt(
+      Deno.env.get('MESSAGE_HISTORY_LIMIT') || '1000',
+    );
+    this.retentionDays = parseInt(
+      Deno.env.get('MESSAGE_HISTORY_RETENTION_DAYS') || '7',
+    );
   }
 
   /**
@@ -1005,7 +1019,10 @@ export class MessageTracker {
         entry,
       );
 
-      this.logger.debug(`Tracked ${direction} message:`, message.method || 'response');
+      this.logger.debug(
+        `Tracked ${direction} message:`,
+        message.method || 'response',
+      );
 
       // Clean up old messages if needed
       await this.cleanupOldMessages(sessionId);
@@ -1087,7 +1104,8 @@ export class MessageTracker {
    */
   private async cleanupOldMessages(sessionId: string): Promise<void> {
     try {
-      const cutoffTime = Date.now() - (this.retentionDays * 24 * 60 * 60 * 1000);
+      const cutoffTime = Date.now() -
+        (this.retentionDays * 24 * 60 * 60 * 1000);
 
       const iter = this.kv.list<MessageEntry>({
         prefix: ['messages', sessionId],
@@ -1112,7 +1130,7 @@ export class MessageTracker {
       if (count > this.messageLimit) {
         const messages = await this.getMessages(sessionId, count);
         const toDeleteCount = count - this.messageLimit;
-        
+
         for (let i = 0; i < toDeleteCount && i < messages.length; i++) {
           await this.kv.delete([
             'messages',
@@ -1190,6 +1208,5 @@ DEV_MODE=false
 
 ---
 
-**Document Version**: 1.0
-**Last Updated**: 2025-10-22
-**Status**: Design Complete - Ready for Implementation
+**Document Version**: 1.0 **Last Updated**: 2025-10-22 **Status**: Design
+Complete - Ready for Implementation

@@ -2,7 +2,9 @@
 
 ## Overview
 
-This document outlines the testing strategy for the MCP Server Client Inspector project. It covers unit tests, integration tests, end-to-end tests, and testing utilities for both the MCP server and Fresh UI components.
+This document outlines the testing strategy for the MCP Server Client Inspector
+project. It covers unit tests, integration tests, end-to-end tests, and testing
+utilities for both the MCP server and Fresh UI components.
 
 ## Testing Principles
 
@@ -23,6 +25,7 @@ deno test --allow-all --unstable-kv tests/
 ```
 
 **Utilities**:
+
 - `@std/testing/asserts` - Assertions
 - `@std/testing/bdd` - BDD-style tests
 - `@std/testing/mock` - Mocking and spying
@@ -38,6 +41,7 @@ deno test --allow-all tests/
 ```
 
 **Utilities**:
+
 - `@preact/testing-library` - Component testing
 - Fresh test utilities
 
@@ -106,25 +110,25 @@ fresh-ui/tests/
 ```typescript
 // tests/unit/tools/echo.test.ts
 
-import { assertEquals } from "@std/testing/asserts";
-import { describe, it } from "@std/testing/bdd";
-import { echoTool } from "../../../src/plugins/inspector.plugin/tools/echo.ts";
+import { assertEquals } from '@std/testing/asserts';
+import { describe, it } from '@std/testing/bdd';
+import { echoTool } from '../../../src/plugins/inspector.plugin/tools/echo.ts';
 
-describe("Echo Tool", () => {
-  it("should echo back the message", async () => {
+describe('Echo Tool', () => {
+  it('should echo back the message', async () => {
     const result = await echoTool.handler({
-      message: "Hello, World!",
+      message: 'Hello, World!',
     });
 
-    assertEquals(result.content[0].type, "text");
-    assertEquals(result.content[0].text, "Hello, World!");
+    assertEquals(result.content[0].type, 'text');
+    assertEquals(result.content[0].text, 'Hello, World!');
   });
 
-  it("should apply delay if specified", async () => {
+  it('should apply delay if specified', async () => {
     const startTime = Date.now();
-    
+
     await echoTool.handler({
-      message: "test",
+      message: 'test',
       delay: 100,
     });
 
@@ -132,21 +136,21 @@ describe("Echo Tool", () => {
     assertEquals(duration >= 100, true);
   });
 
-  it("should convert to uppercase if requested", async () => {
+  it('should convert to uppercase if requested', async () => {
     const result = await echoTool.handler({
-      message: "hello",
+      message: 'hello',
       uppercase: true,
     });
 
-    assertEquals(result.content[0].text, "HELLO");
+    assertEquals(result.content[0].text, 'HELLO');
   });
 
-  it("should handle empty message", async () => {
+  it('should handle empty message', async () => {
     const result = await echoTool.handler({
-      message: "",
+      message: '',
     });
 
-    assertEquals(result.content[0].text, "");
+    assertEquals(result.content[0].text, '');
   });
 });
 ```
@@ -156,14 +160,14 @@ describe("Echo Tool", () => {
 ```typescript
 // tests/unit/tools/calculate.test.ts
 
-import { assertEquals } from "@std/testing/asserts";
-import { describe, it } from "@std/testing/bdd";
-import { calculateTool } from "../../../src/plugins/inspector.plugin/tools/calculate.ts";
+import { assertEquals } from '@std/testing/asserts';
+import { describe, it } from '@std/testing/bdd';
+import { calculateTool } from '../../../src/plugins/inspector.plugin/tools/calculate.ts';
 
-describe("Calculate Tool", () => {
-  it("should add two numbers", async () => {
+describe('Calculate Tool', () => {
+  it('should add two numbers', async () => {
     const result = await calculateTool.handler({
-      operation: "add",
+      operation: 'add',
       a: 5,
       b: 3,
     });
@@ -172,20 +176,20 @@ describe("Calculate Tool", () => {
     assertEquals(data.result, 8);
   });
 
-  it("should handle division by zero", async () => {
+  it('should handle division by zero', async () => {
     const result = await calculateTool.handler({
-      operation: "divide",
+      operation: 'divide',
       a: 10,
       b: 0,
     });
 
     assertEquals(result.isError, true);
-    assertEquals(result.content[0].text.includes("Division by zero"), true);
+    assertEquals(result.content[0].text.includes('Division by zero'), true);
   });
 
-  it("should calculate power", async () => {
+  it('should calculate power', async () => {
     const result = await calculateTool.handler({
-      operation: "power",
+      operation: 'power',
       a: 2,
       b: 3,
     });
@@ -201,13 +205,13 @@ describe("Calculate Tool", () => {
 ```typescript
 // tests/unit/console/ConsoleManager.test.ts
 
-import { assertEquals, assertExists } from "@std/testing/asserts";
-import { describe, it, beforeEach, afterEach } from "@std/testing/bdd";
-import { spy } from "@std/testing/mock";
-import { ConsoleManager } from "../../../src/console/ConsoleManager.ts";
-import { MockBeyondMcpServer, MockMessageTracker, MockLogger } from "../../utils/mockClients.ts";
+import { assertEquals, assertExists } from '@std/testing/asserts';
+import { afterEach, beforeEach, describe, it } from '@std/testing/bdd';
+import { spy } from '@std/testing/mock';
+import { ConsoleManager } from '../../../src/console/ConsoleManager.ts';
+import { MockBeyondMcpServer, MockLogger, MockMessageTracker } from '../../utils/mockClients.ts';
 
-describe("ConsoleManager", () => {
+describe('ConsoleManager', () => {
   let manager: ConsoleManager;
   let mockServer: MockBeyondMcpServer;
   let mockTracker: MockMessageTracker;
@@ -220,10 +224,10 @@ describe("ConsoleManager", () => {
     manager = new ConsoleManager(mockServer, mockTracker, mockLogger);
   });
 
-  it("should handle WebSocket connections", () => {
-    const request = new Request("http://localhost/ws/console", {
+  it('should handle WebSocket connections', () => {
+    const request = new Request('http://localhost/ws/console', {
       headers: {
-        "upgrade": "websocket",
+        'upgrade': 'websocket',
       },
     });
 
@@ -232,11 +236,11 @@ describe("ConsoleManager", () => {
     assertEquals(response.status, 101);
   });
 
-  it("should broadcast messages to all connected clients", () => {
+  it('should broadcast messages to all connected clients', () => {
     // Create mock WebSocket connections
     const ws1 = createMockWebSocket();
     const ws2 = createMockWebSocket();
-    
+
     manager['wsConnections'].set('client1', ws1);
     manager['wsConnections'].set('client2', ws2);
 
@@ -252,7 +256,7 @@ describe("ConsoleManager", () => {
     assertEquals(sendSpy2.calls.length, 1);
   });
 
-  it("should handle notification triggers", async () => {
+  it('should handle notification triggers', async () => {
     const sendNotificationSpy = spy(mockServer, 'sendNotification');
 
     await manager['triggerNotification']({
@@ -263,7 +267,7 @@ describe("ConsoleManager", () => {
     assertEquals(sendNotificationSpy.calls.length, 1);
     assertEquals(
       sendNotificationSpy.calls[0].args[0],
-      'notifications/tools/list_changed'
+      'notifications/tools/list_changed',
     );
   });
 });
@@ -276,20 +280,20 @@ describe("ConsoleManager", () => {
 ```typescript
 // tests/integration/websocket/messaging.test.ts
 
-import { assertEquals, assertExists } from "@std/testing/asserts";
-import { describe, it, beforeAll, afterAll } from "@std/testing/bdd";
+import { assertEquals, assertExists } from '@std/testing/asserts';
+import { afterAll, beforeAll, describe, it } from '@std/testing/bdd';
 
-describe("WebSocket Messaging", () => {
+describe('WebSocket Messaging', () => {
   let serverProcess: Deno.ChildProcess;
   let ws: WebSocket;
 
   beforeAll(async () => {
     // Start test server
-    serverProcess = new Deno.Command("deno", {
-      args: ["run", "--allow-all", "main.ts"],
+    serverProcess = new Deno.Command('deno', {
+      args: ['run', '--allow-all', 'main.ts'],
       env: {
-        MCP_TRANSPORT: "http",
-        HTTP_PORT: "3001",
+        MCP_TRANSPORT: 'http',
+        HTTP_PORT: '3001',
       },
     }).spawn();
 
@@ -302,9 +306,9 @@ describe("WebSocket Messaging", () => {
     serverProcess?.kill();
   });
 
-  it("should establish WebSocket connection", async () => {
+  it('should establish WebSocket connection', async () => {
     return new Promise((resolve, reject) => {
-      ws = new WebSocket("ws://localhost:3001/ws/console");
+      ws = new WebSocket('ws://localhost:3001/ws/console');
 
       ws.onopen = () => {
         resolve();
@@ -314,44 +318,44 @@ describe("WebSocket Messaging", () => {
         reject(error);
       };
 
-      setTimeout(() => reject(new Error("Connection timeout")), 5000);
+      setTimeout(() => reject(new Error('Connection timeout')), 5000);
     });
   });
 
-  it("should receive connection_established message", async () => {
+  it('should receive connection_established message', async () => {
     return new Promise((resolve, reject) => {
-      ws = new WebSocket("ws://localhost:3001/ws/console");
+      ws = new WebSocket('ws://localhost:3001/ws/console');
 
       ws.onmessage = (event) => {
         const message = JSON.parse(event.data);
-        
-        if (message.type === "connection_established") {
+
+        if (message.type === 'connection_established') {
           assertExists(message.payload.connectionId);
           assertExists(message.payload.timestamp);
-          assertEquals(message.payload.serverVersion, "1.0.0");
+          assertEquals(message.payload.serverVersion, '1.0.0');
           resolve();
         }
       };
 
       ws.onerror = (error) => reject(error);
-      setTimeout(() => reject(new Error("Message timeout")), 5000);
+      setTimeout(() => reject(new Error('Message timeout')), 5000);
     });
   });
 
-  it("should handle get_clients command", async () => {
+  it('should handle get_clients command', async () => {
     return new Promise((resolve, reject) => {
-      ws = new WebSocket("ws://localhost:3001/ws/console");
+      ws = new WebSocket('ws://localhost:3001/ws/console');
 
       ws.onopen = () => {
         ws.send(JSON.stringify({
-          type: "get_clients",
+          type: 'get_clients',
         }));
       };
 
       ws.onmessage = (event) => {
         const message = JSON.parse(event.data);
-        
-        if (message.type === "client_list") {
+
+        if (message.type === 'client_list') {
           assertExists(message.payload.clients);
           assertEquals(Array.isArray(message.payload.clients), true);
           resolve();
@@ -359,7 +363,7 @@ describe("WebSocket Messaging", () => {
       };
 
       ws.onerror = (error) => reject(error);
-      setTimeout(() => reject(new Error("Response timeout")), 5000);
+      setTimeout(() => reject(new Error('Response timeout')), 5000);
     });
   });
 });
@@ -370,35 +374,35 @@ describe("WebSocket Messaging", () => {
 ```typescript
 // tests/integration/mcp/toolCalls.test.ts
 
-import { assertEquals } from "@std/testing/asserts";
-import { describe, it } from "@std/testing/bdd";
-import { createMcpTestClient } from "../../utils/mockClients.ts";
+import { assertEquals } from '@std/testing/asserts';
+import { describe, it } from '@std/testing/bdd';
+import { createMcpTestClient } from '../../utils/mockClients.ts';
 
-describe("MCP Tool Calls", () => {
-  it("should execute echo tool successfully", async () => {
+describe('MCP Tool Calls', () => {
+  it('should execute echo tool successfully', async () => {
     const client = await createMcpTestClient();
 
     const response = await client.callTool({
-      name: "echo",
+      name: 'echo',
       arguments: {
-        message: "test message",
+        message: 'test message',
       },
     });
 
-    assertEquals(response.content[0].type, "text");
-    assertEquals(response.content[0].text, "test message");
+    assertEquals(response.content[0].type, 'text');
+    assertEquals(response.content[0].text, 'test message');
 
     await client.close();
   });
 
-  it("should handle tool errors gracefully", async () => {
+  it('should handle tool errors gracefully', async () => {
     const client = await createMcpTestClient();
 
     const response = await client.callTool({
-      name: "trigger_error",
+      name: 'trigger_error',
       arguments: {
-        errorType: "validation",
-        message: "Test error",
+        errorType: 'validation',
+        message: 'Test error',
       },
     });
 
@@ -407,15 +411,15 @@ describe("MCP Tool Calls", () => {
     await client.close();
   });
 
-  it("should handle unknown tools", async () => {
+  it('should handle unknown tools', async () => {
     const client = await createMcpTestClient();
 
     try {
       await client.callTool({
-        name: "nonexistent_tool",
+        name: 'nonexistent_tool',
         arguments: {},
       });
-      throw new Error("Should have thrown");
+      throw new Error('Should have thrown');
     } catch (error) {
       assertEquals(error.code, -32003); // ToolNotFound
     }
@@ -430,31 +434,31 @@ describe("MCP Tool Calls", () => {
 ```typescript
 // tests/integration/mcp/sampling.test.ts
 
-import { assertEquals, assertExists } from "@std/testing/asserts";
-import { describe, it } from "@std/testing/bdd";
-import { createMcpTestClient, MockSamplingClient } from "../../utils/mockClients.ts";
+import { assertEquals, assertExists } from '@std/testing/asserts';
+import { describe, it } from '@std/testing/bdd';
+import { createMcpTestClient, MockSamplingClient } from '../../utils/mockClients.ts';
 
-describe("Sampling Integration", () => {
-  it("should send sampling request to client", async () => {
+describe('Sampling Integration', () => {
+  it('should send sampling request to client', async () => {
     const mcpClient = new MockSamplingClient();
     const server = await createTestServer();
-    
+
     await mcpClient.connect(server);
 
     // Trigger sampling from console
-    const ws = new WebSocket("ws://localhost:3001/ws/console");
-    
+    const ws = new WebSocket('ws://localhost:3001/ws/console');
+
     return new Promise((resolve, reject) => {
       ws.onopen = () => {
         ws.send(JSON.stringify({
-          type: "request_sampling",
+          type: 'request_sampling',
           payload: {
             messages: [
               {
-                role: "user",
+                role: 'user',
                 content: {
-                  type: "text",
-                  text: "Test prompt",
+                  type: 'text',
+                  text: 'Test prompt',
                 },
               },
             ],
@@ -465,47 +469,50 @@ describe("Sampling Integration", () => {
 
       ws.onmessage = (event) => {
         const message = JSON.parse(event.data);
-        
-        if (message.type === "sampling_response") {
+
+        if (message.type === 'sampling_response') {
           assertExists(message.payload.content);
-          assertEquals(message.payload.content.type, "text");
+          assertEquals(message.payload.content.type, 'text');
           resolve();
         }
       };
 
-      setTimeout(() => reject(new Error("Timeout")), 5000);
+      setTimeout(() => reject(new Error('Timeout')), 5000);
     });
   });
 
-  it("should handle sampling errors", async () => {
+  it('should handle sampling errors', async () => {
     const mcpClient = new MockSamplingClient({ failSampling: true });
     const server = await createTestServer();
-    
+
     await mcpClient.connect(server);
 
     // Trigger sampling that will fail
-    const ws = new WebSocket("ws://localhost:3001/ws/console");
-    
+    const ws = new WebSocket('ws://localhost:3001/ws/console');
+
     return new Promise((resolve, reject) => {
       ws.onopen = () => {
         ws.send(JSON.stringify({
-          type: "request_sampling",
+          type: 'request_sampling',
           payload: {
-            messages: [{ role: "user", content: { type: "text", text: "test" } }],
+            messages: [{
+              role: 'user',
+              content: { type: 'text', text: 'test' },
+            }],
           },
         }));
       };
 
       ws.onmessage = (event) => {
         const message = JSON.parse(event.data);
-        
-        if (message.type === "sampling_error") {
+
+        if (message.type === 'sampling_error') {
           assertExists(message.payload.error);
           resolve();
         }
       };
 
-      setTimeout(() => reject(new Error("Timeout")), 5000);
+      setTimeout(() => reject(new Error('Timeout')), 5000);
     });
   });
 });
@@ -516,10 +523,10 @@ describe("Sampling Integration", () => {
 ```typescript
 // tests/e2e/fullFlow.test.ts
 
-import { assertEquals, assertExists } from "@std/testing/asserts";
-import { describe, it, beforeAll, afterAll } from "@std/testing/bdd";
+import { assertEquals, assertExists } from '@std/testing/asserts';
+import { afterAll, beforeAll, describe, it } from '@std/testing/bdd';
 
-describe("Full Inspector Flow", () => {
+describe('Full Inspector Flow', () => {
   let serverProcess: Deno.ChildProcess;
   let mcpClient: MockMcpClient;
   let ws: WebSocket;
@@ -543,38 +550,38 @@ describe("Full Inspector Flow", () => {
     serverProcess?.kill();
   });
 
-  it("should complete full inspection workflow", async () => {
+  it('should complete full inspection workflow', async () => {
     // 1. Console connects and sees client
     const clients = await getClientsFromConsole(ws);
     assertEquals(clients.length, 1);
-    assertEquals(clients[0].name, "Test Client");
+    assertEquals(clients[0].name, 'Test Client');
 
     // 2. MCP client calls tool
-    const toolResult = await mcpClient.callTool("echo", {
-      message: "test",
+    const toolResult = await mcpClient.callTool('echo', {
+      message: 'test',
     });
-    assertEquals(toolResult.content[0].text, "test");
+    assertEquals(toolResult.content[0].text, 'test');
 
     // 3. Console sees the tool call message
     const messages = await getMessagesFromConsole(ws);
     const toolCallMsg = messages.find((m) =>
-      m.type === "mcp_message" &&
-      m.payload.message.method === "tools/call"
+      m.type === 'mcp_message' &&
+      m.payload.message.method === 'tools/call'
     );
     assertExists(toolCallMsg);
 
     // 4. Console triggers notification
-    await triggerNotification(ws, "notifications/tools/list_changed");
+    await triggerNotification(ws, 'notifications/tools/list_changed');
 
     // 5. MCP client receives notification
     const notification = await mcpClient.waitForNotification();
-    assertEquals(notification.method, "notifications/tools/list_changed");
+    assertEquals(notification.method, 'notifications/tools/list_changed');
 
     // 6. Console requests sampling
     const samplingResponse = await requestSampling(ws, {
       messages: [{
-        role: "user",
-        content: { type: "text", text: "test" },
+        role: 'user',
+        content: { type: 'text', text: 'test' },
       }],
     });
     assertExists(samplingResponse.content);
@@ -596,13 +603,13 @@ export class MockBeyondMcpServer {
 
   async createMessage(request: unknown): Promise<unknown> {
     return {
-      content: { type: "text", text: "Mock response" },
+      content: { type: 'text', text: 'Mock response' },
     };
   }
 
   async elicitInput(request: unknown): Promise<unknown> {
     return {
-      action: "accept",
+      action: 'accept',
       content: { test: true },
     };
   }
@@ -633,19 +640,19 @@ export class MockMcpClient {
 // tests/utils/testHelpers.ts
 
 export function startTestServer(): Deno.ChildProcess {
-  return new Deno.Command("deno", {
-    args: ["run", "--allow-all", "main.ts"],
+  return new Deno.Command('deno', {
+    args: ['run', '--allow-all', 'main.ts'],
     env: {
-      MCP_TRANSPORT: "http",
-      HTTP_PORT: "3001",
-      LOG_LEVEL: "error",
+      MCP_TRANSPORT: 'http',
+      HTTP_PORT: '3001',
+      LOG_LEVEL: 'error',
     },
   }).spawn();
 }
 
 export async function waitForServer(
   port: number = 3001,
-  maxAttempts: number = 10
+  maxAttempts: number = 10,
 ): Promise<void> {
   for (let i = 0; i < maxAttempts; i++) {
     try {
@@ -656,17 +663,17 @@ export async function waitForServer(
     }
     await new Promise((resolve) => setTimeout(resolve, 500));
   }
-  throw new Error("Server failed to start");
+  throw new Error('Server failed to start');
 }
 
 export async function connectConsole(
-  port: number = 3001
+  port: number = 3001,
 ): Promise<WebSocket> {
   return new Promise((resolve, reject) => {
     const ws = new WebSocket(`ws://localhost:${port}/ws/console`);
     ws.onopen = () => resolve(ws);
     ws.onerror = reject;
-    setTimeout(() => reject(new Error("Connection timeout")), 5000);
+    setTimeout(() => reject(new Error('Connection timeout')), 5000);
   });
 }
 ```
@@ -706,24 +713,24 @@ on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
-    
+
     steps:
       - uses: actions/checkout@v3
-      
+
       - uses: denoland/setup-deno@v1
         with:
           deno-version: v2.x
-      
+
       - name: Run MCP Server tests
         run: |
           cd mcp-server
           deno test --allow-all --coverage=coverage tests/
-      
+
       - name: Check coverage
         run: |
           cd mcp-server
           deno coverage coverage --lcov > coverage.lcov
-      
+
       - name: Upload coverage
         uses: codecov/codecov-action@v3
         with:
@@ -737,15 +744,15 @@ jobs:
 ```typescript
 // tests/performance/load.test.ts
 
-import { assertEquals } from "@std/testing/asserts";
+import { assertEquals } from '@std/testing/asserts';
 
-Deno.test("should handle multiple concurrent connections", async () => {
+Deno.test('should handle multiple concurrent connections', async () => {
   const connections: WebSocket[] = [];
   const connectionCount = 50;
 
   // Create multiple connections
   for (let i = 0; i < connectionCount; i++) {
-    const ws = new WebSocket("ws://localhost:3001/ws/console");
+    const ws = new WebSocket('ws://localhost:3001/ws/console');
     connections.push(ws);
   }
 
@@ -755,8 +762,8 @@ Deno.test("should handle multiple concurrent connections", async () => {
       (ws) =>
         new Promise((resolve) => {
           ws.onopen = resolve;
-        })
-    )
+        }),
+    ),
   );
 
   assertEquals(connections.length, connectionCount);
@@ -768,6 +775,5 @@ Deno.test("should handle multiple concurrent connections", async () => {
 
 ---
 
-**Document Version**: 1.0
-**Last Updated**: 2025-10-22
-**Status**: Design Complete - Ready for Implementation
+**Document Version**: 1.0 **Last Updated**: 2025-10-22 **Status**: Design
+Complete - Ready for Implementation

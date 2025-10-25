@@ -2,7 +2,9 @@
 
 ## Overview
 
-The MCP Client Inspector provides a WebSocket endpoint at `/ws/console` for real-time communication with the Fresh UI console. This enables live monitoring of MCP protocol messages and interactive testing capabilities.
+The MCP Client Inspector provides a WebSocket endpoint at `/ws/console` for
+real-time communication with the Fresh UI console. This enables live monitoring
+of MCP protocol messages and interactive testing capabilities.
 
 ## Endpoint
 
@@ -58,9 +60,9 @@ All messages from server follow this structure:
 
 ```typescript
 interface ConsoleMessage {
-  type: string;           // Message type identifier
-  payload: unknown;       // Type-specific data
-  timestamp?: number;     // Unix timestamp (ms)
+  type: string; // Message type identifier
+  payload: unknown; // Type-specific data
+  timestamp?: number; // Unix timestamp (ms)
 }
 ```
 
@@ -70,8 +72,8 @@ All commands from console follow this structure:
 
 ```typescript
 interface ConsoleCommand {
-  type: string;           // Command type identifier
-  payload: unknown;       // Type-specific parameters
+  type: string; // Command type identifier
+  payload: unknown; // Type-specific parameters
 }
 ```
 
@@ -82,6 +84,7 @@ interface ConsoleCommand {
 Request list of connected MCP clients.
 
 **Request:**
+
 ```json
 {
   "type": "get_clients",
@@ -90,6 +93,7 @@ Request list of connected MCP clients.
 ```
 
 **Response:**
+
 ```json
 {
   "type": "client_list",
@@ -113,6 +117,7 @@ Request list of connected MCP clients.
 Request message history for a session.
 
 **Request:**
+
 ```json
 {
   "type": "get_message_history",
@@ -124,6 +129,7 @@ Request message history for a session.
 ```
 
 **Response:**
+
 ```json
 {
   "type": "message_history",
@@ -137,7 +143,7 @@ Request message history for a session.
         "message": {
           "jsonrpc": "2.0",
           "method": "tools/call",
-          "params": { /* ... */ }
+          "params": {/* ... */}
         }
       }
     ]
@@ -151,6 +157,7 @@ Request message history for a session.
 Send a notification to all connected MCP clients.
 
 **Request:**
+
 ```json
 {
   "type": "trigger_notification",
@@ -162,6 +169,7 @@ Send a notification to all connected MCP clients.
 ```
 
 **Response (Success):**
+
 ```json
 {
   "type": "notification_sent",
@@ -174,6 +182,7 @@ Send a notification to all connected MCP clients.
 ```
 
 **Response (Error):**
+
 ```json
 {
   "type": "notification_error",
@@ -189,6 +198,7 @@ Send a notification to all connected MCP clients.
 Request the MCP client to perform sampling (LLM completion).
 
 **Request:**
+
 ```json
 {
   "type": "request_sampling",
@@ -209,6 +219,7 @@ Request the MCP client to perform sampling (LLM completion).
 ```
 
 **Response (Success):**
+
 ```json
 {
   "type": "sampling_response",
@@ -226,6 +237,7 @@ Request the MCP client to perform sampling (LLM completion).
 ```
 
 **Response (Error):**
+
 ```json
 {
   "type": "sampling_error",
@@ -242,6 +254,7 @@ Request the MCP client to perform sampling (LLM completion).
 Request user input from the MCP client.
 
 **Request:**
+
 ```json
 {
   "type": "request_elicitation",
@@ -259,6 +272,7 @@ Request user input from the MCP client.
 ```
 
 **Response (Success):**
+
 ```json
 {
   "type": "elicitation_response",
@@ -273,6 +287,7 @@ Request user input from the MCP client.
 ```
 
 **Response (Declined):**
+
 ```json
 {
   "type": "elicitation_response",
@@ -284,6 +299,7 @@ Request user input from the MCP client.
 ```
 
 **Response (Error):**
+
 ```json
 {
   "type": "elicitation_error",
@@ -302,11 +318,12 @@ The server broadcasts certain messages to all connected console clients:
 ### Client List Updates
 
 Sent when clients connect or disconnect:
+
 ```json
 {
   "type": "client_list",
   "payload": {
-    "clients": [ /* ... */ ]
+    "clients": [/* ... */]
   },
   "timestamp": 1729584100000
 }
@@ -315,6 +332,7 @@ Sent when clients connect or disconnect:
 ### MCP Protocol Messages
 
 Broadcast all MCP protocol messages for monitoring:
+
 ```json
 {
   "type": "mcp_message",
@@ -323,7 +341,7 @@ Broadcast all MCP protocol messages for monitoring:
     "message": {
       "jsonrpc": "2.0",
       "method": "tools/call",
-      "params": { /* ... */ }
+      "params": {/* ... */}
     }
   },
   "timestamp": 1729584100000
@@ -363,6 +381,7 @@ Broadcast all MCP protocol messages for monitoring:
 ### Heartbeat (Future)
 
 Currently not implemented. Future versions may include:
+
 - Periodic ping/pong messages
 - Automatic reconnection on disconnect
 - Connection timeout handling
@@ -370,6 +389,7 @@ Currently not implemented. Future versions may include:
 ### Multiple Connections
 
 Multiple console clients can connect simultaneously:
+
 - Each receives its own `connectionId`
 - All receive broadcast messages
 - Commands are processed independently
@@ -413,7 +433,7 @@ ws.onopen = () => {
   // Request client list
   ws.send(JSON.stringify({
     type: 'get_clients',
-    payload: {}
+    payload: {},
   }));
 };
 

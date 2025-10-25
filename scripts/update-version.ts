@@ -1,19 +1,19 @@
 #!/usr/bin/env -S deno run --allow-read --allow-write
 /**
  * Update Version Script
- * 
+ *
  * Reads version from root deno.jsonc and generates shared/version.ts
  * This ensures version consistency across the entire codebase.
- * 
+ *
  * Usage:
  *   deno run --allow-read --allow-write scripts/update-version.ts
  *   deno task update-version
  */
 
-import { parse } from "jsr:@std/jsonc";
+import { parse } from 'jsr:@std/jsonc';
 
-const DENO_CONFIG_PATH = "./deno.jsonc";
-const VERSION_FILE_PATH = "./shared/version.ts";
+const DENO_CONFIG_PATH = './deno.jsonc';
+const VERSION_FILE_PATH = './shared/version.ts';
 
 interface DenoConfig {
   name?: string;
@@ -24,17 +24,17 @@ interface DenoConfig {
 async function main() {
   try {
     // Read and parse deno.jsonc
-    console.log("📖 Reading version from deno.jsonc...");
+    console.log('📖 Reading version from deno.jsonc...');
     const denoConfigText = await Deno.readTextFile(DENO_CONFIG_PATH);
     const denoConfig = parse(denoConfigText) as DenoConfig;
 
     if (!denoConfig.version) {
-      console.error("❌ Error: No version found in deno.jsonc");
+      console.error('❌ Error: No version found in deno.jsonc');
       Deno.exit(1);
     }
 
     const version = denoConfig.version;
-    const packageName = denoConfig.name || "@beyondbetter/mcp-client-inspector";
+    const packageName = denoConfig.name || '@beyondbetter/mcp-client-inspector';
 
     console.log(`✅ Found version: ${version}`);
 
@@ -96,12 +96,12 @@ export function parseVersion(): {
     console.log(`📝 Writing to ${VERSION_FILE_PATH}...`);
     await Deno.writeTextFile(VERSION_FILE_PATH, versionFileContent);
 
-    console.log("✅ Version file updated successfully!");
+    console.log('✅ Version file updated successfully!');
     console.log(`   Package: ${packageName}`);
     console.log(`   Version: ${version}`);
     console.log(`   File: ${VERSION_FILE_PATH}`);
   } catch (error) {
-    console.error("❌ Error updating version:", error);
+    console.error('❌ Error updating version:', error);
     Deno.exit(1);
   }
 }

@@ -5,27 +5,27 @@
  * Useful for testing numeric data handling and parameter validation.
  */
 
-import { z } from "zod";
+import { z } from 'zod';
 import type {
   InferZodSchema,
   ToolDependencies,
   ToolRegistration,
-} from "@beyondbetter/bb-mcp-server";
-import { toError } from "@beyondbetter/bb-mcp-server";
+} from '@beyondbetter/bb-mcp-server';
+import { toError } from '@beyondbetter/bb-mcp-server';
 
 // Input schema
 const calculateInputSchema = {
   operation: z.enum([
-    "add",
-    "subtract",
-    "multiply",
-    "divide",
-    "power",
-    "modulo",
+    'add',
+    'subtract',
+    'multiply',
+    'divide',
+    'power',
+    'modulo',
   ])
-    .describe("Arithmetic operation to perform"),
-  a: z.number().describe("First operand"),
-  b: z.number().describe("Second operand"),
+    .describe('Arithmetic operation to perform'),
+  a: z.number().describe('First operand'),
+  b: z.number().describe('Second operand'),
 } as const;
 
 export function getTools(dependencies: ToolDependencies): ToolRegistration[] {
@@ -33,37 +33,37 @@ export function getTools(dependencies: ToolDependencies): ToolRegistration[] {
 
   return [
     {
-      name: "calculate",
+      name: 'calculate',
       definition: {
-        title: "Calculate",
-        description: "Perform basic arithmetic calculations",
-        category: "Utility",
+        title: 'Calculate',
+        description: 'Perform basic arithmetic calculations',
+        category: 'Utility',
         inputSchema: calculateInputSchema,
       },
       // deno-lint-ignore require-await
       handler: async (args: InferZodSchema<typeof calculateInputSchema>) => {
         try {
-          logger.debug("Calculate tool called", { args });
+          logger.debug('Calculate tool called', { args });
 
           let result: number;
 
           switch (args.operation) {
-            case "add":
+            case 'add':
               result = args.a + args.b;
               break;
-            case "subtract":
+            case 'subtract':
               result = args.a - args.b;
               break;
-            case "multiply":
+            case 'multiply':
               result = args.a * args.b;
               break;
-            case "divide":
+            case 'divide':
               if (args.b === 0) {
                 return {
                   content: [
                     {
-                      type: "text",
-                      text: "Error: Division by zero",
+                      type: 'text',
+                      text: 'Error: Division by zero',
                     },
                   ],
                   isError: true,
@@ -71,18 +71,18 @@ export function getTools(dependencies: ToolDependencies): ToolRegistration[] {
               }
               result = args.a / args.b;
               break;
-            case "power":
+            case 'power':
               result = Math.pow(args.a, args.b);
               break;
-            case "modulo":
+            case 'modulo':
               result = args.a % args.b;
               break;
             default:
               return {
                 content: [
                   {
-                    type: "text",
-                    text: "Invalid operation",
+                    type: 'text',
+                    text: 'Invalid operation',
                   },
                 ],
                 isError: true,
@@ -92,7 +92,7 @@ export function getTools(dependencies: ToolDependencies): ToolRegistration[] {
           return {
             content: [
               {
-                type: "text",
+                type: 'text',
                 text: JSON.stringify(
                   {
                     operation: args.operation,
@@ -106,13 +106,13 @@ export function getTools(dependencies: ToolDependencies): ToolRegistration[] {
             ],
           };
         } catch (error) {
-          logger.error("Calculate tool failed:", toError(error));
+          logger.error('Calculate tool failed:', toError(error));
           return {
             content: [
               {
-                type: "text",
+                type: 'text',
                 text: `Calculation error: ${
-                  error instanceof Error ? error.message : "Unknown error"
+                  error instanceof Error ? error.message : 'Unknown error'
                 }`,
               },
             ],

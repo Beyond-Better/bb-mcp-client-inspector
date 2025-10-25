@@ -1,6 +1,7 @@
 # Publishing Guide
 
-This document explains how the MCP Client Inspector is published to JSR and how to create new releases.
+This document explains how the MCP Client Inspector is published to JSR and how
+to create new releases.
 
 ## Package Structure
 
@@ -12,14 +13,15 @@ The project is published as a single JSR package with multiple entry points:
   "name": "@beyondbetter/mcp-client-inspector",
   "version": "1.0.0",
   "exports": {
-    ".": "./main.ts",                    // Run both components
+    ".": "./main.ts", // Run both components
     "./mcp-server": "./mcp-server/main.ts", // Run MCP server only
-    "./fresh-ui": "./fresh-ui/main.ts"     // Run Fresh UI only
+    "./fresh-ui": "./fresh-ui/main.ts" // Run Fresh UI only
   }
 }
 ```
 
 This allows users to:
+
 - `deno run jsr:@beyondbetter/mcp-client-inspector` - Run both
 - `deno run jsr:@beyondbetter/mcp-client-inspector/mcp-server` - MCP server only
 - `deno run jsr:@beyondbetter/mcp-client-inspector/fresh-ui` - Fresh UI only
@@ -106,11 +108,13 @@ The project uses semantic versioning:
 ### Version Files
 
 Version is stored in:
+
 - `deno.jsonc` (root) - **Primary version**
 - `mcp-server/deno.jsonc` - Component version (should match)
 - `fresh-ui/deno.jsonc` - Component version (should match)
 
-**Best Practice**: Keep all three in sync, but the root `deno.jsonc` is the source of truth for JSR publishing.
+**Best Practice**: Keep all three in sync, but the root `deno.jsonc` is the
+source of truth for JSR publishing.
 
 ## Publishing Checklist
 
@@ -138,7 +142,8 @@ Before creating a release:
 
 **Cause**: Tests failing in CI environment.
 
-**Solution**: 
+**Solution**:
+
 1. Run tests locally to reproduce
 2. Fix failing tests
 3. Commit and push fix
@@ -148,7 +153,8 @@ Before creating a release:
 
 **Cause**: Typo in tag or manual version input.
 
-**Solution**: 
+**Solution**:
+
 1. Cannot delete JSR versions
 2. Publish a new version with correct number
 3. Update documentation to skip problematic version
@@ -158,6 +164,7 @@ Before creating a release:
 **Cause**: Tag format doesn't match `v*.*.*` pattern.
 
 **Solution**: Ensure tag starts with `v` followed by semantic version:
+
 - ✅ `v1.0.0`
 - ✅ `v1.0.0-beta.1`
 - ❌ `1.0.0` (missing `v` prefix)
@@ -186,7 +193,8 @@ The following files/directories are excluded from the published package:
 }
 ```
 
-This keeps the published package lean while including necessary examples and documentation.
+This keeps the published package lean while including necessary examples and
+documentation.
 
 ## Testing Before Publishing
 
@@ -237,10 +245,11 @@ For GitHub Actions to publish to JSR:
   ```yaml
   permissions:
     contents: read
-    id-token: write  # Required for JSR publishing
+    id-token: write # Required for JSR publishing
   ```
 
-No additional secrets or tokens required - JSR publishing uses GitHub's OIDC token.
+No additional secrets or tokens required - JSR publishing uses GitHub's OIDC
+token.
 
 ## References
 

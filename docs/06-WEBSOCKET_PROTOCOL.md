@@ -2,7 +2,9 @@
 
 ## Overview
 
-This document specifies the WebSocket protocol used for communication between the MCP Server and the Fresh UI console. The protocol enables real-time bidirectional communication for testing and monitoring MCP client behavior.
+This document specifies the WebSocket protocol used for communication between
+the MCP Server and the Fresh UI console. The protocol enables real-time
+bidirectional communication for testing and monitoring MCP client behavior.
 
 ## Connection Establishment
 
@@ -13,8 +15,10 @@ ws://localhost:3000/ws/console
 ```
 
 **Configuration**:
+
 - Port: Configured via `HTTP_PORT` environment variable (default: 3000)
-- Path: Configured via `CONSOLE_WS_PATH` environment variable (default: `/ws/console`)
+- Path: Configured via `CONSOLE_WS_PATH` environment variable (default:
+  `/ws/console`)
 - Protocol: WebSocket (RFC 6455)
 
 ### Connection Flow
@@ -48,6 +52,7 @@ Upon successful connection, the server sends:
 ```
 
 **Fields**:
+
 - `connectionId`: Unique identifier for this console connection
 - `timestamp`: Server timestamp (milliseconds since epoch)
 - `serverVersion`: MCP Server version string
@@ -60,21 +65,23 @@ All messages are JSON-encoded with this structure:
 
 ```typescript
 interface Message {
-  type: string;          // Message type identifier
-  payload: unknown;      // Type-specific payload
-  timestamp?: number;    // Optional timestamp
+  type: string; // Message type identifier
+  payload: unknown; // Type-specific payload
+  timestamp?: number; // Optional timestamp
 }
 ```
 
 ### Message Direction
 
 **Server → Console** (ConsoleMessage):
+
 - Connection status updates
 - MCP protocol messages
 - Client list updates
 - Response to commands
 
 **Console → Server** (ConsoleCommand):
+
 - Request actions (sampling, elicitation)
 - Trigger notifications
 - Query information
@@ -88,6 +95,7 @@ interface Message {
 **When**: Immediately after WebSocket connection
 
 **Payload**:
+
 ```json
 {
   "connectionId": "550e8400-e29b-41d4-a716-446655440000",
@@ -100,12 +108,14 @@ interface Message {
 
 **Type**: `client_list`
 
-**When**: 
+**When**:
+
 - After connection (initial list)
 - When clients connect/disconnect
 - In response to `get_clients` command
 
 **Payload**:
+
 ```json
 {
   "clients": [
@@ -123,6 +133,7 @@ interface Message {
 ```
 
 **Fields**:
+
 - `id`: Unique client identifier
 - `name`: Client name (from initialize)
 - `version`: Client version (optional)
@@ -138,6 +149,7 @@ interface Message {
 **When**: In response to `get_message_history` command
 
 **Payload**:
+
 ```json
 {
   "messages": [
@@ -165,6 +177,7 @@ interface Message {
 **When**: MCP protocol message exchanged with client
 
 **Payload**: The actual MCP JSON-RPC message
+
 ```json
 {
   "direction": "incoming",
@@ -190,6 +203,7 @@ interface Message {
 **When**: Tool execution lifecycle
 
 **Payload**:
+
 ```json
 {
   "toolName": "echo",
@@ -207,6 +221,7 @@ interface Message {
 **When**: Client responds to sampling request
 
 **Payload**:
+
 ```json
 {
   "content": {
@@ -225,6 +240,7 @@ interface Message {
 **When**: Sampling request fails
 
 **Payload**:
+
 ```json
 {
   "message": "Sampling request failed",
@@ -240,6 +256,7 @@ interface Message {
 **When**: Client responds to elicitation request
 
 **Payload**:
+
 ```json
 {
   "action": "accept",
@@ -251,6 +268,7 @@ interface Message {
 ```
 
 **Actions**:
+
 - `accept`: User provided input
 - `decline`: User declined to provide input
 - `cancel`: User cancelled the request
@@ -262,6 +280,7 @@ interface Message {
 **When**: Elicitation request fails
 
 **Payload**:
+
 ```json
 {
   "message": "Elicitation request failed",
@@ -277,6 +296,7 @@ interface Message {
 **When**: Notification successfully sent to clients
 
 **Payload**:
+
 ```json
 {
   "method": "notifications/tools/list_changed",
@@ -293,6 +313,7 @@ interface Message {
 **When**: Error occurs in command processing
 
 **Payload**:
+
 ```json
 {
   "message": "Failed to process command",
@@ -311,6 +332,7 @@ interface Message {
 **Purpose**: Send notification to connected MCP clients
 
 **Payload**:
+
 ```json
 {
   "method": "notifications/tools/list_changed",
@@ -319,6 +341,7 @@ interface Message {
 ```
 
 **Supported Methods**:
+
 - `notifications/tools/list_changed`
 - `notifications/resources/list_changed`
 - `notifications/prompts/list_changed`
@@ -332,6 +355,7 @@ interface Message {
 **Purpose**: Request LLM completion from client
 
 **Payload**:
+
 ```json
 {
   "messages": [
@@ -362,6 +386,7 @@ interface Message {
 **Purpose**: Request user input from client
 
 **Payload**:
+
 ```json
 {
   "message": "Please provide your contact information",
@@ -401,6 +426,7 @@ interface Message {
 **Purpose**: Request message history for a session
 
 **Payload**:
+
 ```json
 {
   "sessionId": "session-uuid",
@@ -415,6 +441,7 @@ interface Message {
 ### Example 1: Complete Sampling Flow
 
 **1. Console sends request:**
+
 ```json
 {
   "type": "request_sampling",
@@ -434,6 +461,7 @@ interface Message {
 ```
 
 **2. Server broadcasts MCP message:**
+
 ```json
 {
   "type": "mcp_message",
@@ -449,6 +477,7 @@ interface Message {
 ```
 
 **3. Server broadcasts client response:**
+
 ```json
 {
   "type": "sampling_response",
@@ -466,6 +495,7 @@ interface Message {
 ### Example 2: Tool Call with Message Tracking
 
 **1. Client calls tool (MCP message):**
+
 ```json
 {
   "type": "mcp_message",
@@ -488,6 +518,7 @@ interface Message {
 ```
 
 **2. Server executes and responds (MCP message):**
+
 ```json
 {
   "type": "mcp_message",
@@ -513,6 +544,7 @@ interface Message {
 ### Example 3: Notification Trigger
 
 **1. Console triggers notification:**
+
 ```json
 {
   "type": "trigger_notification",
@@ -524,6 +556,7 @@ interface Message {
 ```
 
 **2. Server confirms:**
+
 ```json
 {
   "type": "notification_sent",
@@ -545,6 +578,7 @@ interface Message {
 **Interval**: 30 seconds (configurable)
 
 **Implementation**:
+
 ```typescript
 // Server sends ping
 webSocket.ping();
@@ -562,6 +596,7 @@ webSocket.ping();
 4. **Reset on success**: Attempts reset to 0 on successful connection
 
 **Flow**:
+
 ```
 Disconnect → Wait (1s) → Retry
   ↓
@@ -575,16 +610,19 @@ Fail → Wait (4s) → Retry
 ### Error Handling
 
 **Connection Errors**:
+
 - Network unavailable
 - Server unreachable
 - Authentication failed (future)
 
 **Protocol Errors**:
+
 - Invalid JSON
 - Unknown message type
 - Invalid payload
 
 **Recovery**:
+
 - Display error to user
 - Attempt reconnection
 - Clear error on success
@@ -594,17 +632,20 @@ Fail → Wait (4s) → Retry
 ### Current Implementation (v1.0)
 
 **No authentication**: WebSocket endpoint is publicly accessible
+
 - Suitable for local development
 - **NOT suitable for production**
 
 ### Future Enhancement (Roadmap)
 
 **Token-based authentication**:
+
 ```
 ws://localhost:3000/ws/console?token=<auth-token>
 ```
 
 **Server validation**:
+
 ```typescript
 const url = new URL(request.url);
 const token = url.searchParams.get('token');
@@ -631,11 +672,13 @@ if (AUTH_ENABLED && !validateToken(token)) {
 ### Scalability
 
 **Current architecture**:
+
 - Single server instance
 - In-memory connection map
 - Suitable for: Development, testing, small teams
 
 **Future considerations**:
+
 - Connection pooling
 - Message queue (Redis)
 - Horizontal scaling
@@ -645,6 +688,7 @@ if (AUTH_ENABLED && !validateToken(token)) {
 ### Manual Testing
 
 **Using wscat**:
+
 ```bash
 # Connect
 wscat -c ws://localhost:3000/ws/console
@@ -665,7 +709,7 @@ const ws = new WebSocket('ws://localhost:3000/ws/console');
 ws.onopen = () => {
   // Send test command
   ws.send(JSON.stringify({
-    type: 'get_clients'
+    type: 'get_clients',
   }));
 };
 
@@ -680,16 +724,19 @@ ws.onmessage = (event) => {
 ### Common Issues
 
 **1. Connection refused**
+
 - Check server is running
 - Verify port configuration
 - Check firewall rules
 
 **2. Messages not received**
+
 - Check WebSocket connection status
 - Verify message format
 - Check browser console for errors
 
 **3. Reconnection loops**
+
 - Server may be rejecting connections
 - Check server logs for errors
 - Verify WebSocket upgrade handling
@@ -697,11 +744,13 @@ ws.onmessage = (event) => {
 ### Debug Logging
 
 **Server side**:
+
 ```bash
 LOG_LEVEL=debug deno task dev
 ```
 
 **Client side**:
+
 ```typescript
 // Enable debug logging
 const debug = true;
@@ -760,6 +809,5 @@ Console               Server              MCP Client
 
 ---
 
-**Document Version**: 1.0
-**Last Updated**: 2025-10-22
-**Status**: Design Complete - Ready for Implementation
+**Document Version**: 1.0 **Last Updated**: 2025-10-22 **Status**: Design
+Complete - Ready for Implementation

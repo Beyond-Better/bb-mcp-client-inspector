@@ -9,6 +9,17 @@
     "coverage:html": "deno coverage coverage/ --html --exclude='.*bb-mcp-server/.*'",
     "coverage:lcov": "deno coverage coverage/ --lcov --exclude='.*bb-mcp-server/.*' > coverage.lcov"
   },
+  "fmt": {
+    "useTabs": false,
+    "lineWidth": 100,
+    "indentWidth": 2,
+    "semiColons": true,
+    "singleQuote": true,
+    "proseWrap": "preserve",
+    "exclude": [
+      "coverage/"
+    ]
+  },
   "exclude": [
     "coverage/",
     "../../bb-mcp-server/"

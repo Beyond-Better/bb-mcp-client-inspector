@@ -2,11 +2,16 @@
 
 ## Project Purpose
 
-The MCP Server Client Inspector is a comprehensive testing platform for validating MCP (Model Context Protocol) client implementations. It provides an interactive web console for testing client behavior across sampling, elicitation, and notification handling mechanisms.
+The MCP Server Client Inspector is a comprehensive testing platform for
+validating MCP (Model Context Protocol) client implementations. It provides an
+interactive web console for testing client behavior across sampling,
+elicitation, and notification handling mechanisms.
 
 ## Problem Statement
 
-While the MCP Inspector exists as an MCP client for testing servers, there is no equivalent tool for testing MCP clients. Developers building MCP clients need a reliable way to:
+While the MCP Inspector exists as an MCP client for testing servers, there is no
+equivalent tool for testing MCP clients. Developers building MCP clients need a
+reliable way to:
 
 - Test sampling request handling (LLM completion requests)
 - Validate elicitation flows (user input requests)
@@ -37,7 +42,9 @@ A dual-server architecture providing:
 ### Version 1.0 (Initial Release)
 
 #### MCP Server
-- ✅ Basic inspector tools (echo, convert_date, calculate, delay_response, random_data, trigger_error)
+
+- ✅ Basic inspector tools (echo, convert_date, calculate, delay_response,
+  random_data, trigger_error)
 - ✅ WebSocket endpoint for console integration
 - ✅ Message tracking and broadcasting
 - ✅ Session management with Deno KV
@@ -45,6 +52,7 @@ A dual-server architecture providing:
 - ✅ Multi-client support (HTTP mode)
 
 #### Fresh UI Console
+
 - ✅ Connection status monitoring
 - ✅ Client selector (for multi-client scenarios)
 - ✅ Sampling request form (message, model, temperature, max_tokens)
@@ -72,6 +80,7 @@ A dual-server architecture providing:
 ## Technology Stack
 
 ### MCP Server
+
 - **Runtime**: Deno 2.5+
 - **Framework**: bb-mcp-server library (AppServer pattern)
 - **MCP SDK**: @modelcontextprotocol/sdk v1.18.2
@@ -80,6 +89,7 @@ A dual-server architecture providing:
 - **Language**: TypeScript
 
 ### Fresh UI Server
+
 - **Framework**: Deno Fresh (latest stable)
 - **Runtime**: Deno 2.5+
 - **UI Components**: Fresh Islands (Preact)
@@ -90,6 +100,7 @@ A dual-server architecture providing:
 ## Architecture Highlights
 
 ### Separation of Concerns
+
 ```
 ┌─────────────────────────────────────┐
 │  MCP Server (Deno)                  │
@@ -136,11 +147,13 @@ A dual-server architecture providing:
 ## Target Users
 
 ### Primary
+
 - **MCP Client Developers**: Testing client implementations
 - **Integration Developers**: Validating MCP integrations
 - **QA Engineers**: Systematic client testing
 
 ### Secondary
+
 - **MCP Learning**: Understanding protocol mechanics
 - **Debugging**: Troubleshooting client issues
 - **Demo/Education**: Teaching MCP concepts
@@ -148,6 +161,7 @@ A dual-server architecture providing:
 ## Success Metrics
 
 ### Functionality
+
 - ✅ Successfully tests sampling requests and responses
 - ✅ Successfully tests elicitation flows (accept/decline/cancel)
 - ✅ Successfully triggers and verifies notifications
@@ -155,12 +169,14 @@ A dual-server architecture providing:
 - ✅ Handles multiple connected clients (HTTP mode)
 
 ### Usability
+
 - ✅ Simple setup (< 5 minutes from clone to running)
 - ✅ Intuitive UI (minimal learning curve)
 - ✅ Clear error messages and feedback
 - ✅ Responsive real-time updates
 
 ### Quality
+
 - ✅ Comprehensive test coverage (>80%)
 - ✅ Clear documentation for LLM consumption
 - ✅ Example test scenarios included
@@ -203,24 +219,28 @@ bb-mcp-server-client-inspector/
 ## Development Approach
 
 ### Phase 1: Foundation (Week 1)
+
 - MCP server basic setup with bb-mcp-server
 - Inspector tools implementation
 - WebSocket endpoint for console
 - Fresh UI basic setup
 
 ### Phase 2: Core Features (Week 2)
+
 - Sampling request builder and tester
 - Elicitation request builder and tester
 - Notification triggers
 - Message viewer
 
 ### Phase 3: Multi-Client & Polish (Week 3)
+
 - Client selector implementation
 - Connection status monitoring
 - Response inspector enhancements
 - Testing and documentation
 
 ### Phase 4: Release Preparation (Week 4)
+
 - Comprehensive testing
 - Documentation completion
 - Example scenarios
@@ -244,6 +264,7 @@ Each document is designed for LLM consumption in implementation conversations.
 ## Quick Start (For Implementers)
 
 ### Prerequisites
+
 ```bash
 # Deno 2.5+
 deno --version
@@ -253,6 +274,7 @@ deno info jsr:@beyondbetter/bb-mcp-server
 ```
 
 ### Development Setup
+
 ```bash
 # Terminal 1: MCP Server
 cd mcp-server
@@ -265,6 +287,7 @@ deno task dev
 ```
 
 ### Testing
+
 ```bash
 # MCP Server tests
 cd mcp-server
@@ -278,17 +301,21 @@ deno task test
 ## Open Source Release
 
 ### License
+
 MIT License (recommended for maximum adoption)
 
 ### Repository
+
 GitHub: `beyond-better/bb-mcp-server-client-inspector`
 
 ### Documentation for Users
+
 - README.md - User-facing setup and usage
 - CONTRIBUTING.md - Contribution guidelines
 - Examples and tutorials
 
 ### Publication
+
 - JSR package for easy distribution
 - GitHub releases with changelogs
 - Documentation site (optional, later)
@@ -312,6 +339,5 @@ For implementation:
 
 ---
 
-**Document Version**: 1.0
-**Last Updated**: 2025-10-22
-**Status**: Design Complete - Ready for Implementation
+**Document Version**: 1.0 **Last Updated**: 2025-10-22 **Status**: Design
+Complete - Ready for Implementation

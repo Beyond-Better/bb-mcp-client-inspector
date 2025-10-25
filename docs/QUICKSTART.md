@@ -38,6 +38,7 @@ MCP_TRANSPORT=http deno task dev
 ```
 
 Server will be available at:
+
 - MCP endpoint: `http://localhost:3000/mcp`
 - WebSocket console: `ws://localhost:3000/ws/console` (Phase 2)
 
@@ -57,6 +58,7 @@ This opens a web interface to test the server.
 Once connected, try these tools:
 
 #### 1. Echo Tool
+
 ```json
 {
   "name": "echo",
@@ -68,6 +70,7 @@ Once connected, try these tools:
 ```
 
 #### 2. Calculate Tool
+
 ```json
 {
   "name": "calculate",
@@ -80,6 +83,7 @@ Once connected, try these tools:
 ```
 
 #### 3. Convert Date Tool
+
 ```json
 {
   "name": "convert_date",
@@ -92,6 +96,7 @@ Once connected, try these tools:
 ```
 
 #### 4. Delay Response Tool
+
 ```json
 {
   "name": "delay_response",
@@ -103,6 +108,7 @@ Once connected, try these tools:
 ```
 
 #### 5. Random Data Tool
+
 ```json
 {
   "name": "random_data",
@@ -115,6 +121,7 @@ Once connected, try these tools:
 ```
 
 #### 6. Trigger Error Tool
+
 ```json
 {
   "name": "trigger_error",
@@ -173,7 +180,8 @@ STORAGE_DENO_KV_PATH=./data/inspector.db
 
 1. **Connect your MCP client** to test its implementation
 2. **Review message history** using the console (Phase 2)
-3. **Add custom tools** by following patterns in `src/plugins/inspector.plugin/tools/`
+3. **Add custom tools** by following patterns in
+   `src/plugins/inspector.plugin/tools/`
 4. **Explore the API** using MCP Inspector or your own client
 
 ## Support

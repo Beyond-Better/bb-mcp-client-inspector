@@ -2,9 +2,10 @@
  * useWebSocket Hook Tests
  */
 
-import { assertEquals, assertExists } from "@std/assert";
-import { describe, it, beforeEach, afterEach } from "@std/testing/bdd";
+import { assertEquals, assertExists } from '@std/assert';
+import { afterEach, beforeEach, describe, it } from '@std/testing/bdd';
 import {
+  clearMessages,
   closeWebSocket,
   initWebSocket,
   sendCommand,
@@ -12,12 +13,11 @@ import {
   wsConnectionId,
   wsError,
   wsMessages,
-  clearMessages,
-} from "../../../../fresh-ui/hooks/useWebSocket.ts";
-import { delay } from "../../../utils/test-helpers.ts";
-import type { ConsoleMessage } from "@shared/types/index.ts";
+} from '../../../../fresh-ui/hooks/useWebSocket.ts';
+import { delay } from '../../../utils/test-helpers.ts';
+import type { ConsoleMessage } from '@shared/types/index.ts';
 
-describe("useWebSocket Hook", () => {
+describe('useWebSocket Hook', () => {
   // Clean up after each test
   afterEach(() => {
     closeWebSocket();
@@ -26,8 +26,8 @@ describe("useWebSocket Hook", () => {
     wsConnectionId.value = null;
   });
 
-  describe("initialization", () => {
-    it("should have initial signal values", () => {
+  describe('initialization', () => {
+    it('should have initial signal values', () => {
       assertEquals(wsConnected.value, false);
       assertEquals(wsMessages.value.length, 0);
       assertEquals(wsError.value, null);
@@ -35,17 +35,17 @@ describe("useWebSocket Hook", () => {
     });
   });
 
-  describe("clearMessages", () => {
-    it("should clear message history", () => {
+  describe('clearMessages', () => {
+    it('should clear message history', () => {
       // Add some messages
       wsMessages.value = [
         {
-          type: "connection_established",
-          payload: { connectionId: "test", serverVersion: "1.0.0" },
+          type: 'connection_established',
+          payload: { connectionId: 'test', serverVersion: '1.0.0' },
           timestamp: Date.now(),
         },
         {
-          type: "client_list",
+          type: 'client_list',
           payload: { clients: [] },
           timestamp: Date.now(),
         },
@@ -59,24 +59,24 @@ describe("useWebSocket Hook", () => {
     });
   });
 
-  describe("sendCommand", () => {
-    it("should handle sending when not connected", () => {
+  describe('sendCommand', () => {
+    it('should handle sending when not connected', () => {
       // Should not throw when WebSocket is not connected
       sendCommand({
-        type: "get_clients",
+        type: 'get_clients',
       });
 
       // Error should be set
-      assertEquals(wsError.value, "Not connected to server");
+      assertEquals(wsError.value, 'Not connected to server');
     });
   });
 
-  describe("signal reactivity", () => {
-    it("should update wsMessages signal when new messages arrive", () => {
+  describe('signal reactivity', () => {
+    it('should update wsMessages signal when new messages arrive', () => {
       const initialLength = wsMessages.value.length;
 
       const newMessage: ConsoleMessage = {
-        type: "notification_sent",
+        type: 'notification_sent',
         payload: { test: true },
         timestamp: Date.now(),
       };
@@ -84,18 +84,21 @@ describe("useWebSocket Hook", () => {
       wsMessages.value = [...wsMessages.value, newMessage];
 
       assertEquals(wsMessages.value.length, initialLength + 1);
-      assertEquals(wsMessages.value[wsMessages.value.length - 1].type, "notification_sent");
+      assertEquals(
+        wsMessages.value[wsMessages.value.length - 1].type,
+        'notification_sent',
+      );
     });
 
-    it("should maintain message order", () => {
+    it('should maintain message order', () => {
       const message1: ConsoleMessage = {
-        type: "notification_sent",
+        type: 'notification_sent',
         payload: { id: 1 },
         timestamp: Date.now(),
       };
 
       const message2: ConsoleMessage = {
-        type: "notification_sent",
+        type: 'notification_sent',
         payload: { id: 2 },
         timestamp: Date.now() + 1,
       };
@@ -107,8 +110,8 @@ describe("useWebSocket Hook", () => {
     });
   });
 
-  describe("connection state", () => {
-    it("should track connected state", () => {
+  describe('connection state', () => {
+    it('should track connected state', () => {
       assertEquals(wsConnected.value, false);
 
       // Simulate connection
@@ -120,29 +123,29 @@ describe("useWebSocket Hook", () => {
       assertEquals(wsConnected.value, false);
     });
 
-    it("should track connection ID", () => {
+    it('should track connection ID', () => {
       assertEquals(wsConnectionId.value, null);
 
-      const connectionId = "test-conn-123";
+      const connectionId = 'test-conn-123';
       wsConnectionId.value = connectionId as any;
 
       assertEquals(wsConnectionId.value, connectionId);
     });
   });
 
-  describe("error handling", () => {
-    it("should track error state", () => {
+  describe('error handling', () => {
+    it('should track error state', () => {
       assertEquals(wsError.value, null);
 
-      const errorMessage = "Connection failed";
+      const errorMessage = 'Connection failed';
       wsError.value = errorMessage;
 
       assertEquals(wsError.value, errorMessage);
     });
 
-    it("should clear error on successful connection", () => {
-      wsError.value = "Previous error";
-      assertEquals(wsError.value, "Previous error");
+    it('should clear error on successful connection', () => {
+      wsError.value = 'Previous error';
+      assertEquals(wsError.value, 'Previous error');
 
       // Simulate successful connection
       wsError.value = null;
@@ -153,13 +156,13 @@ describe("useWebSocket Hook", () => {
     });
   });
 
-  describe("message validation", () => {
-    it("should validate console message format", () => {
+  describe('message validation', () => {
+    it('should validate console message format', () => {
       const validMessage: ConsoleMessage = {
-        type: "connection_established",
+        type: 'connection_established',
         payload: {
-          connectionId: "test-123",
-          serverVersion: "1.0.0",
+          connectionId: 'test-123',
+          serverVersion: '1.0.0',
         },
         timestamp: Date.now(),
       };
@@ -168,14 +171,14 @@ describe("useWebSocket Hook", () => {
       assertExists(validMessage.payload);
     });
 
-    it("should handle different message types", () => {
+    it('should handle different message types', () => {
       const messageTypes = [
-        "connection_established",
-        "client_list",
-        "notification_sent",
-        "sampling_response",
-        "elicitation_response",
-        "error",
+        'connection_established',
+        'client_list',
+        'notification_sent',
+        'sampling_response',
+        'elicitation_response',
+        'error',
       ] as const;
 
       for (const type of messageTypes) {
@@ -186,16 +189,16 @@ describe("useWebSocket Hook", () => {
         };
 
         assertExists(message.type);
-        assertEquals(typeof message.type, "string");
+        assertEquals(typeof message.type, 'string');
       }
     });
   });
 
-  describe("module-level state", () => {
-    it("should share state across imports", () => {
+  describe('module-level state', () => {
+    it('should share state across imports', () => {
       // Module-level signals are singletons
       wsMessages.value = [{
-        type: "connection_established",
+        type: 'connection_established',
         payload: {},
         timestamp: Date.now(),
       }];
@@ -208,11 +211,11 @@ describe("useWebSocket Hook", () => {
     });
   });
 
-  describe("closeWebSocket", () => {
-    it("should reset connection state", () => {
+  describe('closeWebSocket', () => {
+    it('should reset connection state', () => {
       // Set up some state
       wsConnected.value = true;
-      wsConnectionId.value = "test-123" as any;
+      wsConnectionId.value = 'test-123' as any;
 
       // Close connection
       closeWebSocket();
@@ -221,7 +224,7 @@ describe("useWebSocket Hook", () => {
       assertEquals(wsConnected.value, false);
     });
 
-    it("should be safe to call multiple times", () => {
+    it('should be safe to call multiple times', () => {
       closeWebSocket();
       closeWebSocket();
       closeWebSocket();

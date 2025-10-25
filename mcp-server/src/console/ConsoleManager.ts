@@ -5,9 +5,9 @@
  * Handles real-time message broadcasting and command processing.
  */
 
-import type { BeyondMcpServer, Logger } from "@beyondbetter/bb-mcp-server";
-import type { MessageTracker } from "./MessageTracker.ts";
-import { VERSION } from "@shared/version.ts";
+import type { BeyondMcpServer, Logger } from '@beyondbetter/bb-mcp-server';
+import type { MessageTracker } from './MessageTracker.ts';
+import { VERSION } from '@shared/version.ts';
 import type {
   //ConsoleCommand,
   ConsoleMessage,
@@ -15,9 +15,9 @@ import type {
   NotificationPayload,
   SamplingPayload,
   //SessionId,
-} from "@shared/types/index.ts";
-import { formatZodError, validateConsoleCommand } from "@shared/types/index.ts";
-import { errorMessage, toError } from "@shared/types/index.ts";
+} from '@shared/types/index.ts';
+import { formatZodError, validateConsoleCommand } from '@shared/types/index.ts';
+import { errorMessage, toError } from '@shared/types/index.ts';
 
 export class ConsoleManager {
   private wsConnections: Map<string, WebSocket>;
@@ -33,7 +33,7 @@ export class ConsoleManager {
     this.logger = logger;
     this.wsConnections = new Map();
 
-    this.logger.info("ConsoleManager: initialized");
+    this.logger.info('ConsoleManager: initialized');
   }
 
   /**
@@ -45,9 +45,9 @@ export class ConsoleManager {
     dependencies: { beyondMcpServer: BeyondMcpServer },
   ): Promise<Response> {
     // Check if this is a WebSocket upgrade request
-    const upgrade = request.headers.get("upgrade");
-    if (upgrade !== "websocket") {
-      return new Response("Expected WebSocket upgrade", { status: 426 });
+    const upgrade = request.headers.get('upgrade');
+    if (upgrade !== 'websocket') {
+      return new Response('Expected WebSocket upgrade', { status: 426 });
     }
 
     try {
@@ -80,10 +80,10 @@ export class ConsoleManager {
       return response;
     } catch (error) {
       this.logger.error(
-        "ConsoleManager: Failed to upgrade WebSocket:",
+        'ConsoleManager: Failed to upgrade WebSocket:',
         toError(error),
       );
-      return new Response("WebSocket upgrade failed", { status: 500 });
+      return new Response('WebSocket upgrade failed', { status: 500 });
     }
   }
 
@@ -98,7 +98,7 @@ export class ConsoleManager {
 
     // Send welcome message
     this.sendToClient(connectionId, {
-      type: "connection_established",
+      type: 'connection_established',
       payload: {
         connectionId,
         serverVersion: VERSION,
@@ -140,9 +140,9 @@ export class ConsoleManager {
           formatZodError(validation.error),
         );
         this.sendToClient(connectionId, {
-          type: "error",
+          type: 'error',
           payload: {
-            message: "Invalid command format",
+            message: 'Invalid command format',
             details: formatZodError(validation.error),
           },
           timestamp: Date.now(),
@@ -157,32 +157,32 @@ export class ConsoleManager {
       );
 
       switch (command.type) {
-        case "trigger_notification":
+        case 'trigger_notification':
           await this.triggerNotification(
             command.payload as NotificationPayload,
             beyondMcpServer,
           );
           break;
 
-        case "request_sampling":
+        case 'request_sampling':
           await this.requestSampling(
             command.payload as SamplingPayload,
             beyondMcpServer,
           );
           break;
 
-        case "request_elicitation":
+        case 'request_elicitation':
           await this.requestElicitation(
             command.payload as ElicitationPayload,
             beyondMcpServer,
           );
           break;
 
-        case "get_clients":
+        case 'get_clients':
           await this.sendClientList(connectionId, beyondMcpServer);
           break;
 
-        case "get_message_history":
+        case 'get_message_history':
           await this.sendMessageHistory(connectionId, command.payload);
           break;
 
@@ -191,7 +191,7 @@ export class ConsoleManager {
             `ConsoleManager: Unknown command type: ${command.type}`,
           );
           this.sendToClient(connectionId, {
-            type: "error",
+            type: 'error',
             payload: {
               message: `Unknown command type: ${command.type}`,
             },
@@ -200,13 +200,13 @@ export class ConsoleManager {
       }
     } catch (error) {
       this.logger.error(
-        "ConsoleManager: Error handling console message:",
+        'ConsoleManager: Error handling console message:',
         toError(error),
       );
       this.sendToClient(connectionId, {
-        type: "error",
+        type: 'error',
         payload: {
-          message: "Failed to process command",
+          message: 'Failed to process command',
           error: errorMessage(error),
         },
         timestamp: Date.now(),
@@ -223,7 +223,7 @@ export class ConsoleManager {
     beyondMcpServer: BeyondMcpServer,
   ): Promise<void> {
     try {
-      this.logger.info("ConsoleManager: Triggering notification", {
+      this.logger.info('ConsoleManager: Triggering notification', {
         level: payload.level,
         logger: payload.logger,
       });
@@ -239,7 +239,7 @@ export class ConsoleManager {
       );
 
       this.broadcastMessage({
-        type: "notification_sent",
+        type: 'notification_sent',
         payload: {
           level: payload.level,
           logger: payload.logger,
@@ -249,13 +249,13 @@ export class ConsoleManager {
       });
     } catch (error) {
       this.logger.error(
-        "ConsoleManager: Error triggering notification:",
+        'ConsoleManager: Error triggering notification:',
         toError(error),
       );
       this.broadcastMessage({
-        type: "notification_error",
+        type: 'notification_error',
         payload: {
-          message: "Failed to send notification",
+          message: 'Failed to send notification',
           error: errorMessage(error),
         },
         timestamp: Date.now(),
@@ -272,18 +272,18 @@ export class ConsoleManager {
     beyondMcpServer: BeyondMcpServer,
   ): Promise<void> {
     try {
-      this.logger.info("ConsoleManager: Requesting sampling from client", {
+      this.logger.info('ConsoleManager: Requesting sampling from client', {
         sessionId: payload.sessionId,
       });
 
       // Convert to library's CreateMessageRequest format
       const response = await beyondMcpServer.createMessage({
-        model: payload.modelPreferences?.hints?.[0]?.name || "default",
+        model: payload.modelPreferences?.hints?.[0]?.name || 'default',
         messages: payload.messages.map((msg) => ({
           role: msg.role,
           content: {
-            type: "text" as const,
-            text: msg.content.type === "text" ? msg.content.text : "",
+            type: 'text' as const,
+            text: msg.content.type === 'text' ? msg.content.text : '',
           },
         })),
         maxTokens: payload.maxTokens,
@@ -292,19 +292,19 @@ export class ConsoleManager {
       }, payload.sessionId); // Pass sessionId for client targeting
 
       this.broadcastMessage({
-        type: "sampling_response",
+        type: 'sampling_response',
         payload: response,
         timestamp: Date.now(),
       });
     } catch (error) {
       this.logger.error(
-        "ConsoleManager: Error requesting sampling:",
+        'ConsoleManager: Error requesting sampling:',
         toError(error),
       );
       this.broadcastMessage({
-        type: "sampling_error",
+        type: 'sampling_error',
         payload: {
-          message: "Sampling request failed",
+          message: 'Sampling request failed',
           error: errorMessage(error),
         },
         timestamp: Date.now(),
@@ -320,10 +320,10 @@ export class ConsoleManager {
     beyondMcpServer: BeyondMcpServer,
   ): Promise<void> {
     try {
-      this.logger.info("ConsoleManager: Requesting elicitation from client", {
+      this.logger.info('ConsoleManager: Requesting elicitation from client', {
         sessionId: payload.sessionId,
       });
-      this.logger.debug("ConsoleManager: Elicitation request payload:", {
+      this.logger.debug('ConsoleManager: Elicitation request payload:', {
         message: payload.message,
         requestedSchema: payload.requestedSchema,
         sessionId: payload.sessionId,
@@ -334,20 +334,20 @@ export class ConsoleManager {
         requestedSchema: payload.requestedSchema,
       }, payload.sessionId);
 
-      this.logger.debug("ConsoleManager: Elicitation response received:", {
+      this.logger.debug('ConsoleManager: Elicitation response received:', {
         response: JSON.stringify(response, null, 2),
         responseType: typeof response,
         responseKeys: response ? Object.keys(response) : [],
       }); // Pass sessionId for client targeting
 
       this.broadcastMessage({
-        type: "elicitation_response",
+        type: 'elicitation_response',
         payload: response,
         timestamp: Date.now(),
       });
     } catch (error) {
       this.logger.error(
-        "ConsoleManager: Error requesting elicitation:",
+        'ConsoleManager: Error requesting elicitation:',
         toError(error),
         {
           errorMessage: errorMessage(error),
@@ -360,9 +360,9 @@ export class ConsoleManager {
         },
       );
       this.broadcastMessage({
-        type: "elicitation_error",
+        type: 'elicitation_error',
         payload: {
-          message: "Elicitation request failed",
+          message: 'Elicitation request failed',
           error: errorMessage(error),
         },
         timestamp: Date.now(),
@@ -400,19 +400,19 @@ export class ConsoleManager {
       }));
 
       this.sendToClient(connectionId, {
-        type: "client_list",
+        type: 'client_list',
         payload: { clients },
         timestamp: Date.now(),
       });
     } catch (error) {
       this.logger.error(
-        "ConsoleManager: Error getting client list:",
+        'ConsoleManager: Error getting client list:',
         toError(error),
       );
       this.sendToClient(connectionId, {
-        type: "error",
+        type: 'error',
         payload: {
-          message: "Failed to retrieve client list",
+          message: 'Failed to retrieve client list',
           error: errorMessage(error),
         },
         timestamp: Date.now(),
@@ -429,7 +429,7 @@ export class ConsoleManager {
     try {
       if (!this.beyondMcpServer) {
         this.logger.warn(
-          "ConsoleManager: Cannot get client list - beyondMcpServer not initialized",
+          'ConsoleManager: Cannot get client list - beyondMcpServer not initialized',
         );
         return;
       }
@@ -454,13 +454,13 @@ export class ConsoleManager {
       }));
 
       this.broadcastMessage({
-        type: "client_list",
+        type: 'client_list',
         payload: { clients },
         timestamp: Date.now(),
       });
     } catch (error) {
       this.logger.error(
-        "ConsoleManager: Error broadcasting client list:",
+        'ConsoleManager: Error broadcasting client list:',
         toError(error),
       );
     }
@@ -476,24 +476,24 @@ export class ConsoleManager {
   ): Promise<void> {
     try {
       const messages = await this.messageTracker.getMessages(
-        payload.sessionId || "default",
+        payload.sessionId || 'default',
         payload.limit || 100,
       );
 
       this.sendToClient(connectionId, {
-        type: "message_history",
+        type: 'message_history',
         payload: { messages },
         timestamp: Date.now(),
       });
     } catch (error) {
       this.logger.error(
-        "ConsoleManager: Error getting message history:",
+        'ConsoleManager: Error getting message history:',
         toError(error),
       );
       this.sendToClient(connectionId, {
-        type: "error",
+        type: 'error',
         payload: {
-          message: "Failed to retrieve message history",
+          message: 'Failed to retrieve message history',
           error: errorMessage(error),
         },
         timestamp: Date.now(),
@@ -557,7 +557,7 @@ export class ConsoleManager {
       [id, ws],
     ) => ({
       id,
-      state: ["CONNECTING", "OPEN", "CLOSING", "CLOSED"][ws.readyState],
+      state: ['CONNECTING', 'OPEN', 'CLOSING', 'CLOSED'][ws.readyState],
     }));
 
     return {

@@ -1,22 +1,22 @@
 /**
  * MCP Protocol Message Fixtures
- * 
+ *
  * Sample MCP protocol messages for testing.
  */
 
-import type { McpMessage } from "@shared/types/index.ts";
+import type { McpMessage } from '@shared/types/index.ts';
 
 /**
  * Sample tool call request
  */
 export const toolCallRequest: McpMessage = {
-  jsonrpc: "2.0",
+  jsonrpc: '2.0',
   id: 1,
-  method: "tools/call",
+  method: 'tools/call',
   params: {
-    name: "echo",
+    name: 'echo',
     arguments: {
-      message: "Hello, World!",
+      message: 'Hello, World!',
     },
   },
 };
@@ -25,13 +25,13 @@ export const toolCallRequest: McpMessage = {
  * Sample tool call response
  */
 export const toolCallResponse: McpMessage = {
-  jsonrpc: "2.0",
+  jsonrpc: '2.0',
   id: 1,
   result: {
     content: [
       {
-        type: "text",
-        text: "Hello, World!",
+        type: 'text',
+        text: 'Hello, World!',
       },
     ],
   },
@@ -41,31 +41,31 @@ export const toolCallResponse: McpMessage = {
  * Sample tools/list request
  */
 export const toolsListRequest: McpMessage = {
-  jsonrpc: "2.0",
+  jsonrpc: '2.0',
   id: 2,
-  method: "tools/list",
+  method: 'tools/list',
 };
 
 /**
  * Sample tools/list response
  */
 export const toolsListResponse: McpMessage = {
-  jsonrpc: "2.0",
+  jsonrpc: '2.0',
   id: 2,
   result: {
     tools: [
       {
-        name: "echo",
-        description: "Echo back the provided message",
+        name: 'echo',
+        description: 'Echo back the provided message',
         inputSchema: {
-          type: "object",
+          type: 'object',
           properties: {
             message: {
-              type: "string",
-              description: "Message to echo back",
+              type: 'string',
+              description: 'Message to echo back',
             },
           },
-          required: ["message"],
+          required: ['message'],
         },
       },
     ],
@@ -76,12 +76,12 @@ export const toolsListResponse: McpMessage = {
  * Sample notification
  */
 export const notificationMessage: McpMessage = {
-  jsonrpc: "2.0",
-  method: "notifications/message",
+  jsonrpc: '2.0',
+  method: 'notifications/message',
   params: {
-    level: "info",
-    logger: "test",
-    data: "Test notification",
+    level: 'info',
+    logger: 'test',
+    data: 'Test notification',
   },
 };
 
@@ -89,13 +89,13 @@ export const notificationMessage: McpMessage = {
  * Sample error response
  */
 export const errorResponse: McpMessage = {
-  jsonrpc: "2.0",
+  jsonrpc: '2.0',
   id: 3,
   error: {
     code: -32600,
-    message: "Invalid Request",
+    message: 'Invalid Request',
     data: {
-      details: "Missing required parameter",
+      details: 'Missing required parameter',
     },
   },
 };
@@ -104,16 +104,16 @@ export const errorResponse: McpMessage = {
  * Sample sampling request (createMessage)
  */
 export const samplingRequest: McpMessage = {
-  jsonrpc: "2.0",
+  jsonrpc: '2.0',
   id: 4,
-  method: "sampling/createMessage",
+  method: 'sampling/createMessage',
   params: {
     messages: [
       {
-        role: "user",
+        role: 'user',
         content: {
-          type: "text",
-          text: "What is 2+2?",
+          type: 'text',
+          text: 'What is 2+2?',
         },
       },
     ],
@@ -125,15 +125,15 @@ export const samplingRequest: McpMessage = {
  * Sample sampling response
  */
 export const samplingResponse: McpMessage = {
-  jsonrpc: "2.0",
+  jsonrpc: '2.0',
   id: 4,
   result: {
     content: {
-      type: "text",
-      text: "2+2 equals 4.",
+      type: 'text',
+      text: '2+2 equals 4.',
     },
-    model: "test-model",
-    stopReason: "endTurn",
+    model: 'test-model',
+    stopReason: 'endTurn',
   },
 };
 
@@ -141,17 +141,17 @@ export const samplingResponse: McpMessage = {
  * Sample elicitation request
  */
 export const elicitationRequest: McpMessage = {
-  jsonrpc: "2.0",
+  jsonrpc: '2.0',
   id: 5,
-  method: "elicitation/request",
+  method: 'elicitation/request',
   params: {
-    message: "Please confirm the action",
+    message: 'Please confirm the action',
     requestedSchema: {
-      type: "object",
+      type: 'object',
       properties: {
         confirmed: {
-          type: "boolean",
-          description: "User confirmation",
+          type: 'boolean',
+          description: 'User confirmation',
         },
       },
     },
@@ -162,10 +162,10 @@ export const elicitationRequest: McpMessage = {
  * Sample elicitation response (accept)
  */
 export const elicitationResponseAccept: McpMessage = {
-  jsonrpc: "2.0",
+  jsonrpc: '2.0',
   id: 5,
   result: {
-    action: "accept",
+    action: 'accept',
     content: {
       confirmed: true,
     },
@@ -176,9 +176,9 @@ export const elicitationResponseAccept: McpMessage = {
  * Sample elicitation response (decline)
  */
 export const elicitationResponseDecline: McpMessage = {
-  jsonrpc: "2.0",
+  jsonrpc: '2.0',
   id: 5,
   result: {
-    action: "decline",
+    action: 'decline',
   },
 };

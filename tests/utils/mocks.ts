@@ -1,22 +1,20 @@
 /**
  * Mock Classes and Utilities
- * 
+ *
  * Mock implementations for testing MCP server and console components.
  */
 
-import type {
-  BeyondMcpServer,
-  Logger,
-  ToolDependencies,
-} from "@beyondbetter/bb-mcp-server";
-import type { ClientInfo, MessageEntry } from "@shared/types/index.ts";
-import type { ClientId, SessionId } from "@shared/types/index.ts";
+import type { BeyondMcpServer, Logger, ToolDependencies } from '@beyondbetter/bb-mcp-server';
+import type { ClientInfo, MessageEntry } from '@shared/types/index.ts';
+import type { ClientId, SessionId } from '@shared/types/index.ts';
 
 /**
  * Mock BeyondMcpServer for testing
  */
 export class MockBeyondMcpServer implements Partial<BeyondMcpServer> {
-  private notifications: Array<{ level: string; logger?: string; data: unknown; sessionId?: string }> = [];
+  private notifications: Array<
+    { level: string; logger?: string; data: unknown; sessionId?: string }
+  > = [];
   private samplingRequests: Array<{ messages: unknown[]; sessionId?: string }> = [];
   private elicitationRequests: Array<{ message: string; sessionId?: string }> = [];
 
@@ -30,22 +28,28 @@ export class MockBeyondMcpServer implements Partial<BeyondMcpServer> {
   async createMessage(
     request: { model?: string; messages: unknown[]; maxTokens?: number },
     sessionId?: string,
-  ): Promise<{ content: { type: "text"; text: string }[]; model: string; stopReason: string }> {
+  ): Promise<
+    {
+      content: { type: 'text'; text: string }[];
+      model: string;
+      stopReason: string;
+    }
+  > {
     this.samplingRequests.push({ messages: request.messages, sessionId });
     return {
-      content: [{ type: "text", text: "Mock response" }],
-      model: request.model || "mock-model",
-      stopReason: "endTurn",
+      content: [{ type: 'text', text: 'Mock response' }],
+      model: request.model || 'mock-model',
+      stopReason: 'endTurn',
     };
   }
 
   async elicitInput(
     request: { message: string; requestedSchema?: unknown },
     sessionId?: string,
-  ): Promise<{ action: "accept" | "reject"; content?: unknown }> {
+  ): Promise<{ action: 'accept' | 'reject'; content?: unknown }> {
     this.elicitationRequests.push({ message: request.message, sessionId });
     return {
-      action: "accept" as const,
+      action: 'accept' as const,
       content: { confirmed: true },
     };
   }
@@ -82,7 +86,7 @@ export class MockTransportManager {
     sessionId: string;
     connectedAt: number;
     lastActivity: number;
-    transport: "stdio" | "http";
+    transport: 'stdio' | 'http';
     clientInfo?: unknown;
     protocolVersion?: string;
     requestCount: number;
@@ -96,7 +100,7 @@ export class MockTransportManager {
   addClientSession(
     session: {
       sessionId: string;
-      transport: "stdio" | "http";
+      transport: 'stdio' | 'http';
       clientInfo?: unknown;
     },
   ) {
@@ -106,7 +110,7 @@ export class MockTransportManager {
       lastActivity: Date.now(),
       transport: session.transport,
       clientInfo: session.clientInfo,
-      protocolVersion: "2024-11-05",
+      protocolVersion: '2024-11-05',
       requestCount: 0,
       lastMeta: {},
     });
@@ -132,7 +136,7 @@ export class MockMessageTracker {
 
   async trackMessage(
     sessionId: SessionId,
-    direction: "incoming" | "outgoing",
+    direction: 'incoming' | 'outgoing',
     message: unknown,
   ): Promise<void> {
     const entry: MessageEntry = {
@@ -203,19 +207,19 @@ export class MockLogger implements Partial<Logger> {
   logs: Array<{ level: string; message: string; data?: unknown }> = [];
 
   debug(message: string, data?: unknown): void {
-    this.logs.push({ level: "debug", message, data });
+    this.logs.push({ level: 'debug', message, data });
   }
 
   info(message: string, data?: unknown): void {
-    this.logs.push({ level: "info", message, data });
+    this.logs.push({ level: 'info', message, data });
   }
 
   warn(message: string, data?: unknown): void {
-    this.logs.push({ level: "warn", message, data });
+    this.logs.push({ level: 'warn', message, data });
   }
 
   error(message: string, data?: unknown): void {
-    this.logs.push({ level: "error", message, data });
+    this.logs.push({ level: 'error', message, data });
   }
 
   getLogs(): Array<{ level: string; message: string; data?: unknown }> {
@@ -308,7 +312,7 @@ export class MockServerWebSocket {
 
   send(data: string): void {
     if (this.readyState !== WebSocket.OPEN) {
-      throw new Error("WebSocket is not open");
+      throw new Error('WebSocket is not open');
     }
     this.sentMessages.push(data);
   }

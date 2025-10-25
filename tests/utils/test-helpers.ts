@@ -1,19 +1,19 @@
 /**
  * Test Helpers
- * 
+ *
  * Utility functions for testing across the project.
  */
 
-import { Logger } from "@beyondbetter/bb-mcp-server";
-import type { ClientInfo, MessageEntry } from "@shared/types/index.ts";
-import type { ClientId, SessionId } from "@shared/types/index.ts";
+import { Logger } from '@beyondbetter/bb-mcp-server';
+import type { ClientInfo, MessageEntry } from '@shared/types/index.ts';
+import type { ClientId, SessionId } from '@shared/types/index.ts';
 
 /**
  * Create in-memory Deno KV for testing
  */
 export async function createTestKV(): Promise<Deno.Kv> {
   // Use :memory: path for in-memory KV
-  return await Deno.openKv(":memory:");
+  return await Deno.openKv(':memory:');
 }
 
 /**
@@ -24,7 +24,7 @@ export function createTestLogger(options?: {
   level?: string;
 }): Logger {
   const silent = options?.silent ?? true;
-  const level = options?.level ?? "error";
+  const level = options?.level ?? 'error';
 
   // Create logger without invalid config
   const logger = new Logger();
@@ -44,7 +44,7 @@ export async function waitFor(
 ): Promise<void> {
   const timeout = options?.timeout ?? 5000;
   const interval = options?.interval ?? 100;
-  const message = options?.message ?? "Condition not met";
+  const message = options?.message ?? 'Condition not met';
 
   const startTime = Date.now();
 
@@ -61,17 +61,19 @@ export async function waitFor(
 /**
  * Create sample client info for testing
  */
-export function createSampleClientInfo(overrides?: Partial<ClientInfo>): ClientInfo {
+export function createSampleClientInfo(
+  overrides?: Partial<ClientInfo>,
+): ClientInfo {
   return {
-    clientId: "test-client-1" as ClientId,
-    sessionId: "test-session-1" as SessionId,
+    clientId: 'test-client-1' as ClientId,
+    sessionId: 'test-session-1' as SessionId,
     connectedAt: Date.now(),
     lastSeen: Date.now(),
-    transport: "http",
+    transport: 'http',
     metadata: {
       clientInfo: {
-        name: "Test Client",
-        version: "1.0.0",
+        name: 'Test Client',
+        version: '1.0.0',
       },
     },
     ...overrides,
@@ -87,15 +89,15 @@ export function createSampleMessageEntry(
   return {
     id: crypto.randomUUID(),
     timestamp: Date.now(),
-    sessionId: "test-session-1" as SessionId,
-    direction: "incoming",
+    sessionId: 'test-session-1' as SessionId,
+    direction: 'incoming',
     message: {
-      jsonrpc: "2.0",
+      jsonrpc: '2.0',
       id: 1,
-      method: "tools/call",
+      method: 'tools/call',
       params: {
-        name: "echo",
-        arguments: { message: "test" },
+        name: 'echo',
+        arguments: { message: 'test' },
       },
     },
     ...overrides,
@@ -127,7 +129,7 @@ export async function assertRejects(
   }
 
   if (!didThrow) {
-    throw new Error("Expected promise to reject, but it resolved");
+    throw new Error('Expected promise to reject, but it resolved');
   }
 
   if (errorCheck && thrownError && !errorCheck(thrownError)) {
@@ -154,14 +156,14 @@ export class MockWebSocket {
     setTimeout(() => {
       this.readyState = WebSocket.OPEN;
       if (this.onopen) {
-        this.onopen(new Event("open"));
+        this.onopen(new Event('open'));
       }
     }, 0);
   }
 
   send(data: string): void {
     if (this.readyState !== WebSocket.OPEN) {
-      throw new Error("WebSocket is not open");
+      throw new Error('WebSocket is not open');
     }
     this.sentMessages.push(data);
   }
@@ -170,7 +172,7 @@ export class MockWebSocket {
     this.readyState = WebSocket.CLOSED;
     if (this.onclose) {
       this.onclose(
-        new CloseEvent("close", { code: 1000, reason: "Normal closure" }),
+        new CloseEvent('close', { code: 1000, reason: 'Normal closure' }),
       );
     }
   }
@@ -178,13 +180,13 @@ export class MockWebSocket {
   // Test helpers
   simulateMessage(data: string): void {
     if (this.onmessage) {
-      this.onmessage(new MessageEvent("message", { data }));
+      this.onmessage(new MessageEvent('message', { data }));
     }
   }
 
   simulateError(): void {
     if (this.onerror) {
-      this.onerror(new Event("error"));
+      this.onerror(new Event('error'));
     }
   }
 

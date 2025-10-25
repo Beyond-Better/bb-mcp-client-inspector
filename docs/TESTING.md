@@ -17,6 +17,7 @@ deno task dev
 ```
 
 Expected output:
+
 ```
 🔍 Starting MCP Client Inspector Server...
 ✅ MCP Client Inspector Server started successfully!
@@ -40,6 +41,7 @@ deno task dev
 ```
 
 Expected output:
+
 ```
 > vite
 
@@ -76,7 +78,8 @@ Expected output:
 
 5. **Test Message Filtering**
    - Use dropdown above message list
-   - Try filters: All Messages, MCP Protocol, Sampling, Elicitation, Notifications
+   - Try filters: All Messages, MCP Protocol, Sampling, Elicitation,
+     Notifications
    - Message count should update based on filter
 
 6. **Check Statistics Panel**
@@ -100,17 +103,20 @@ The UI includes detailed console logging. Open DevTools (F12) to see:
 ### Troubleshooting
 
 **WebSocket won't connect:**
+
 1. Check MCP server is running (Terminal 1)
 2. Verify port 3030 in `.env` files matches
 3. Check browser console for errors
 4. Try refreshing the page
 
 **Messages not appearing:**
+
 1. Check connection status (green dot)
 2. Open browser console to see WebSocket messages
 3. Verify MCP server console shows no errors
 
 **Fresh UI won't start:**
+
 1. Run `deno cache fresh-ui/main.ts` to download dependencies
 2. Check no other process is using port 8000
 3. Try `deno task build` then `deno task start`
@@ -118,6 +124,7 @@ The UI includes detailed console logging. Open DevTools (F12) to see:
 ### Expected Behavior
 
 ✅ **Working correctly:**
+
 - Green "Connected" indicator
 - Connection ID displayed
 - Can send notifications
@@ -127,6 +134,7 @@ The UI includes detailed console logging. Open DevTools (F12) to see:
 - Statistics update in real-time
 
 ❌ **Not implemented yet (Phase 2 remaining):**
+
 - Sampling request form
 - Elicitation request form
 - Client selector (multi-client support)
@@ -136,6 +144,7 @@ The UI includes detailed console logging. Open DevTools (F12) to see:
 ### Next Steps
 
 If WebSocket connection and notification triggering work:
+
 1. Implement Sampling Form
 2. Implement Elicitation Form
 3. Add Client Selector
@@ -143,6 +152,5 @@ If WebSocket connection and notification triggering work:
 
 ---
 
-**Last Updated**: 2025-10-22
-**Phase**: 2 (Initial)
-**Status**: WebSocket connection and notification triggering ready for testing
+**Last Updated**: 2025-10-22 **Phase**: 2 (Initial) **Status**: WebSocket
+connection and notification triggering ready for testing

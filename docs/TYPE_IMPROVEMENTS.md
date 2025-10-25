@@ -1,17 +1,17 @@
 # Type System Improvements
 
-**Date**: 2025-10-22
-**Status**: Complete ✅
+**Date**: 2025-10-22 **Status**: Complete ✅
 
 ## Summary
 
-Standardized type usage across the inspector project and enhanced bb-mcp-server library with better type exports.
+Standardized type usage across the inspector project and enhanced bb-mcp-server
+library with better type exports.
 
 ## Changes to bb-mcp-server Library
 
 ### 1. Exported InferZodSchema ✅
 
-**Before**: Private type helper  
+**Before**: Private type helper\
 **After**: Public exported type
 
 ```typescript
@@ -22,6 +22,7 @@ export type InferZodSchema<T extends Record<string, ZodSchema>> = {
 ```
 
 **Benefits**:
+
 - Consumers can properly type their tool arguments
 - No need to duplicate this utility type
 - Better TypeScript inference for tool handlers
@@ -43,6 +44,7 @@ export interface ToolDependencies {
 ```
 
 **Benefits**:
+
 - Standardizes tool module dependency patterns
 - Type-safe access to core components
 - Documents expected dependencies
@@ -53,6 +55,7 @@ export interface ToolDependencies {
 ### Updated All Tool Files (6 files)
 
 **Before**:
+
 ```typescript
 import type { ToolConfig } from '@beyondbetter/bb-mcp-server';
 
@@ -63,8 +66,9 @@ export function getTools(dependencies: any): ToolConfig<any>[] {
 ```
 
 **After**:
+
 ```typescript
-import type { ToolRegistration, ToolDependencies } from '@beyondbetter/bb-mcp-server';
+import type { ToolDependencies, ToolRegistration } from '@beyondbetter/bb-mcp-server';
 
 export function getTools(dependencies: ToolDependencies): ToolRegistration[] {
   const { logger } = dependencies;
@@ -73,6 +77,7 @@ export function getTools(dependencies: ToolDependencies): ToolRegistration[] {
 ```
 
 **Files Updated**:
+
 1. `src/plugins/inspector.plugin/tools/echo.ts`
 2. `src/plugins/inspector.plugin/tools/convertDate.ts`
 3. `src/plugins/inspector.plugin/tools/calculate.ts`
@@ -85,11 +90,13 @@ export function getTools(dependencies: ToolDependencies): ToolRegistration[] {
 ### Before (Duplication Issue)
 
 **bb-mcp-applescript** had its own types:
+
 - `ToolConfig<T>` - Duplicate of library's `ToolRegistration`
 - `ToolDependencies` - Useful pattern not in library
 - `InferZodSchema<T>` - Re-exported from unexported library type
 
 **bb-mcp-server** had:
+
 - ✅ `ToolRegistration` - Proper type
 - ❌ `InferZodSchema<T>` - Not exported (private)
 - ❌ `ToolDependencies` - Didn't exist
@@ -97,6 +104,7 @@ export function getTools(dependencies: ToolDependencies): ToolRegistration[] {
 ### After (Standardized)
 
 **bb-mcp-server** now exports:
+
 - ✅ `ToolRegistration` - Tool registration structure
 - ✅ `ToolDependencies` - Standard dependency injection
 - ✅ `InferZodSchema<T>` - Type inference utility
@@ -109,12 +117,14 @@ export function getTools(dependencies: ToolDependencies): ToolRegistration[] {
 ## Benefits
 
 ### For Library (bb-mcp-server)
+
 1. **Better API**: More complete type exports
 2. **Developer Experience**: Clear, documented types
 3. **Consistency**: Standard patterns across ecosystem
 4. **Extensibility**: ToolDependencies allows custom deps
 
 ### For Consumers (Inspector, bb-mcp-applescript)
+
 1. **No Duplication**: Use library types directly
 2. **Type Safety**: Proper TypeScript inference
 3. **Maintainability**: Changes in one place
@@ -126,10 +136,10 @@ export function getTools(dependencies: ToolDependencies): ToolRegistration[] {
 
 ```typescript
 import { z } from 'zod';
-import type { 
-  ToolRegistration, 
+import type {
+  InferZodSchema,
   ToolDependencies,
-  InferZodSchema 
+  ToolRegistration,
 } from '@beyondbetter/bb-mcp-server';
 
 // Define input schema
@@ -209,16 +219,16 @@ If you have code using `ToolConfig` or custom dependency types:
    ```typescript
    // Before
    import type { ToolConfig } from './types/toolTypes.ts';
-   
+
    // After
-   import type { ToolRegistration, ToolDependencies } from '@beyondbetter/bb-mcp-server';
+   import type { ToolDependencies, ToolRegistration } from '@beyondbetter/bb-mcp-server';
    ```
 
 2. **Update function signatures**:
    ```typescript
    // Before
    export function getTools(dependencies: any): ToolConfig<any>[] {
-   
+
    // After
    export function getTools(dependencies: ToolDependencies): ToolRegistration[] {
    ```
@@ -230,6 +240,7 @@ If you have code using `ToolConfig` or custom dependency types:
 ## Testing
 
 ### Type Checking
+
 ```bash
 # Inspector project
 cd mcp-server
@@ -239,6 +250,7 @@ deno task check
 ```
 
 ### Runtime Verification
+
 ```bash
 # Start server
 MCP_TRANSPORT=http deno task dev
@@ -250,43 +262,47 @@ MCP_TRANSPORT=http deno task dev
 ## Documentation Updates
 
 ### Updated Files
+
 - ✅ `bb-mcp-server:src/lib/types/BeyondMcpTypes.ts` - Added exports
 - ✅ All inspector tool files - Use library types
 - ✅ This document - Migration guide
 
 ### Recommended for bb-mcp-applescript
+
 Update `server/src/types/toolTypes.ts` to remove duplicates:
 
 ```typescript
 // Simplified version - just re-exports
 import type {
-  ToolRegistration,
-  ToolDependencies,
-  ToolDefinition,
-  ToolHandler,
-  ToolRegistrationOptions,
-  ToolCallExtra,
   InferZodSchema,
+  ToolCallExtra,
+  ToolDefinition,
+  ToolDependencies,
+  ToolHandler,
+  ToolRegistration,
+  ToolRegistrationOptions,
 } from '@beyondbetter/bb-mcp-server';
 
 export type {
-  ToolRegistration,
-  ToolDependencies,
-  ToolDefinition,
-  ToolHandler,
-  ToolRegistrationOptions,
-  ToolCallExtra,
   InferZodSchema,
+  ToolCallExtra,
+  ToolDefinition,
+  ToolDependencies,
+  ToolHandler,
+  ToolRegistration,
+  ToolRegistrationOptions,
 };
 ```
 
 ## Impact
 
 ### Breaking Changes
+
 - ❌ None - These are additions to the library
 - ✅ Backward compatible - existing code still works
 
 ### Migration Required
+
 - Only if you want to adopt the new types
 - Gradual migration possible
 - Old patterns still work
@@ -294,12 +310,14 @@ export type {
 ## Future Improvements
 
 ### Potential Additions
+
 1. **ToolContext** - Execution context type
 2. **ToolMetadata** - Enhanced metadata structure
 3. **ToolValidation** - Validation result types
 4. **ToolRegistry types** - Registry-specific types
 
 ### Documentation
+
 - Add examples to library docs
 - Update plugin development guide
 - Create type reference guide
@@ -307,6 +325,7 @@ export type {
 ## Conclusion
 
 The type system is now more complete and consistent:
+
 - ✅ Library exports all needed types
 - ✅ No duplication across projects
 - ✅ Better developer experience
@@ -317,6 +336,6 @@ The type system is now more complete and consistent:
 
 ---
 
-**Implemented by**: AI Brain (LLM)  
-**Date**: 2025-10-22  
+**Implemented by**: AI Brain (LLM)\
+**Date**: 2025-10-22\
 **Library Version**: bb-mcp-server 1.0.0+

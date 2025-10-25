@@ -2,14 +2,18 @@
 
 ## Overview
 
-This document describes the unified elicitation component implementation that supports both user approval and form-based data collection.
+This document describes the unified elicitation component implementation that
+supports both user approval and form-based data collection.
 
 ## Architecture Decision
 
-**Single Component Approach**: One `ElicitationForm` component with two modes (approval/form) rather than separate components.
+**Single Component Approach**: One `ElicitationForm` component with two modes
+(approval/form) rather than separate components.
 
 **Rationale**:
-- Matches BB's feedback system where approval is elicitation with empty `formData: {}`
+
+- Matches BB's feedback system where approval is elicitation with empty
+  `formData: {}`
 - MCP protocol treats both as elicitation with optional schema
 - Avoids code duplication for approve/decline/cancel logic
 - Follows project's 1-2 parent islands architecture guideline
@@ -21,6 +25,7 @@ This document describes the unified elicitation component implementation that su
 **Location**: `fresh-ui/components/ElicitationForm.tsx`
 
 **Features**:
+
 - Radio toggle for mode switching (Approval vs Form)
 - Message input (required)
 - JSON schema input (Form mode only)
@@ -32,12 +37,14 @@ This document describes the unified elicitation component implementation that su
 **Modes**:
 
 #### Approval Mode
+
 - Simple user approval workflow
 - No schema required
 - Client shows Accept/Decline/Cancel dialog
 - Response: `{ action: "accept", content: {} }`
 
 **Example Use Case**:
+
 ```typescript
 // Message: "Do you approve this action?"
 // No schema
@@ -45,12 +52,14 @@ This document describes the unified elicitation component implementation that su
 ```
 
 #### Form Mode
+
 - Structured data collection
 - JSON schema required
 - Client shows form based on schema
 - Response: `{ action: "accept", content: {...form data...} }`
 
 **Example Use Case**:
+
 ```typescript
 // Message: "Please provide your contact information"
 // Schema: {
@@ -61,9 +70,9 @@ This document describes the unified elicitation component implementation that su
 //   },
 //   required: ["name", "email"]
 // }
-// Client response: { 
-//   action: "accept", 
-//   content: { name: "John Doe", email: "john@example.com" } 
+// Client response: {
+//   action: "accept",
+//   content: { name: "John Doe", email: "john@example.com" }
 // }
 ```
 
@@ -72,6 +81,7 @@ This document describes the unified elicitation component implementation that su
 **Location**: `fresh-ui/components/ElicitationResponse.tsx`
 
 **Features**:
+
 - Displays most recent elicitation response
 - Color-coded action badges:
   - ✅ Accepted (green)
@@ -83,6 +93,7 @@ This document describes the unified elicitation component implementation that su
 - Placeholder when no responses yet
 
 **Display Logic**:
+
 - Searches backwards through message history for latest response
 - Shows either success response or error
 - Automatically updates when new responses arrive (via signals)
@@ -92,6 +103,7 @@ This document describes the unified elicitation component implementation that su
 **Location**: `fresh-ui/components/CommandPanel.tsx`
 
 **Changes**:
+
 1. Added ElicitationForm import
 2. Added ElicitationResponse import
 3. Enabled "Elicitation" tab (removed `disabled: true`)
@@ -99,6 +111,7 @@ This document describes the unified elicitation component implementation that su
 5. Added divider + ElicitationResponse panel below form
 
 **Layout**:
+
 ```
 ╭──────────────────────────╮
 │ 🎮 Command Panel          │
@@ -120,12 +133,14 @@ This document describes the unified elicitation component implementation that su
 **Location**: `mcp-server/src/console/ConsoleManager.ts`
 
 **Already Implemented**: ✅
+
 - Handles `request_elicitation` command
 - Calls `beyondMcpServer.elicitInput()`
 - Broadcasts `elicitation_response` on success
 - Broadcasts `elicitation_error` on failure
 
 **Request Format**:
+
 ```typescript
 {
   type: "request_elicitation",
@@ -137,6 +152,7 @@ This document describes the unified elicitation component implementation that su
 ```
 
 **Response Format**:
+
 ```typescript
 // Success
 {
@@ -165,6 +181,7 @@ This document describes the unified elicitation component implementation that su
 **Reference**: `docs/06-WEBSOCKET_PROTOCOL.md`
 
 **Flow**:
+
 ```
 Console UI          MCP Server          MCP Client
     │                   │                   │
@@ -188,7 +205,7 @@ Console UI          MCP Server          MCP Client
 4. Click "Request Approval"
 5. **Expected**: Client shows approval dialog
 6. User clicks "Accept"
-7. **Verify**: 
+7. **Verify**:
    - Message viewer shows `elicitation_response`
    - Response panel shows ✅ Accepted badge
    - Content is empty object `{}`
@@ -243,19 +260,22 @@ Console UI          MCP Server          MCP Client
 **Pattern**: Preact Signals (module-level)
 
 **ElicitationForm State**:
+
 ```typescript
-const elicitationMode = signal<"approval" | "form">("approval");
-const message = signal("");
-const schemaJson = signal("");
+const elicitationMode = signal<'approval' | 'form'>('approval');
+const message = signal('');
+const schemaJson = signal('');
 ```
 
 **Shared WebSocket State** (from `useWebSocket.ts`):
+
 ```typescript
 export const wsConnected = signal(false);
 export const wsMessages = signal<ConsoleMessage[]>([]);
 ```
 
 **ElicitationResponse State**:
+
 ```typescript
 const latestResponse = computed(() => {
   // Searches wsMessages backwards for latest elicitation response
@@ -275,6 +295,7 @@ const latestResponse = computed(() => {
 ### Mode Toggle Design
 
 Using DaisyUI's `join` component for radio button group:
+
 ```html
 <div class="join">
   <input type="radio" class="join-item btn" aria-label="Approval" />
@@ -285,11 +306,13 @@ Using DaisyUI's `join` component for radio button group:
 ### Response Display Design
 
 **Action Badges**:
+
 - Accept: Green badge with ✅ emoji
-- Decline: Red badge with ❌ emoji  
+- Decline: Red badge with ❌ emoji
 - Cancel: Yellow badge with 🚫 emoji
 
 **Form Data Display**:
+
 - Formatted JSON in code block
 - Syntax highlighting via `font-mono` class
 - Scrollable if large
@@ -311,14 +334,14 @@ Create `shared/types/console.types.ts` with comprehensive types:
 
 ```typescript
 export interface ElicitationSchema {
-  type: "object" | "string" | "number" | "boolean" | "array";
+  type: 'object' | 'string' | 'number' | 'boolean' | 'array';
   properties?: Record<string, ElicitationSchemaProperty>;
   required?: string[];
   description?: string;
 }
 
 export interface ElicitationSchemaProperty {
-  type: "string" | "number" | "boolean" | "array" | "object";
+  type: 'string' | 'number' | 'boolean' | 'array' | 'object';
   description?: string;
   enum?: unknown[];
   enumNames?: string[];
@@ -327,16 +350,18 @@ export interface ElicitationSchemaProperty {
 }
 
 export interface ElicitationResponsePayload {
-  action: "accept" | "decline" | "cancel";
+  action: 'accept' | 'decline' | 'cancel';
   content?: Record<string, unknown>;
 }
 ```
 
-**Note**: Current implementation uses simpler types which work fine for v1.0. Enhanced types can be added when implementing the `shared/types/` structure.
+**Note**: Current implementation uses simpler types which work fine for v1.0.
+Enhanced types can be added when implementing the `shared/types/` structure.
 
 ## Connection to BB's Feedback System
 
 **BB's Request Feedback Pattern**:
+
 ```typescript
 const response = await feedbackManager.requestFeedback({
   messageId,
@@ -346,7 +371,7 @@ const response = await feedbackManager.requestFeedback({
   content: enhancedContent,
   defaultResponse: {
     action: defaultAction,
-    formData: {},  // <-- Empty for approval, populated for forms
+    formData: {}, // <-- Empty for approval, populated for forms
   },
   timeout: config.timeout * 1000,
   source: { type: 'tool', name: toolName },
@@ -354,6 +379,7 @@ const response = await feedbackManager.requestFeedback({
 ```
 
 **Our Mapping**:
+
 - BB's "user approval" = Our "approval mode" (formData: {})
 - BB's "form elicitation" = Our "form mode" (formData: {...})
 - Both use same mechanism, just different payload
@@ -361,6 +387,7 @@ const response = await feedbackManager.requestFeedback({
 ## Future Enhancements (Roadmap)
 
 ### v1.1+
+
 - Visual form builder (no JSON editing)
 - Form validation preview
 - Schema templates library
@@ -368,6 +395,7 @@ const response = await feedbackManager.requestFeedback({
 - Form field type helpers (date picker, file upload, etc.)
 
 ### v1.2+
+
 - Form response history
 - Export/import form schemas
 - Schema validation before sending
@@ -380,18 +408,21 @@ const response = await feedbackManager.requestFeedback({
 **Symptoms**: Elicitation request sent, but response panel doesn't update
 
 **Check**:
+
 1. Look in message viewer - is `elicitation_response` there?
 2. Check browser console for errors
 3. Verify computed signal is updating
 4. Check if response has correct type string
 
-**Fix**: The computed signal searches backwards through messages. If message type doesn't match exactly, it won't be found.
+**Fix**: The computed signal searches backwards through messages. If message
+type doesn't match exactly, it won't be found.
 
 ### Issue: Schema validation error
 
 **Symptoms**: "Invalid JSON schema" alert when submitting
 
 **Check**:
+
 1. JSON syntax is valid (no trailing commas, quotes correct)
 2. Schema has `type` field
 3. Properties are properly formatted
@@ -403,6 +434,7 @@ const response = await feedbackManager.requestFeedback({
 **Symptoms**: Request sent, but no response received
 
 **Check**:
+
 1. Client supports elicitation (check initialize response)
 2. Client is still connected
 3. Timeout not too short
@@ -413,11 +445,13 @@ const response = await feedbackManager.requestFeedback({
 ## Files Modified/Created
 
 ### Created
+
 - ✅ `fresh-ui/components/ElicitationForm.tsx` (180 lines)
 - ✅ `fresh-ui/components/ElicitationResponse.tsx` (149 lines)
 - ✅ `docs/ELICITATION_IMPLEMENTATION.md` (this file)
 
 ### Modified
+
 - ✅ `fresh-ui/components/CommandPanel.tsx`
   - Added imports for ElicitationForm and ElicitationResponse
   - Enabled elicitation tab (removed disabled flag)
@@ -425,6 +459,7 @@ const response = await feedbackManager.requestFeedback({
   - Added response display panel with divider
 
 ### No Changes Needed
+
 - ✅ `mcp-server/src/console/ConsoleManager.ts` (already handles elicitation)
 - ✅ `mcp-server/src/console/types.ts` (types sufficient for v1.0)
 - ✅ `fresh-ui/hooks/useWebSocket.ts` (already supports message types)
@@ -461,7 +496,5 @@ const response = await feedbackManager.requestFeedback({
 
 ---
 
-**Document Version**: 1.0
-**Created**: 2025-10-23
-**Status**: Implementation Complete
-**Phase**: Phase 2 - Core Features
+**Document Version**: 1.0 **Created**: 2025-10-23 **Status**: Implementation
+Complete **Phase**: Phase 2 - Core Features

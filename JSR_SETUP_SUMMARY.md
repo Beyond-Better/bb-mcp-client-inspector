@@ -1,10 +1,12 @@
 # JSR Publishing Setup - Complete Summary
 
-This document summarizes the complete JSR publishing setup for the MCP Client Inspector project.
+This document summarizes the complete JSR publishing setup for the MCP Client
+Inspector project.
 
 ## Overview
 
-The project is now configured as a **single JSR package with multiple entry points**, allowing users to:
+The project is now configured as a **single JSR package with multiple entry
+points**, allowing users to:
 
 1. **Run both components together** (default)
 2. **Run MCP Server only**
@@ -19,6 +21,7 @@ All directly from JSR without cloning the repository.
 **Purpose**: Launches both MCP Server and Fresh UI components simultaneously.
 
 **Key Features**:
+
 - Spawns both servers as child processes
 - Configurable ports and hosts via CLI arguments
 - Proper cleanup on exit (Ctrl+C)
@@ -26,6 +29,7 @@ All directly from JSR without cloning the repository.
 - Environment variable passthrough
 
 **Usage Examples**:
+
 ```bash
 # Default (MCP on :3000, UI on :8000)
 deno run -A jsr:@beyondbetter/mcp-client-inspector
@@ -40,6 +44,7 @@ deno run -A jsr:@beyondbetter/mcp-client-inspector --help
 ### 2. Updated Root Configuration: `deno.jsonc`
 
 **Changes**:
+
 - Added `exports` field with three entry points:
   - `"."` → `./main.ts` (run both)
   - `"./mcp-server"` → `./mcp-server/main.ts` (MCP server only)
@@ -54,6 +59,7 @@ deno run -A jsr:@beyondbetter/mcp-client-inspector --help
 **Purpose**: Automated testing on every push/PR
 
 **Steps**:
+
 1. Formatting check (`deno fmt --check`)
 2. Linting (`deno lint`)
 3. Type checking (`deno task check`)
@@ -62,6 +68,7 @@ deno run -A jsr:@beyondbetter/mcp-client-inspector --help
 6. Upload to Codecov (optional)
 
 **Triggers**:
+
 - Push to `main` or `develop` branches
 - Pull requests to `main` or `develop` branches
 
@@ -70,25 +77,29 @@ deno run -A jsr:@beyondbetter/mcp-client-inspector --help
 **Purpose**: Automated publishing to JSR
 
 **Steps**:
+
 1. Run all tests (same as test workflow)
 2. Extract version from git tag or manual input
 3. Update `deno.jsonc` with version
 4. Publish to JSR with `deno publish --allow-dirty`
 
 **Triggers**:
+
 - Git tags matching `v*.*.*` (e.g., `v1.0.0`)
 - Manual dispatch with version input
 
 **Required Permissions**:
+
 ```yaml
 permissions:
   contents: read
-  id-token: write  # For JSR OIDC authentication
+  id-token: write # For JSR OIDC authentication
 ```
 
 ### 5. Documentation: `INSTALLATION.md`
 
 **Contents**:
+
 - JSR installation instructions
 - Running from source instructions
 - Environment configuration
@@ -99,6 +110,7 @@ permissions:
 ### 6. Documentation: `PUBLISHING.md`
 
 **Contents**:
+
 - Package structure explanation
 - Automated publishing workflow details
 - Creating releases (git tag method)
@@ -112,9 +124,11 @@ permissions:
 
 ### Why This Approach?
 
-Instead of publishing three separate packages, we use **one package with multiple exports**:
+Instead of publishing three separate packages, we use **one package with
+multiple exports**:
 
 **Benefits**:
+
 - ✅ Single version to manage
 - ✅ Shared dependencies (no duplication)
 - ✅ Simpler publishing workflow
@@ -122,6 +136,7 @@ Instead of publishing three separate packages, we use **one package with multipl
 - ✅ Users can choose what to run
 
 **Trade-offs**:
+
 - ⚠️ Users download all code even if using one component
 - ⚠️ Package size is larger (but still reasonable)
 
@@ -156,7 +171,8 @@ jsr:@beyondbetter/mcp-client-inspector/fresh-ui
 
 ## Component Communication
 
-The wrapper script (`main.ts`) passes environment variables to configure component communication:
+The wrapper script (`main.ts`) passes environment variables to configure
+component communication:
 
 ```typescript
 // MCP Server environment
@@ -277,6 +293,7 @@ The wrapper requires all permissions because it spawns child processes:
 ### 2. Process Management
 
 The wrapper handles graceful shutdown:
+
 - Listens for Ctrl+C
 - Sends SIGTERM to both child processes
 - Waits for clean exit
@@ -285,19 +302,23 @@ The wrapper handles graceful shutdown:
 ### 3. Version Consistency
 
 Three `deno.jsonc` files exist:
+
 - `/deno.jsonc` (root - **source of truth for JSR**)
 - `/mcp-server/deno.jsonc` (component config)
 - `/fresh-ui/deno.jsonc` (component config)
 
-**Best Practice**: Keep versions in sync manually, but only root version matters for publishing.
+**Best Practice**: Keep versions in sync manually, but only root version matters
+for publishing.
 
 ### 4. Import Map Complexity
 
 The project has:
+
 - `import_map.json` (production imports)
 - `import_map.dev.json` (development imports)
 
-When published to JSR, only `import_map.json` is used. Ensure all dependencies are correctly specified there.
+When published to JSR, only `import_map.json` is used. Ensure all dependencies
+are correctly specified there.
 
 ## Troubleshooting
 
@@ -311,13 +332,15 @@ When published to JSR, only `import_map.json` is used. Ensure all dependencies a
 
 **Cause**: Path resolution issues in `main.ts`.
 
-**Solution**: Check that `new URL("./mcp-server/main.ts", import.meta.url)` resolves correctly.
+**Solution**: Check that `new URL("./mcp-server/main.ts", import.meta.url)`
+resolves correctly.
 
 ### GitHub Actions fails to publish
 
 **Cause**: Missing `id-token: write` permission.
 
-**Solution**: Check `.github/workflows/publish.yaml` has correct permissions block.
+**Solution**: Check `.github/workflows/publish.yaml` has correct permissions
+block.
 
 ### Version conflict on publish
 
@@ -346,6 +369,6 @@ When published to JSR, only `import_map.json` is used. Ensure all dependencies a
 
 ---
 
-**Setup Date**: 2025-10-25  
-**Status**: ✅ Complete and ready for testing  
+**Setup Date**: 2025-10-25\
+**Status**: ✅ Complete and ready for testing\
 **Next Milestone**: First beta release to JSR

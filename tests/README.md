@@ -75,6 +75,7 @@ deno test --allow-all --unstable-kv --watch tests/
 ### Unit Tests
 
 **MCP Server Tools** (`tests/unit/mcp-server/tools/`):
+
 - `echo.test.ts` - Echo tool functionality
 - `calculate.test.ts` - Calculation operations
 - `convertDate.test.ts` - Date conversion and formatting
@@ -83,22 +84,27 @@ deno test --allow-all --unstable-kv --watch tests/
 - `triggerError.test.ts` - Error triggering and handling
 
 **Console Components** (`tests/unit/mcp-server/console/`):
+
 - `MessageTracker.test.ts` - Message storage and retrieval
 - `ConsoleManager.test.ts` - WebSocket management and command handling
 
 **Fresh UI Hooks** (`tests/unit/fresh-ui/hooks/`):
+
 - `useWebSocket.test.ts` - WebSocket connection management
 - `useConsoleState.test.ts` - UI state management
 
 ### Integration Tests
 
-**WebSocket Communication** (`tests/integration/websocket-communication.test.ts`):
+**WebSocket Communication**
+(`tests/integration/websocket-communication.test.ts`):
+
 - Connection flow
 - Message broadcasting
 - Command handling
 - Multi-client scenarios
 
 **Message Flow** (`tests/integration/message-flow.test.ts`):
+
 - Tool call flows
 - Notification handling
 - Sampling requests
@@ -110,46 +116,53 @@ deno test --allow-all --unstable-kv --watch tests/
 ### Test Helpers (`tests/utils/test-helpers.ts`)
 
 **In-Memory KV**:
+
 ```typescript
 const kv = await createTestKV();
 // Use in tests, close in afterEach
 ```
 
 **Test Logger**:
+
 ```typescript
-const logger = createTestLogger({ silent: true, level: "error" });
+const logger = createTestLogger({ silent: true, level: 'error' });
 ```
 
 **Wait Utilities**:
+
 ```typescript
 await waitFor(() => condition, { timeout: 5000, interval: 100 });
 ```
 
 **Sample Data**:
+
 ```typescript
-const client = createSampleClientInfo({ clientId: "custom-id" });
-const message = createSampleMessageEntry({ direction: "incoming" });
+const client = createSampleClientInfo({ clientId: 'custom-id' });
+const message = createSampleMessageEntry({ direction: 'incoming' });
 ```
 
 ### Mock Classes (`tests/utils/mocks.ts`)
 
 **MockBeyondMcpServer**:
+
 ```typescript
 const mockServer = new MockBeyondMcpServer();
-await mockServer.sendNotification({ level: "info", data: "test" });
+await mockServer.sendNotification({ level: 'info', data: 'test' });
 const notifications = mockServer.getNotifications();
 ```
 
 **MockMessageTracker**:
+
 ```typescript
 const mockTracker = new MockMessageTracker();
-await mockTracker.trackMessage(sessionId, "incoming", message);
+await mockTracker.trackMessage(sessionId, 'incoming', message);
 ```
 
 **MockWebSocketServer**:
+
 ```typescript
 const wsServer = new MockWebSocketServer();
-const socket = wsServer.createConnection("conn-1");
+const socket = wsServer.createConnection('conn-1');
 wsServer.broadcast(JSON.stringify(message));
 ```
 
@@ -158,6 +171,7 @@ wsServer.broadcast(JSON.stringify(message));
 ### MCP Messages (`tests/fixtures/mcp-messages.ts`)
 
 Pre-defined MCP protocol messages:
+
 - `toolCallRequest` / `toolCallResponse`
 - `toolsListRequest` / `toolsListResponse`
 - `samplingRequest` / `samplingResponse`
@@ -168,6 +182,7 @@ Pre-defined MCP protocol messages:
 ### Console Messages (`tests/fixtures/console-messages.ts`)
 
 Pre-defined console WebSocket messages:
+
 - `connectionEstablished`
 - `clientListMessage`
 - `samplingResponseMessage` / `samplingErrorMessage`
@@ -179,10 +194,10 @@ Pre-defined console WebSocket messages:
 ### Unit Test Template
 
 ```typescript
-import { assertEquals, assertExists } from "@std/assert";
-import { describe, it, beforeEach, afterEach } from "@std/testing/bdd";
+import { assertEquals, assertExists } from '@std/assert';
+import { afterEach, beforeEach, describe, it } from '@std/testing/bdd';
 
-describe("Component Name", () => {
+describe('Component Name', () => {
   // Setup
   beforeEach(() => {
     // Initialize test dependencies
@@ -192,16 +207,16 @@ describe("Component Name", () => {
     // Cleanup
   });
 
-  describe("feature group", () => {
-    it("should do something specific", () => {
+  describe('feature group', () => {
+    it('should do something specific', () => {
       // Arrange
-      const input = "test";
+      const input = 'test';
 
       // Act
       const result = doSomething(input);
 
       // Assert
-      assertEquals(result, "expected");
+      assertEquals(result, 'expected');
     });
   });
 });
@@ -210,11 +225,11 @@ describe("Component Name", () => {
 ### Integration Test Template
 
 ```typescript
-import { assertEquals } from "@std/assert";
-import { describe, it, beforeEach, afterEach } from "@std/testing/bdd";
-import { createTestKV, createTestLogger } from "../utils/test-helpers.ts";
+import { assertEquals } from '@std/assert';
+import { afterEach, beforeEach, describe, it } from '@std/testing/bdd';
+import { createTestKV, createTestLogger } from '../utils/test-helpers.ts';
 
-describe("Integration Scenario", () => {
+describe('Integration Scenario', () => {
   let kv: Deno.Kv;
 
   beforeEach(async () => {
@@ -227,7 +242,7 @@ describe("Integration Scenario", () => {
     // Cleanup
   });
 
-  it("should handle complete flow", async () => {
+  it('should handle complete flow', async () => {
     // Test end-to-end scenario
   });
 });
