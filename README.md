@@ -45,6 +45,7 @@ deno run -A jsr:@beyondbetter/bb-mcp-client-inspector
 ```
 
 This will start both servers:
+
 - **MCP Server** on `http://localhost:3000`
 - **Web UI** on `http://localhost:8000`
 
@@ -59,6 +60,7 @@ deno run -A jsr:@beyondbetter/bb-mcp-client-inspector --mcp-port 3001 --ui-port 
 ```
 
 Available options:
+
 - `--mcp-port <port>` - Port for MCP server (default: 3000)
 - `--ui-port <port>` - Port for Fresh UI (default: 8000)
 - `--mcp-host <host>` - Host for MCP server (default: localhost)
@@ -69,6 +71,7 @@ Available options:
 For development or customization, run from source:
 
 **Prerequisites:**
+
 - **Deno 2.5+** - [Install Deno](https://deno.land/)
 - **Git** - For cloning the repository
 
