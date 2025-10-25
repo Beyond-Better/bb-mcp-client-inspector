@@ -52,7 +52,7 @@ export default function CommandPanel() {
         </div>
 
         {/* Tab Content */}
-        <div class="mt-4">
+        <div class="mt-3">
           {activeTab.value === "notifications" && <NotificationForm />}
 
           {activeTab.value === "sampling" && <SamplingForm />}
@@ -62,14 +62,14 @@ export default function CommandPanel() {
 
         {/* Response Display (shown when sampling or elicitation tab is active) */}
         {activeTab.value === "sampling" && (
-          <div class="mt-6">
+          <div class="mt-2">
             <div class="divider">Latest Response</div>
             <SamplingResponse />
           </div>
         )}
 
         {activeTab.value === "elicitation" && (
-          <div class="mt-6">
+          <div class="mt-2">
             <div class="divider">Latest Response</div>
             <ElicitationResponse />
           </div>

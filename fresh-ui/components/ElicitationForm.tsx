@@ -153,7 +153,7 @@ export default function ElicitationForm() {
   };
 
   return (
-    <div class="space-y-6">
+    <div class="space-y-4">
       {/* Mode Toggle */}
       <div class="form-control">
         <label class="label">
