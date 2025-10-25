@@ -9,7 +9,7 @@
   },
   "tasks": {
     "update-version": "deno run --allow-read --allow-write scripts/update-version.ts",
-    "start": "deno run --allow-net --allow-read --allow-write --allow-env main.ts",
+    "start": "deno run --allow-net --allow-read --allow-write --allow-env --allow-run main.ts",
     "dev:mcp": "cd mcp-server && deno task dev",
     "dev:ui": "cd fresh-ui && deno task dev",
     "dev": "deno task dev:mcp & deno task dev:ui",
@@ -88,7 +88,7 @@
       "screenshot*.png",
       "docs/**",
       "GUIDELINES.md",
-      "TEST_SUMMARY.md"
+      "INSTALLATION.md"
     ]
   }
 }

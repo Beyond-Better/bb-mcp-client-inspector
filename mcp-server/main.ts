@@ -6,6 +6,8 @@
  * An MCP server for testing and inspecting MCP client implementations.
  * Provides basic tools and console integration for testing sampling,
  * elicitation, and notification handling.
+ *
+ * @module
  */
 
 import { AppServer, Logger } from '@beyondbetter/bb-mcp-server';

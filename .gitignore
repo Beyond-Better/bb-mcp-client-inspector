@@ -1,6 +1,7 @@
 .bb/
 .trash/
 .BBEditLSPWorkspaceConfig.json
+data/
 
 node_modules
 coverage
