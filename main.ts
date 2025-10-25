@@ -52,6 +52,9 @@ interface LaunchOptions {
  * Resolves the correct module path for spawning child processes.
  * Handles both local development (file:// URLs) and JSR execution (jsr: URLs).
  *
+ * For JSR execution, strips '/main.ts' from the subpath to match the export names
+ * defined in deno.jsonc (e.g., './mcp-server' instead of './mcp-server/main.ts').
+ *
  * @param subpath - The subpath to the module (e.g., '/mcp-server/main.ts')
  * @returns The resolved module path or specifier
  */
@@ -65,12 +68,15 @@ function getModulePath(subpath: string): string {
     const match = importUrl.match(/jsr:\/\/@([^\/]+\/[^@\/]+)(@[^\/]+)?/);
     if (match) {
       const packageName = match[1];
-      return `jsr:@${packageName}${subpath}`;
+      // Strip /main.ts from subpath to match export names in deno.jsonc
+      const exportPath = subpath.replace(/\/main\.ts$/, '');
+      return `jsr:@${packageName}${exportPath}`;
     }
     // Fallback: try to construct from the URL
     const fallbackMatch = importUrl.match(/@([^\/]+\/[^\/]+)/);
     if (fallbackMatch) {
-      return `jsr:@${fallbackMatch[1]}${subpath}`;
+      const exportPath = subpath.replace(/\/main\.ts$/, '');
+      return `jsr:@${fallbackMatch[1]}${exportPath}`;
     }
   }
 
