@@ -1,0 +1,32 @@
+{
+  "tasks": {
+    "test": "deno test --allow-all --unstable-kv",
+    "test:watch": "deno test --allow-all --unstable-kv --watch",
+    "test:unit": "deno test --allow-all --unstable-kv unit/",
+    "test:integration": "deno test --allow-all --unstable-kv integration/",
+    "test:coverage": "deno test --allow-all --unstable-kv --coverage=coverage",
+    "coverage": "deno coverage coverage/ --exclude='file:///.*bb-mcp-server.*'",
+    "coverage:html": "deno coverage coverage/ --html --exclude='file:///.*bb-mcp-server.*'",
+    "coverage:lcov": "deno coverage coverage/ --lcov --exclude='file:///.*bb-mcp-server.*' > coverage.lcov"
+  },
+  "exclude": [
+    "coverage/",
+    "../bb-mcp-server/"
+  ],
+  // Local development: use import_map.dev.json (points to local bb-mcp-server)
+  "importMap": "../import_map.dev.json",
+  // Production: use import_map.json (points to jsr:@beyondbetter/bb-mcp-server)
+  // "importMap": "../import_map.json",
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "dom.asynciterable",
+      "dom.iterable",
+      "deno.ns",
+      "deno.window",
+      "deno.unstable"
+    ],
+    "jsx": "precompile",
+    "jsxImportSource": "preact"
+  }
+}
