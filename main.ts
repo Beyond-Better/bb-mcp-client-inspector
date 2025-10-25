@@ -48,6 +48,36 @@ interface LaunchOptions {
   uiHost: string;
 }
 
+/**
+ * Resolves the correct module path for spawning child processes.
+ * Handles both local development (file:// URLs) and JSR execution (jsr: URLs).
+ *
+ * @param subpath - The subpath to the module (e.g., '/mcp-server/main.ts')
+ * @returns The resolved module path or specifier
+ */
+function getModulePath(subpath: string): string {
+  const importUrl = import.meta.url;
+
+  // Check if running from JSR
+  if (importUrl.startsWith('jsr:') || importUrl.includes('jsr.io')) {
+    // Extract package name from the import.meta.url
+    // Example: jsr:/@beyondbetter/bb-mcp-client-inspector@0.1.2/main.ts
+    const match = importUrl.match(/jsr:\/\/@([^\/]+\/[^@\/]+)(@[^\/]+)?/);
+    if (match) {
+      const packageName = match[1];
+      return `jsr:@${packageName}${subpath}`;
+    }
+    // Fallback: try to construct from the URL
+    const fallbackMatch = importUrl.match(/@([^\/]+\/[^\/]+)/);
+    if (fallbackMatch) {
+      return `jsr:@${fallbackMatch[1]}${subpath}`;
+    }
+  }
+
+  // Local file path
+  return new URL(`.${subpath}`, import.meta.url).pathname;
+}
+
 function parseArguments(): LaunchOptions | null {
   const args = parseArgs(Deno.args, {
     string: ['mcp-port', 'ui-port', 'mcp-host', 'ui-host'],
@@ -81,6 +111,8 @@ async function launchMcpServer(
     `🚀 Starting MCP Server on ${options.mcpHost}:${options.mcpPort}...`,
   );
 
+  const mcpServerPath = getModulePath('/mcp-server/main.ts');
+
   const command = new Deno.Command(Deno.execPath(), {
     args: [
       'run',
@@ -89,7 +121,7 @@ async function launchMcpServer(
       '--allow-write',
       '--allow-env',
       '--unstable-kv',
-      new URL('./mcp-server/main.ts', import.meta.url).pathname,
+      mcpServerPath,
     ],
     env: {
       ...Deno.env.toObject(),
@@ -115,16 +147,13 @@ async function launchFreshUi(
 ): Promise<Deno.ChildProcess> {
   console.log(`🎨 Starting Fresh UI on ${options.uiHost}:${options.uiPort}...`);
 
+  const freshUiPath = getModulePath('/fresh-ui/main.ts');
+
   const command = new Deno.Command(Deno.execPath(), {
     args: [
-      'serve',
+      'run',
       '-A',
-      new URL('./fresh-ui/_fresh/server.js', import.meta.url).pathname,
-      '--host',
-      options.uiHost,
-      '--port',
-      options.uiPort.toString(),
-      '--open',
+      freshUiPath,
     ],
     env: {
       ...Deno.env.toObject(),

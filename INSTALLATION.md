@@ -10,7 +10,7 @@ installation.
 The default export runs both the MCP Server and Web UI simultaneously:
 
 ```bash
-deno run -A jsr:@beyondbetter/mcp-client-inspector
+deno run -A jsr:@beyondbetter/bb-mcp-client-inspector
 ```
 
 This will start:
@@ -21,7 +21,7 @@ This will start:
 ### Run with Custom Ports
 
 ```bash
-deno run -A jsr:@beyondbetter/mcp-client-inspector --mcp-port 3001 --ui-port 8080
+deno run -A jsr:@beyondbetter/bb-mcp-client-inspector --mcp-port 3001 --ui-port 8080
 ```
 
 Available options:
@@ -38,10 +38,10 @@ You can also run just the MCP server or just the Web UI:
 
 ```bash
 # Run only the MCP server
-deno run -A jsr:@beyondbetter/mcp-client-inspector/mcp-server
+deno run -A jsr:@beyondbetter/bb-mcp-client-inspector/mcp-server
 
 # Run only the Web UI
-deno run -A jsr:@beyondbetter/mcp-client-inspector/fresh-ui
+deno run -A jsr:@beyondbetter/bb-mcp-client-inspector/fresh-ui
 ```
 
 ## From Source
@@ -151,7 +151,7 @@ deno run \
   --allow-read \
   --allow-write \
   --allow-env \
-  jsr:@beyondbetter/mcp-client-inspector
+  jsr:@beyondbetter/bb-mcp-client-inspector
 ```
 
 ## Next Steps

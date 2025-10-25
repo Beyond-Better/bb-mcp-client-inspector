@@ -5,6 +5,7 @@
     "dev": "vite",
     "build": "vite build",
     "start": "deno serve -A _fresh/server.js",
+    "run": "deno run -A main.ts",
     "update": "deno run -A -r jsr:@fresh/update .",
     "test": "deno test --allow-all --unstable-kv --check ../tests/",
     "lint": "deno lint",

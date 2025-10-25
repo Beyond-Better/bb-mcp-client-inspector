@@ -26,26 +26,34 @@ export const app: App<State> = new App<State>();
 
 app.use(staticFiles());
 
-// Pass a shared value from a middleware
-app.use(async (ctx) => {
-  ctx.state.shared = 'hello';
-  return await ctx.next();
-});
-
-// this is the same as the /api/:name route defined via a file. feel free to delete this!
-app.get('/api2/:name', (ctx) => {
-  const name = ctx.params.name;
-  return new Response(
-    `Hello, ${name.charAt(0).toUpperCase() + name.slice(1)}!`,
-  );
-});
+// // Pass a shared value from a middleware
+// app.use(async (ctx) => {
+//   ctx.state.shared = 'hello';
+//   return await ctx.next();
+// });
 
 // this can also be defined via a file. feel free to delete this!
-const exampleLoggerMiddleware = define.middleware((ctx) => {
+const loggerMiddleware = define.middleware((ctx) => {
   console.log(`${ctx.req.method} ${ctx.req.url}`);
   return ctx.next();
 });
-app.use(exampleLoggerMiddleware);
+app.use(loggerMiddleware);
 
 // Include file-system based routes here
 app.fsRoutes();
+
+// Start the server when run directly
+if (import.meta.main) {
+  const port = parseInt(Deno.env.get('PORT') || '8000');
+  const host = Deno.env.get('HOST') || 'localhost';
+
+  console.log(`🎨 Starting Fresh UI on ${host}:${port}...`);
+
+  await app.listen({
+    port,
+    hostname: host,
+    onListen: ({ port, hostname }) => {
+      console.log(`✅ Fresh UI ready at http://${hostname}:${port}`);
+    },
+  });
+}

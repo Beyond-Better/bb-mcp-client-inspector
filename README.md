@@ -36,61 +36,54 @@ server for testing clients.
 
 ## Installation
 
-### Prerequisites
+### Quick Start (Recommended)
 
+**Run directly from JSR** - No installation required!
+
+```bash
+deno run -A jsr:@beyondbetter/bb-mcp-client-inspector
+```
+
+This will start both servers:
+- **MCP Server** on `http://localhost:3000`
+- **Web UI** on `http://localhost:8000`
+
+Open your browser to `http://localhost:8000` to access the inspector console.
+
+#### Custom Ports
+
+Specify custom ports if the defaults are in use:
+
+```bash
+deno run -A jsr:@beyondbetter/bb-mcp-client-inspector --mcp-port 3001 --ui-port 8080
+```
+
+Available options:
+- `--mcp-port <port>` - Port for MCP server (default: 3000)
+- `--ui-port <port>` - Port for Fresh UI (default: 8000)
+- `--mcp-host <host>` - Host for MCP server (default: localhost)
+- `--ui-host <host>` - Host for Fresh UI (default: localhost)
+
+### Development Setup
+
+For development or customization, run from source:
+
+**Prerequisites:**
 - **Deno 2.5+** - [Install Deno](https://deno.land/)
 - **Git** - For cloning the repository
 
-### Quick Setup
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Beyond-Better/bb-mcp-server-client-inspector.git
-   cd bb-mcp-server-client-inspector
-   ```
-
-2. **Set up the MCP Server:**
-   ```bash
-   cd mcp-server
-   cp .env.example .env
-   # Edit .env if needed (defaults work for local development)
-   ```
-
-3. **Set up the Fresh UI:**
-   ```bash
-   cd ../fresh-ui
-   cp .env.example .env
-   # Edit .env if needed (defaults work for local development)
-   ```
-
-### Running the Servers
-
-You'll need two terminal windows:
-
-**Terminal 1 - MCP Server:**
+**Quick Setup:**
 
 ```bash
-cd mcp-server
+# Clone and navigate
+git clone https://github.com/Beyond-Better/bb-mcp-server-client-inspector.git
+cd bb-mcp-server-client-inspector
+
+# Run both servers in development mode
 deno task dev
 ```
 
-The MCP server will start on `http://localhost:3000`
-
-**Terminal 2 - Fresh UI:**
-
-```bash
-cd fresh-ui
-deno task dev
-```
-
-The Fresh UI will start on `http://localhost:8000`
-
-### Verification
-
-1. Open your browser to `http://localhost:8000`
-2. You should see the MCP Client Inspector interface
-3. The console should show "WebSocket connected" when the connection is established
-4. Try the inspector tools to verify everything is working
+This starts both servers with hot reload. Open `http://localhost:8000` in your browser.
 
 > **📖 Detailed Instructions:** For configuration options, troubleshooting, and advanced setup, see [INSTALLATION.md](./INSTALLATION.md)
 
@@ -303,6 +296,8 @@ Trigger and verify notifications:
 
 ## Implementation Guidelines
 
+For LLM implementers working on this project:
+
 ### Prerequisites
 
 ```bash
@@ -316,6 +311,10 @@ deno info jsr:@beyondbetter/bb-mcp-server
 ### Development Setup
 
 ```bash
+# Clone the repository
+git clone https://github.com/Beyond-Better/bb-mcp-server-client-inspector.git
+cd bb-mcp-server-client-inspector
+
 # Terminal 1: MCP Server
 cd mcp-server
 cp .env.example .env
@@ -437,7 +436,7 @@ For implementers:
 
 **GitHub**: `beyond-better/bb-mcp-server-client-inspector`
 
-**JSR Package**: `@beyondbetter/mcp-client-inspector` (planned)
+**JSR Package**: `@beyondbetter/bb-mcp-client-inspector`
 
 ---
 
