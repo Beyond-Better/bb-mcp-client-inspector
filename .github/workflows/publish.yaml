@@ -59,5 +59,8 @@ jobs:
           echo "Updated deno.jsonc version to $VERSION"
           cat deno.jsonc | grep version
 
+      - name: Generate version.ts from deno.jsonc
+        run: deno task update-version
+
       - name: Publish to JSR
         run: deno publish --allow-dirty

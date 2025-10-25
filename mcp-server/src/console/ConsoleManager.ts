@@ -7,6 +7,7 @@
 
 import type { BeyondMcpServer, Logger } from "@beyondbetter/bb-mcp-server";
 import type { MessageTracker } from "./MessageTracker.ts";
+import { VERSION } from "@shared/version.ts";
 import type {
   //ConsoleCommand,
   ConsoleMessage,
@@ -100,7 +101,7 @@ export class ConsoleManager {
       type: "connection_established",
       payload: {
         connectionId,
-        serverVersion: "1.0.0",
+        serverVersion: VERSION,
       },
       timestamp: Date.now(),
     });

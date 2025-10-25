@@ -1,6 +1,7 @@
 {
   "imports": {
     "@shared/types/": "./shared/types/",
+    "@shared/version.ts": "./shared/version.ts",
     
     "@beyondbetter/bb-mcp-server": "jsr:@beyondbetter/bb-mcp-server@^0.1.16",
     "@beyondbetter/bb-mcp-server/": "jsr:@beyondbetter/bb-mcp-server@^0.1.16/",

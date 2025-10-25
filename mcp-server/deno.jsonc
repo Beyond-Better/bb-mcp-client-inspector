@@ -5,8 +5,8 @@
   "tasks": {
     "start": "deno run --allow-all --unstable-kv main.ts",
     "dev": "deno run --allow-all --unstable-kv --watch main.ts",
-    "test": "deno test --allow-all --unstable-kv tests/",
-    "test:watch": "deno test --allow-all --unstable-kv --watch tests/",
+    "test": "deno test --allow-all --unstable-kv --check ../tests/",
+    "test:watch": "deno test --allow-all --unstable-kv --watch ../tests/",
     "check": "deno check main.ts src/**/*.ts",
     "check:all": "deno fmt --check . && deno lint . && deno check main.ts src/**/*.ts",
     "lint": "deno lint",

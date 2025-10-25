@@ -14,6 +14,7 @@ import type {
   PluginManagerConfig,
 } from "@beyondbetter/bb-mcp-server";
 import { MessageTracker } from "./console/MessageTracker.ts";
+import { VERSION } from "@shared/version.ts";
 import { ConsoleManager } from "./console/ConsoleManager.ts";
 
 /**
@@ -104,7 +105,7 @@ export async function createInspectorDependencies(
     // Server configuration
     serverConfig: {
       name: "mcp-client-inspector",
-      version: "1.0.0",
+      version: VERSION,
       title: "MCP Client Inspector",
       description:
         "MCP server for testing and inspecting MCP client implementations",

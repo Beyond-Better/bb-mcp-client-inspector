@@ -7,6 +7,7 @@
 
 import { useEffect } from "preact/hooks";
 import { closeWebSocket, initWebSocket } from "../hooks/useWebSocket.ts";
+import { VERSION } from "@shared/version.ts";
 import ConnectionStatus from "../components/ConnectionStatus.tsx";
 import ClientSelector from "../components/ClientSelector.tsx";
 import MessageViewer from "../components/MessageViewer.tsx";
@@ -74,7 +75,7 @@ export default function Console({ wsUrl }: ConsoleProps) {
       <footer class="footer footer-center p-4 bg-base-100 text-base-content border-t mt-12">
         <div>
           <p class="text-sm">
-            MCP Client Inspector v1.0.0 | Beyond Better
+            MCP Client Inspector v{VERSION} | Beyond Better
           </p>
         </div>
       </footer>

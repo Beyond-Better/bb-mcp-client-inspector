@@ -9,10 +9,11 @@
  * @module
  */
 
-import { parseArgs } from "@std/cli/parse-args";
+import { parseArgs } from "@std/cli";
+import { VERSION } from "@shared/version.ts";
 
 const HELP = `
-MCP Client Inspector v1.0.0
+MCP Client Inspector v${VERSION}
 
 Usage:
   deno run jsr:@beyondbetter/mcp-client-inspector [options]
