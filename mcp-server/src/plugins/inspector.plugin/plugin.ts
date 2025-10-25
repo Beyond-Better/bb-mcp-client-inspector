@@ -11,19 +11,19 @@ import type {
   ToolRegistry,
   WorkflowBase,
   WorkflowRegistry,
-} from "@beyondbetter/bb-mcp-server";
+} from '@beyondbetter/bb-mcp-server';
 
 //import { getTools as getEchoTools } from './tools/echo.ts';
-import { getTools as getConvertDateTools } from "./tools/convertDate.ts";
-import { getTools as getCalculateTools } from "./tools/calculate.ts";
-import { getTools as getDelayResponseTools } from "./tools/delayResponse.ts";
-import { getTools as getRandomDataTools } from "./tools/randomData.ts";
-import { getTools as getTriggerErrorTools } from "./tools/triggerError.ts";
+import { getTools as getConvertDateTools } from './tools/convertDate.ts';
+import { getTools as getCalculateTools } from './tools/calculate.ts';
+import { getTools as getDelayResponseTools } from './tools/delayResponse.ts';
+import { getTools as getRandomDataTools } from './tools/randomData.ts';
+import { getTools as getTriggerErrorTools } from './tools/triggerError.ts';
 
 export default {
-  name: "inspector",
-  version: "1.0.0",
-  description: "Inspector tools for testing MCP client implementations",
+  name: 'inspector',
+  version: '1.0.0',
+  description: 'Inspector tools for testing MCP client implementations',
 
   workflows: [] as WorkflowBase[],
   tools: [] as ToolRegistration[],
@@ -57,7 +57,7 @@ export default {
       );
     }
 
-    logger.info("Inspector plugin initialized with tools:", {
+    logger.info('Inspector plugin initialized with tools:', {
       toolCount: allTools.length,
       tools: allTools.map((t) => t.name),
     });

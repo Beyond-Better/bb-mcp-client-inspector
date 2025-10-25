@@ -5,7 +5,8 @@
 ### ✅ Full Client Tracking System
 
 1. **Backend (bb-mcp-server library)**:
-   - Client session tracking for HTTP (multiple clients) and STDIO (single client)
+   - Client session tracking for HTTP (multiple clients) and STDIO (single
+     client)
    - Extracts client name, version, protocol from initialize request
    - Captures `_meta` field from all client→server requests
    - Tracks connection time, activity, request count
@@ -66,6 +67,7 @@ http://localhost:8000
 ```
 
 You should see:
+
 - ✅ Green "Connected" indicator (WebSocket to MCP server)
 - 📱 Client Selector card (empty at first)
 - 🎮 Command Panel with three tabs
@@ -79,6 +81,7 @@ npx @modelcontextprotocol/inspector http://localhost:3030/mcp
 ```
 
 Or connect programmatically with:
+
 ```json
 {
   "jsonrpc": "2.0",
@@ -98,6 +101,7 @@ Or connect programmatically with:
 ### 5. Verify Client Appears
 
 In the Console UI, you should now see:
+
 - 📱 Client appears in ClientSelector
 - Shows client name and version
 - Shows transport type (HTTP badge)
@@ -107,12 +111,14 @@ In the Console UI, you should now see:
 ### 6. Test Client Targeting
 
 **A. Send Notification**:
+
 1. Click "🔔 Notifications" tab
 2. Select level, enter message
 3. Click "Send Notification"
 4. Check that sessionId is included in payload (browser console)
 
 **B. Request Sampling**:
+
 1. Click "🧠 Sampling" tab
 2. Enter a prompt: "What is 2+2?"
 3. Click "Request Completion"
@@ -120,6 +126,7 @@ In the Console UI, you should now see:
 5. MCP client should receive sampling request
 
 **C. Request Elicitation**:
+
 1. Click "❓ Elicitation" tab
 2. Enter message: "Do you approve?"
 3. Click "Request Approval"
@@ -129,6 +136,7 @@ In the Console UI, you should now see:
 ### 7. Test _meta Capture
 
 Send a request from MCP client with `_meta` field:
+
 ```json
 {
   "jsonrpc": "2.0",
@@ -136,7 +144,7 @@ Send a request from MCP client with `_meta` field:
   "method": "tools/call",
   "params": {
     "name": "echo",
-    "arguments": {"message": "test"}
+    "arguments": { "message": "test" }
   },
   "_meta": {
     "sessionId": "abc123",
@@ -147,6 +155,7 @@ Send a request from MCP client with `_meta` field:
 ```
 
 Then in Console UI:
+
 - Click "🔄 Refresh" in ClientSelector
 - Client should now show "[has _meta]" badge
 - Request count should increment
@@ -154,18 +163,21 @@ Then in Console UI:
 ## Troubleshooting
 
 ### Client Not Appearing
+
 1. Check MCP server logs for session initialization
 2. Verify client sent proper initialize request
 3. Click Refresh button in ClientSelector
 4. Check browser console for WebSocket messages
 
 ### sessionId Not Targeting
+
 1. Verify client is selected (checkmark visible)
 2. Check browser console for command payload
 3. Check MCP server logs for sessionId in request
 4. Remember: SDK may not support targeting yet (logged but not used)
 
 ### _meta Not Captured
+
 1. Verify client is sending `_meta` in request body
 2. Check MCP server logs for metadata extraction
 3. Click Refresh to update client list
@@ -174,17 +186,20 @@ Then in Console UI:
 ## What's Next
 
 ### Immediate
+
 - [ ] Format code (see commands above)
 - [ ] Test with real MCP client
 - [ ] Verify all targeting works
 
 ### Soon
+
 - [ ] Add message filtering by selected client
 - [ ] Show full `_meta` content on client details
 - [ ] Add client disconnection notifications
 - [ ] Update README with screenshots
 
 ### Future Enhancements
+
 - [ ] Client history (show disconnected clients)
 - [ ] Request history per client
 - [ ] Export client metadata
@@ -194,6 +209,7 @@ Then in Console UI:
 ## Key Files Reference
 
 ### Library (bb-mcp-server)
+
 - `src/lib/transport/TransportTypes.ts` - ClientSessionInfo interface
 - `src/lib/transport/HttpTransport.ts` - HTTP client tracking
 - `src/lib/transport/StdioTransport.ts` - STDIO client tracking
@@ -201,6 +217,7 @@ Then in Console UI:
 - `src/lib/server/BeyondMcpServer.ts` - getTransportManager()
 
 ### Inspector
+
 - `mcp-server/src/console/ConsoleManager.ts` - Uses TransportManager API
 - `fresh-ui/components/ClientSelector.tsx` - Client selection UI
 - `fresh-ui/components/SamplingForm.tsx` - Sampling with targeting

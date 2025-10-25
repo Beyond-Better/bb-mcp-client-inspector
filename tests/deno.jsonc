@@ -1,0 +1,50 @@
+{
+  "tasks": {
+    "test": "deno test --allow-all --unstable-kv",
+    "test:watch": "deno test --allow-all --unstable-kv --watch",
+    "test:unit": "deno test --allow-all --unstable-kv unit/",
+    "test:unit:fresh-ui": "deno test --allow-all --unstable-kv unit/fresh-ui",
+    "test:unit:mcp-server": "deno test --allow-all --unstable-kv unit/mcp-server",
+    "test:integration": "deno test --allow-all --unstable-kv integration/",
+    "test:coverage": "deno test --allow-all --unstable-kv --coverage=coverage",
+    "coverage": "deno coverage coverage/ --exclude='.*bb-mcp-server/.*'",
+    "coverage:html": "deno coverage coverage/ --html --exclude='.*bb-mcp-server/.*'",
+    "coverage:lcov": "deno coverage coverage/ --lcov --exclude='.*bb-mcp-server/.*' > coverage.lcov"
+  },
+  "fmt": {
+    "useTabs": false,
+    "lineWidth": 100,
+    "indentWidth": 2,
+    "semiColons": true,
+    "singleQuote": true,
+    "proseWrap": "preserve",
+    "exclude": [
+      "coverage/"
+    ]
+  },
+  "exclude": [
+    "coverage/",
+    "../../bb-mcp-server/"
+  ],
+  // Local development: use import_map.dev.json (points to local bb-mcp-server)
+  // "importMap": "../import_map.dev.json",
+  // Production: use import_map.json (points to jsr:@beyondbetter/bb-mcp-server)
+  "importMap": "../import_map.json",
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "dom.asynciterable",
+      "dom.iterable",
+      "deno.ns",
+      "deno.window",
+      "deno.unstable"
+    ],
+    "jsx": "precompile",
+    "jsxImportSource": "preact"
+  },
+  "lint": {
+    "rules": {
+      "exclude": ["no-explicit-any"]
+    }
+  }
+}

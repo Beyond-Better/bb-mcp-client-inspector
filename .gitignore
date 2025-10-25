@@ -3,3 +3,4 @@
 .BBEditLSPWorkspaceConfig.json
 
 node_modules
+coverage

@@ -2,7 +2,9 @@
 
 ## Overview
 
-This document defines all TypeScript interfaces and types used across the MCP Server Client Inspector project. These types are shared between the MCP server and Fresh UI components.
+This document defines all TypeScript interfaces and types used across the MCP
+Server Client Inspector project. These types are shared between the MCP server
+and Fresh UI components.
 
 ## Shared Types Location
 
@@ -29,18 +31,18 @@ export interface ConsoleMessage {
 }
 
 export type ConsoleMessageType =
-  | "connection_established"
-  | "client_list"
-  | "message_history"
-  | "mcp_message"
-  | "tool_call"
-  | "tool_response"
-  | "sampling_response"
-  | "sampling_error"
-  | "elicitation_response"
-  | "elicitation_error"
-  | "notification_sent"
-  | "error";
+  | 'connection_established'
+  | 'client_list'
+  | 'message_history'
+  | 'mcp_message'
+  | 'tool_call'
+  | 'tool_response'
+  | 'sampling_response'
+  | 'sampling_error'
+  | 'elicitation_response'
+  | 'elicitation_error'
+  | 'notification_sent'
+  | 'error';
 
 /**
  * Command sent from console UI to MCP server
@@ -51,11 +53,11 @@ export interface ConsoleCommand {
 }
 
 export type ConsoleCommandType =
-  | "trigger_notification"
-  | "request_sampling"
-  | "request_elicitation"
-  | "get_clients"
-  | "get_message_history";
+  | 'trigger_notification'
+  | 'request_sampling'
+  | 'request_elicitation'
+  | 'get_clients'
+  | 'get_message_history';
 
 /**
  * Connection established payload
@@ -80,7 +82,7 @@ export interface ClientInfo {
   id: string;
   name: string;
   version?: string;
-  transport: "stdio" | "http";
+  transport: 'stdio' | 'http';
   connected: boolean;
   lastSeen: number;
   sessionId?: string;
@@ -102,7 +104,7 @@ export interface MessageEntry {
   id: string;
   timestamp: number;
   sessionId: string;
-  direction: "incoming" | "outgoing";
+  direction: 'incoming' | 'outgoing';
   message: McpMessage;
 }
 
@@ -127,13 +129,13 @@ export interface SamplingPayload {
 }
 
 export interface SamplingMessage {
-  role: "user" | "assistant";
+  role: 'user' | 'assistant';
   content: SamplingContent;
 }
 
 export type SamplingContent =
-  | { type: "text"; text: string }
-  | { type: "image"; data: string; mimeType: string };
+  | { type: 'text'; text: string }
+  | { type: 'image'; data: string; mimeType: string };
 
 export interface ModelPreferences {
   hints?: ModelHint[];
@@ -152,7 +154,7 @@ export interface ModelHint {
 export interface SamplingResponsePayload {
   content: SamplingContent;
   model?: string;
-  stopReason?: "endTurn" | "stopSequence" | "maxTokens";
+  stopReason?: 'endTurn' | 'stopSequence' | 'maxTokens';
 }
 
 /**
@@ -164,14 +166,14 @@ export interface ElicitationPayload {
 }
 
 export interface ElicitationSchema {
-  type: "object" | "string" | "number" | "boolean" | "array";
+  type: 'object' | 'string' | 'number' | 'boolean' | 'array';
   properties?: Record<string, ElicitationSchemaProperty>;
   required?: string[];
   description?: string;
 }
 
 export interface ElicitationSchemaProperty {
-  type: "string" | "number" | "boolean" | "array" | "object";
+  type: 'string' | 'number' | 'boolean' | 'array' | 'object';
   description?: string;
   enum?: unknown[];
   enumNames?: string[];
@@ -183,7 +185,7 @@ export interface ElicitationSchemaProperty {
  * Elicitation response payload
  */
 export interface ElicitationResponsePayload {
-  action: "accept" | "decline" | "cancel";
+  action: 'accept' | 'decline' | 'cancel';
   content?: Record<string, unknown>;
 }
 
@@ -207,7 +209,7 @@ export interface ErrorPayload {
  * MCP JSON-RPC message
  */
 export interface McpMessage {
-  jsonrpc: "2.0";
+  jsonrpc: '2.0';
   id?: string | number;
   method?: string;
   params?: unknown;
@@ -246,9 +248,9 @@ export enum McpErrorCode {
  * Initialize request
  */
 export interface InitializeRequest {
-  jsonrpc: "2.0";
+  jsonrpc: '2.0';
   id: string | number;
-  method: "initialize";
+  method: 'initialize';
   params: InitializeParams;
 }
 
@@ -270,7 +272,7 @@ export interface ClientCapabilities {
  * Initialize response
  */
 export interface InitializeResponse {
-  jsonrpc: "2.0";
+  jsonrpc: '2.0';
   id: string | number;
   result: InitializeResult;
 }
@@ -304,9 +306,9 @@ export interface ServerInfo {
  * Tool call request
  */
 export interface ToolCallRequest {
-  jsonrpc: "2.0";
+  jsonrpc: '2.0';
   id: string | number;
-  method: "tools/call";
+  method: 'tools/call';
   params: ToolCallParams;
 }
 
@@ -319,7 +321,7 @@ export interface ToolCallParams {
  * Tool call response
  */
 export interface ToolCallResponse {
-  jsonrpc: "2.0";
+  jsonrpc: '2.0';
   id: string | number;
   result: ToolCallResult;
 }
@@ -330,9 +332,9 @@ export interface ToolCallResult {
 }
 
 export type ToolContent =
-  | { type: "text"; text: string }
-  | { type: "image"; data: string; mimeType: string }
-  | { type: "resource"; resource: ResourceContent };
+  | { type: 'text'; text: string }
+  | { type: 'image'; data: string; mimeType: string }
+  | { type: 'resource'; resource: ResourceContent };
 
 export interface ResourceContent {
   uri: string;
@@ -345,9 +347,9 @@ export interface ResourceContent {
  * List tools request
  */
 export interface ListToolsRequest {
-  jsonrpc: "2.0";
+  jsonrpc: '2.0';
   id: string | number;
-  method: "tools/list";
+  method: 'tools/list';
   params?: Record<string, never>;
 }
 
@@ -355,7 +357,7 @@ export interface ListToolsRequest {
  * List tools response
  */
 export interface ListToolsResponse {
-  jsonrpc: "2.0";
+  jsonrpc: '2.0';
   id: string | number;
   result: ListToolsResult;
 }
@@ -368,7 +370,7 @@ export interface ToolInfo {
   name: string;
   description?: string;
   inputSchema: {
-    type: "object";
+    type: 'object';
     properties?: Record<string, unknown>;
     required?: string[];
   };
@@ -378,7 +380,7 @@ export interface ToolInfo {
  * Notification message
  */
 export interface NotificationMessage {
-  jsonrpc: "2.0";
+  jsonrpc: '2.0';
   method: string;
   params?: unknown;
 }
@@ -387,16 +389,16 @@ export interface NotificationMessage {
  * Sampling notification (from server to client)
  */
 export interface SamplingNotification {
-  jsonrpc: "2.0";
-  method: "sampling/createMessage";
+  jsonrpc: '2.0';
+  method: 'sampling/createMessage';
   params: SamplingParams;
 }
 
 export interface SamplingParams {
   messages: Array<{
-    role: "user" | "assistant";
+    role: 'user' | 'assistant';
     content: {
-      type: "text" | "image";
+      type: 'text' | 'image';
       text?: string;
       data?: string;
       mimeType?: string;
@@ -409,7 +411,7 @@ export interface SamplingParams {
     intelligencePriority?: number;
   };
   systemPrompt?: string;
-  includeContext?: "none" | "thisServer" | "allServers";
+  includeContext?: 'none' | 'thisServer' | 'allServers';
   temperature?: number;
   maxTokens: number;
   stopSequences?: string[];
@@ -420,9 +422,9 @@ export interface SamplingParams {
  * Elicitation request (from server to client)
  */
 export interface ElicitationRequest {
-  jsonrpc: "2.0";
+  jsonrpc: '2.0';
   id: string | number;
-  method: "elicitation/request";
+  method: 'elicitation/request';
   params: ElicitationParams;
 }
 
@@ -439,10 +441,10 @@ export interface ElicitationParams {
  * Elicitation response (from client to server)
  */
 export interface ElicitationResponse {
-  jsonrpc: "2.0";
+  jsonrpc: '2.0';
   id: string | number;
   result: {
-    action: "accept" | "decline" | "cancel";
+    action: 'accept' | 'decline' | 'cancel';
     content?: Record<string, unknown>;
   };
 }
@@ -451,8 +453,8 @@ export interface ElicitationResponse {
  * Tools list changed notification
  */
 export interface ToolsListChangedNotification {
-  jsonrpc: "2.0";
-  method: "notifications/tools/list_changed";
+  jsonrpc: '2.0';
+  method: 'notifications/tools/list_changed';
   params?: Record<string, never>;
 }
 
@@ -460,8 +462,8 @@ export interface ToolsListChangedNotification {
  * Resources list changed notification
  */
 export interface ResourcesListChangedNotification {
-  jsonrpc: "2.0";
-  method: "notifications/resources/list_changed";
+  jsonrpc: '2.0';
+  method: 'notifications/resources/list_changed';
   params?: Record<string, never>;
 }
 
@@ -469,8 +471,8 @@ export interface ResourcesListChangedNotification {
  * Prompts list changed notification
  */
 export interface PromptsListChangedNotification {
-  jsonrpc: "2.0";
-  method: "notifications/prompts/list_changed";
+  jsonrpc: '2.0';
+  method: 'notifications/prompts/list_changed';
   params?: Record<string, never>;
 }
 ```
@@ -538,17 +540,17 @@ export type Brand<T, B> = T & { __brand: B };
 /**
  * Session ID
  */
-export type SessionId = Brand<string, "SessionId">;
+export type SessionId = Brand<string, 'SessionId'>;
 
 /**
  * Client ID
  */
-export type ClientId = Brand<string, "ClientId">;
+export type ClientId = Brand<string, 'ClientId'>;
 
 /**
  * Connection ID
  */
-export type ConnectionId = Brand<string, "ConnectionId">;
+export type ConnectionId = Brand<string, 'ConnectionId'>;
 ```
 
 ## Storage Schema (Deno KV)
@@ -561,17 +563,14 @@ export type ConnectionId = Brand<string, "ConnectionId">;
  */
 export type KVKey =
   // Messages
-  | ["messages", SessionId, string, UUID]  // timestamp as string for ordering
-  
+  | ['messages', SessionId, string, UUID] // timestamp as string for ordering
   // Clients
-  | ["clients", ClientId]
-  
+  | ['clients', ClientId]
   // Sessions
-  | ["sessions", SessionId]
-  
+  | ['sessions', SessionId]
   // Metadata
-  | ["metadata", "server_info"]
-  | ["metadata", "stats"];
+  | ['metadata', 'server_info']
+  | ['metadata', 'stats'];
 ```
 
 ### Stored Values
@@ -585,7 +584,7 @@ export interface StoredMessage {
   timestamp: Timestamp;
   sessionId: SessionId;
   clientId?: ClientId;
-  direction: "incoming" | "outgoing";
+  direction: 'incoming' | 'outgoing';
   message: McpMessage;
   metadata?: Record<string, JsonValue>;
 }
@@ -597,7 +596,7 @@ export interface StoredClient {
   id: ClientId;
   name: string;
   version?: string;
-  transport: "stdio" | "http";
+  transport: 'stdio' | 'http';
   connected: boolean;
   connectedAt: Timestamp;
   lastSeen: Timestamp;
@@ -665,12 +664,12 @@ export interface MessageViewerState {
 }
 
 export type MessageFilter =
-  | "all"
-  | "mcp"
-  | "sampling"
-  | "elicitation"
-  | "notifications"
-  | "errors";
+  | 'all'
+  | 'mcp'
+  | 'sampling'
+  | 'elicitation'
+  | 'notifications'
+  | 'errors';
 
 /**
  * Client selector state
@@ -697,18 +696,18 @@ export interface FormState {
 ```typescript
 // For runtime validation (using Zod)
 
-import { z } from "zod";
+import { z } from 'zod';
 
 /**
  * Console command schema
  */
 export const consoleCommandSchema = z.object({
   type: z.enum([
-    "trigger_notification",
-    "request_sampling",
-    "request_elicitation",
-    "get_clients",
-    "get_message_history",
+    'trigger_notification',
+    'request_sampling',
+    'request_elicitation',
+    'get_clients',
+    'get_message_history',
   ]),
   payload: z.unknown().optional(),
 });
@@ -727,14 +726,14 @@ export const notificationPayloadSchema = z.object({
 export const samplingPayloadSchema = z.object({
   messages: z.array(
     z.object({
-      role: z.enum(["user", "assistant"]),
+      role: z.enum(['user', 'assistant']),
       content: z.object({
-        type: z.enum(["text", "image"]),
+        type: z.enum(['text', 'image']),
         text: z.string().optional(),
         data: z.string().optional(),
         mimeType: z.string().optional(),
       }),
-    })
+    }),
   ),
   modelPreferences: z
     .object({
@@ -742,7 +741,7 @@ export const samplingPayloadSchema = z.object({
         .array(
           z.object({
             name: z.string().optional(),
-          })
+          }),
         )
         .optional(),
       costPriority: z.number().min(0).max(1).optional(),
@@ -763,7 +762,7 @@ export const elicitationPayloadSchema = z.object({
   message: z.string().min(1),
   requestedSchema: z
     .object({
-      type: z.enum(["object", "string", "number", "boolean", "array"]),
+      type: z.enum(['object', 'string', 'number', 'boolean', 'array']),
       properties: z.record(z.unknown()).optional(),
       required: z.array(z.string()).optional(),
       description: z.string().optional(),
@@ -778,7 +777,7 @@ export const clientInfoSchema = z.object({
   id: z.string(),
   name: z.string(),
   version: z.string().optional(),
-  transport: z.enum(["stdio", "http"]),
+  transport: z.enum(['stdio', 'http']),
   connected: z.boolean(),
   lastSeen: z.number(),
   sessionId: z.string().optional(),
@@ -793,10 +792,10 @@ export const clientInfoSchema = z.object({
  */
 export function isConsoleMessage(value: unknown): value is ConsoleMessage {
   return (
-    typeof value === "object" &&
+    typeof value === 'object' &&
     value !== null &&
-    "type" in value &&
-    "payload" in value
+    'type' in value &&
+    'payload' in value
   );
 }
 
@@ -805,10 +804,10 @@ export function isConsoleMessage(value: unknown): value is ConsoleMessage {
  */
 export function isMcpMessage(value: unknown): value is McpMessage {
   return (
-    typeof value === "object" &&
+    typeof value === 'object' &&
     value !== null &&
-    "jsonrpc" in value &&
-    (value as McpMessage).jsonrpc === "2.0"
+    'jsonrpc' in value &&
+    (value as McpMessage).jsonrpc === '2.0'
   );
 }
 
@@ -817,10 +816,10 @@ export function isMcpMessage(value: unknown): value is McpMessage {
  */
 export function isMcpError(value: unknown): value is McpError {
   return (
-    typeof value === "object" &&
+    typeof value === 'object' &&
     value !== null &&
-    "code" in value &&
-    "message" in value
+    'code' in value &&
+    'message' in value
   );
 }
 
@@ -828,23 +827,23 @@ export function isMcpError(value: unknown): value is McpError {
  * Type guard for notification messages
  */
 export function isNotificationMessage(
-  message: McpMessage
+  message: McpMessage,
 ): message is NotificationMessage {
-  return "method" in message && !"id" in message;
+  return 'method' in message && (!'id') in message;
 }
 
 /**
  * Type guard for request messages
  */
 export function isRequestMessage(message: McpMessage): boolean {
-  return "method" in message && "id" in message;
+  return 'method' in message && 'id' in message;
 }
 
 /**
  * Type guard for response messages
  */
 export function isResponseMessage(message: McpMessage): boolean {
-  return "id" in message && ("result" in message || "error" in message);
+  return 'id' in message && ('result' in message || 'error' in message);
 }
 ```
 
@@ -855,43 +854,43 @@ export function isResponseMessage(message: McpMessage): boolean {
  * MCP protocol version
  */
 export enum McpProtocolVersion {
-  V1_0_0 = "1.0.0",
+  V1_0_0 = '1.0.0',
 }
 
 /**
  * Transport type
  */
 export enum TransportType {
-  STDIO = "stdio",
-  HTTP = "http",
+  STDIO = 'stdio',
+  HTTP = 'http',
 }
 
 /**
  * Message direction
  */
 export enum MessageDirection {
-  INCOMING = "incoming",
-  OUTGOING = "outgoing",
+  INCOMING = 'incoming',
+  OUTGOING = 'outgoing',
 }
 
 /**
  * Connection status
  */
 export enum ConnectionStatus {
-  DISCONNECTED = "disconnected",
-  CONNECTING = "connecting",
-  CONNECTED = "connected",
-  RECONNECTING = "reconnecting",
-  ERROR = "error",
+  DISCONNECTED = 'disconnected',
+  CONNECTING = 'connecting',
+  CONNECTED = 'connected',
+  RECONNECTING = 'reconnecting',
+  ERROR = 'error',
 }
 
 /**
  * Notification methods
  */
 export enum NotificationMethod {
-  TOOLS_LIST_CHANGED = "notifications/tools/list_changed",
-  RESOURCES_LIST_CHANGED = "notifications/resources/list_changed",
-  PROMPTS_LIST_CHANGED = "notifications/prompts/list_changed",
+  TOOLS_LIST_CHANGED = 'notifications/tools/list_changed',
+  RESOURCES_LIST_CHANGED = 'notifications/resources/list_changed',
+  PROMPTS_LIST_CHANGED = 'notifications/prompts/list_changed',
 }
 ```
 
@@ -901,8 +900,8 @@ export enum NotificationMethod {
 /**
  * Protocol constants
  */
-export const MCP_PROTOCOL_VERSION = "1.0.0";
-export const JSONRPC_VERSION = "2.0";
+export const MCP_PROTOCOL_VERSION = '1.0.0';
+export const JSONRPC_VERSION = '2.0';
 
 /**
  * Timeout constants (milliseconds)
@@ -939,27 +938,21 @@ export const AUTO_SCROLL_THRESHOLD = 100;
 /**
  * Extract payload type from console message
  */
-export type ExtractPayload<T extends ConsoleMessageType> =
-  T extends "connection_established"
-    ? ConnectionEstablishedPayload
-    : T extends "client_list"
-    ? ClientListPayload
-    : T extends "message_history"
-    ? MessageHistoryPayload
-    : T extends "sampling_response"
-    ? SamplingResponsePayload
-    : T extends "elicitation_response"
-    ? ElicitationResponsePayload
-    : T extends "error"
-    ? ErrorPayload
-    : unknown;
+export type ExtractPayload<T extends ConsoleMessageType> = T extends 'connection_established'
+  ? ConnectionEstablishedPayload
+  : T extends 'client_list' ? ClientListPayload
+  : T extends 'message_history' ? MessageHistoryPayload
+  : T extends 'sampling_response' ? SamplingResponsePayload
+  : T extends 'elicitation_response' ? ElicitationResponsePayload
+  : T extends 'error' ? ErrorPayload
+  : unknown;
 
 /**
  * Create typed console message
  */
 export function createConsoleMessage<T extends ConsoleMessageType>(
   type: T,
-  payload: ExtractPayload<T>
+  payload: ExtractPayload<T>,
 ): ConsoleMessage {
   return {
     type,
@@ -973,7 +966,7 @@ export function createConsoleMessage<T extends ConsoleMessageType>(
  */
 export function createConsoleCommand<T extends ConsoleCommandType>(
   type: T,
-  payload?: unknown
+  payload?: unknown,
 ): ConsoleCommand {
   return {
     type,
@@ -984,6 +977,5 @@ export function createConsoleCommand<T extends ConsoleCommandType>(
 
 ---
 
-**Document Version**: 1.0
-**Last Updated**: 2025-10-22
-**Status**: Design Complete - Ready for Implementation
+**Document Version**: 1.0 **Last Updated**: 2025-10-22 **Status**: Design
+Complete - Ready for Implementation

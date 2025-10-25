@@ -1,21 +1,21 @@
 /**
  * Validation Schemas
- * 
+ *
  * Zod schemas for runtime validation of console commands and payloads.
  */
 
-import { z } from "zod";
+import { z } from 'zod';
 
 /**
  * Console command schema
  */
 export const consoleCommandSchema = z.object({
   type: z.enum([
-    "trigger_notification",
-    "request_sampling",
-    "request_elicitation",
-    "get_clients",
-    "get_message_history",
+    'trigger_notification',
+    'request_sampling',
+    'request_elicitation',
+    'get_clients',
+    'get_message_history',
   ]),
   payload: z.unknown().optional(),
 });
@@ -25,14 +25,14 @@ export const consoleCommandSchema = z.object({
  */
 export const notificationPayloadSchema = z.object({
   level: z.enum([
-    "debug",
-    "info",
-    "notice",
-    "warning",
-    "error",
-    "critical",
-    "alert",
-    "emergency",
+    'debug',
+    'info',
+    'notice',
+    'warning',
+    'error',
+    'critical',
+    'alert',
+    'emergency',
   ]),
   logger: z.string().optional(),
   data: z.unknown(),
@@ -44,11 +44,11 @@ export const notificationPayloadSchema = z.object({
  */
 const samplingContentSchema = z.union([
   z.object({
-    type: z.literal("text"),
+    type: z.literal('text'),
     text: z.string(),
   }),
   z.object({
-    type: z.literal("image"),
+    type: z.literal('image'),
     data: z.string(),
     mimeType: z.string(),
   }),
@@ -58,7 +58,7 @@ const samplingContentSchema = z.union([
  * Sampling message schema
  */
 const samplingMessageSchema = z.object({
-  role: z.enum(["user", "assistant"]),
+  role: z.enum(['user', 'assistant']),
   content: samplingContentSchema,
 });
 
@@ -70,7 +70,7 @@ const modelPreferencesSchema = z.object({
     .array(
       z.object({
         name: z.string().optional(),
-      })
+      }),
     )
     .optional(),
   costPriority: z.number().min(0).max(1).optional(),
@@ -82,10 +82,13 @@ const modelPreferencesSchema = z.object({
  * Sampling payload schema
  */
 export const samplingPayloadSchema = z.object({
-  messages: z.array(samplingMessageSchema).min(1, "At least one message required"),
+  messages: z.array(samplingMessageSchema).min(
+    1,
+    'At least one message required',
+  ),
   modelPreferences: modelPreferencesSchema.optional(),
   systemPrompt: z.string().optional(),
-  includeContext: z.enum(["none", "thisServer", "allServers"]).optional(),
+  includeContext: z.enum(['none', 'thisServer', 'allServers']).optional(),
   temperature: z.number().min(0).max(2).optional(),
   maxTokens: z.number().int().positive(),
   stopSequences: z.array(z.string()).optional(),
@@ -97,7 +100,7 @@ export const samplingPayloadSchema = z.object({
  */
 const elicitationSchemaPropertySchema: z.ZodType<any> = z.lazy(() =>
   z.object({
-    type: z.enum(["string", "number", "boolean", "array", "object"]),
+    type: z.enum(['string', 'number', 'boolean', 'array', 'object']),
     description: z.string().optional(),
     enum: z.array(z.unknown()).optional(),
     enumNames: z.array(z.string()).optional(),
@@ -110,7 +113,7 @@ const elicitationSchemaPropertySchema: z.ZodType<any> = z.lazy(() =>
  * Elicitation schema
  */
 const elicitationSchemaSchema = z.object({
-  type: z.enum(["object", "string", "number", "boolean", "array"]),
+  type: z.enum(['object', 'string', 'number', 'boolean', 'array']),
   properties: z.record(elicitationSchemaPropertySchema).optional(),
   required: z.array(z.string()).optional(),
   description: z.string().optional(),
@@ -120,7 +123,7 @@ const elicitationSchemaSchema = z.object({
  * Elicitation payload schema
  */
 export const elicitationPayloadSchema = z.object({
-  message: z.string().min(1, "Message is required"),
+  message: z.string().min(1, 'Message is required'),
   requestedSchema: elicitationSchemaSchema,
 });
 
@@ -140,7 +143,7 @@ export const clientInfoSchema = z.object({
   sessionId: z.string(),
   connectedAt: z.number(),
   lastSeen: z.number(),
-  transport: z.enum(["stdio", "http"]),
+  transport: z.enum(['stdio', 'http']),
   metadata: z.record(z.unknown()).optional(),
 });
 
@@ -150,7 +153,7 @@ export const clientInfoSchema = z.object({
 
 /**
  * Validate console command
- * 
+ *
  * @param data - Unknown data to validate
  * @returns Validation result with typed data or error
  */
@@ -191,6 +194,6 @@ export function validateMessageHistoryPayload(data: unknown) {
  */
 export function formatZodError(error: z.ZodError): string {
   return error.errors
-    .map((err) => `${err.path.join(".")}: ${err.message}`)
-    .join(", ");
+    .map((err) => `${err.path.join('.')}: ${err.message}`)
+    .join(', ');
 }

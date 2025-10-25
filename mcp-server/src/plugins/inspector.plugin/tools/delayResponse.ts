@@ -5,20 +5,20 @@
  * Useful for testing timeout handling and async behavior.
  */
 
-import { z } from "zod";
+import { z } from 'zod';
 import type {
   InferZodSchema,
   ToolDependencies,
   ToolRegistration,
-} from "@beyondbetter/bb-mcp-server";
-import { toError } from "@beyondbetter/bb-mcp-server";
+} from '@beyondbetter/bb-mcp-server';
+import { toError } from '@beyondbetter/bb-mcp-server';
 
 // Input schema
 const delayResponseInputSchema = {
   delay: z.number().int().min(0).max(60000)
-    .describe("Delay duration in milliseconds (0-60000)"),
+    .describe('Delay duration in milliseconds (0-60000)'),
   message: z.string().optional()
-    .describe("Optional message to return after delay"),
+    .describe('Optional message to return after delay'),
 } as const;
 
 export function getTools(dependencies: ToolDependencies): ToolRegistration[] {
@@ -26,19 +26,18 @@ export function getTools(dependencies: ToolDependencies): ToolRegistration[] {
 
   return [
     {
-      name: "delay_response",
+      name: 'delay_response',
       definition: {
-        title: "Delay Response",
-        description:
-          "Delay the response by a specified duration (for testing timeouts)",
-        category: "Testing",
+        title: 'Delay Response',
+        description: 'Delay the response by a specified duration (for testing timeouts)',
+        category: 'Testing',
         inputSchema: delayResponseInputSchema,
       },
       handler: async (
         args: InferZodSchema<typeof delayResponseInputSchema>,
       ) => {
         try {
-          logger.debug("Delay response tool called", { args });
+          logger.debug('Delay response tool called', { args });
 
           const startTime = Date.now();
 
@@ -50,12 +49,12 @@ export function getTools(dependencies: ToolDependencies): ToolRegistration[] {
           return {
             content: [
               {
-                type: "text",
+                type: 'text',
                 text: JSON.stringify(
                   {
                     requestedDelay: args.delay,
                     actualDelay,
-                    message: args.message || "Delay completed",
+                    message: args.message || 'Delay completed',
                   },
                   null,
                   2,
@@ -64,14 +63,12 @@ export function getTools(dependencies: ToolDependencies): ToolRegistration[] {
             ],
           };
         } catch (error) {
-          logger.error("Delay response tool failed:", toError(error));
+          logger.error('Delay response tool failed:', toError(error));
           return {
             content: [
               {
-                type: "text",
-                text: `Error: ${
-                  error instanceof Error ? error.message : "Unknown error"
-                }`,
+                type: 'text',
+                text: `Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
               },
             ],
             isError: true,

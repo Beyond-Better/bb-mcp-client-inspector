@@ -86,21 +86,26 @@
 #### 1. AppServer (bb-mcp-server)
 
 **Responsibilities**:
+
 - MCP server lifecycle management
 - Plugin discovery and loading
 - Dependency injection
 - Configuration management
 
 **Key Classes**:
+
 ```typescript
 class AppServer {
-  static async create(dependenciesFactory: DependenciesFactory): Promise<AppServer>
-  async start(): Promise<void>
-  async stop(): Promise<void>
+  static async create(
+    dependenciesFactory: DependenciesFactory,
+  ): Promise<AppServer>;
+  async start(): Promise<void>;
+  async stop(): Promise<void>;
 }
 ```
 
 **Integration Points**:
+
 - Loads inspector plugin from `src/plugins/inspector.plugin/`
 - Initializes ConsoleManager with BeyondMcpServer instance
 - Provides MessageTracker access to protocol events
@@ -108,31 +113,38 @@ class AppServer {
 #### 2. BeyondMcpServer (from bb-mcp-server)
 
 **Responsibilities**:
+
 - MCP protocol implementation (SDK 1.18.2)
 - JSON-RPC message handling
 - Tool and workflow registration
 - Transport management (STDIO/HTTP)
 
 **Key Interfaces**:
+
 ```typescript
 interface BeyondMcpServer {
   // Tool management
-  registerTool(name: string, definition: ToolDefinition, handler: ToolHandler): void
-  
+  registerTool(
+    name: string,
+    definition: ToolDefinition,
+    handler: ToolHandler,
+  ): void;
+
   // Notification sending
-  sendNotification(method: string, params?: unknown): Promise<void>
-  
+  sendNotification(method: string, params?: unknown): Promise<void>;
+
   // Sampling (createMessage)
-  createMessage(request: CreateMessageRequest): Promise<CreateMessageResponse>
-  
+  createMessage(request: CreateMessageRequest): Promise<CreateMessageResponse>;
+
   // Elicitation
-  elicitInput(request: ElicitInputRequest): Promise<ElicitInputResponse>
+  elicitInput(request: ElicitInputRequest): Promise<ElicitInputResponse>;
 }
 ```
 
 #### 3. Inspector Plugin
 
 **Structure**:
+
 ```
 inspector.plugin/
 ├── plugin.ts              # Plugin definition
@@ -146,27 +158,29 @@ inspector.plugin/
 ```
 
 **Plugin Definition**:
+
 ```typescript
 const InspectorPlugin: AppPlugin = {
   name: 'inspector',
   version: '1.0.0',
   description: 'Inspector tools for testing MCP clients',
-  
+
   tools: [
     // Array of tool definitions
     {
       name: 'echo',
-      definition: { /* ... */ },
-      handler: async (args) => { /* ... */ }
+      definition: {/* ... */},
+      handler: async (args) => {/* ... */},
     },
     // ... more tools
   ],
-  
-  workflows: [] // Empty for v1.0
+
+  workflows: [], // Empty for v1.0
 };
 ```
 
 **Tool Pattern**:
+
 ```typescript
 export const echoTool = {
   name: 'echo',
@@ -176,26 +190,27 @@ export const echoTool = {
     category: 'Testing',
     inputSchema: {
       message: z.string().describe('Message to echo'),
-      delay: z.number().optional().describe('Delay in ms before responding')
-    }
+      delay: z.number().optional().describe('Delay in ms before responding'),
+    },
   },
   handler: async (args: { message: string; delay?: number }) => {
     if (args.delay) {
-      await new Promise(resolve => setTimeout(resolve, args.delay));
+      await new Promise((resolve) => setTimeout(resolve, args.delay));
     }
     return {
       content: [{
         type: 'text',
-        text: args.message
-      }]
+        text: args.message,
+      }],
     };
-  }
+  },
 };
 ```
 
 #### 4. Console Manager
 
 **Responsibilities**:
+
 - WebSocket server endpoint
 - UI client connection management
 - Message broadcasting to UI
@@ -203,30 +218,31 @@ export const echoTool = {
 - Notification triggering
 
 **Class Structure**:
+
 ```typescript
 class ConsoleManager {
   private wsConnections: Map<string, WebSocket>;
   private mcpServer: BeyondMcpServer;
   private messageTracker: MessageTracker;
-  
+
   constructor(mcpServer: BeyondMcpServer, messageTracker: MessageTracker) {
     this.mcpServer = mcpServer;
     this.messageTracker = messageTracker;
     this.wsConnections = new Map();
   }
-  
+
   // WebSocket endpoint handler
   handleWebSocket(request: Request): Response {
     const { socket, response } = Deno.upgradeWebSocket(request);
     const connectionId = crypto.randomUUID();
-    
+
     socket.onopen = () => this.handleConnection(connectionId, socket);
     socket.onmessage = (e) => this.handleMessage(connectionId, e.data);
     socket.onclose = () => this.handleDisconnection(connectionId);
-    
+
     return response;
   }
-  
+
   // Broadcast MCP message to all UI clients
   broadcastMessage(message: ConsoleMessage): void {
     const payload = JSON.stringify(message);
@@ -236,11 +252,14 @@ class ConsoleManager {
       }
     }
   }
-  
+
   // Handle commands from UI
-  private async handleMessage(connectionId: string, data: string): Promise<void> {
+  private async handleMessage(
+    connectionId: string,
+    data: string,
+  ): Promise<void> {
     const command = JSON.parse(data) as ConsoleCommand;
-    
+
     switch (command.type) {
       case 'trigger_notification':
         await this.triggerNotification(command.payload);
@@ -256,52 +275,54 @@ class ConsoleManager {
         break;
     }
   }
-  
+
   // Trigger notification to MCP clients
-  private async triggerNotification(payload: NotificationPayload): Promise<void> {
+  private async triggerNotification(
+    payload: NotificationPayload,
+  ): Promise<void> {
     await this.mcpServer.sendNotification(
       payload.method,
-      payload.params
+      payload.params,
     );
   }
-  
+
   // Request sampling from MCP client
   private async requestSampling(payload: SamplingPayload): Promise<void> {
     try {
       const response = await this.mcpServer.createMessage({
         messages: payload.messages,
         modelPreferences: payload.modelPreferences,
-        maxTokens: payload.maxTokens
+        maxTokens: payload.maxTokens,
       });
-      
+
       this.broadcastMessage({
         type: 'sampling_response',
-        payload: response
+        payload: response,
       });
     } catch (error) {
       this.broadcastMessage({
         type: 'sampling_error',
-        payload: { error: error.message }
+        payload: { error: error.message },
       });
     }
   }
-  
+
   // Request elicitation from MCP client
   private async requestElicitation(payload: ElicitationPayload): Promise<void> {
     try {
       const response = await this.mcpServer.elicitInput({
         message: payload.message,
-        requestedSchema: payload.requestedSchema
+        requestedSchema: payload.requestedSchema,
       });
-      
+
       this.broadcastMessage({
         type: 'elicitation_response',
-        payload: response
+        payload: response,
       });
     } catch (error) {
       this.broadcastMessage({
         type: 'elicitation_error',
-        payload: { error: error.message }
+        payload: { error: error.message },
       });
     }
   }
@@ -311,76 +332,82 @@ class ConsoleManager {
 #### 5. Message Tracker
 
 **Responsibilities**:
+
 - Capture MCP protocol messages
 - Store message history per session
 - Provide message retrieval
 - Session management
 
 **Class Structure**:
+
 ```typescript
 class MessageTracker {
   private kv: Deno.Kv;
-  
+
   constructor(kv: Deno.Kv) {
     this.kv = kv;
   }
-  
+
   // Track incoming/outgoing MCP messages
   async trackMessage(
     sessionId: string,
     direction: 'incoming' | 'outgoing',
-    message: McpMessage
+    message: McpMessage,
   ): Promise<void> {
     const entry: MessageEntry = {
       id: crypto.randomUUID(),
       timestamp: Date.now(),
       sessionId,
       direction,
-      message
+      message,
     };
-    
+
     // Store in KV
     await this.kv.set(
       ['messages', sessionId, entry.id],
-      entry
+      entry,
     );
   }
-  
+
   // Get message history for session
   async getMessages(
     sessionId: string,
-    limit: number = 100
+    limit: number = 100,
   ): Promise<MessageEntry[]> {
     const messages: MessageEntry[] = [];
-    
-    for await (const entry of this.kv.list<MessageEntry>({
-      prefix: ['messages', sessionId]
-    })) {
+
+    for await (
+      const entry of this.kv.list<MessageEntry>({
+        prefix: ['messages', sessionId],
+      })
+    ) {
       messages.push(entry.value);
       if (messages.length >= limit) break;
     }
-    
+
     return messages.sort((a, b) => a.timestamp - b.timestamp);
   }
-  
+
   // Track client connections
   async trackClient(clientId: string, info: ClientInfo): Promise<void> {
     await this.kv.set(
       ['clients', clientId],
-      info
+      info,
     );
   }
-  
+
   // Get all connected clients
   async getClients(): Promise<ClientInfo[]> {
     const clients: ClientInfo[] = [];
-    
-    for await (const entry of this.kv.list<ClientInfo>({
-      prefix: ['clients']
-    })) {
+
+    for await (
+      const entry of this.kv.list<ClientInfo>({
+        prefix: ['clients'],
+      })
+    ) {
       clients.push(entry.value);
     }
-    
+
     return clients;
   }
 }
@@ -391,6 +418,7 @@ class MessageTracker {
 #### 1. Fresh App Setup
 
 **main.ts**:
+
 ```typescript
 import { App } from 'fresh';
 import { config } from './fresh.config.ts';
@@ -401,6 +429,7 @@ app.listen({ port: 8000 });
 ```
 
 **fresh.config.ts**:
+
 ```typescript
 import { defineConfig } from 'fresh';
 import tailwind from 'fresh/plugins/tailwind';
@@ -413,6 +442,7 @@ export default defineConfig({
 #### 2. Routes
 
 **routes/index.tsx** (Console UI):
+
 ```typescript
 import { PageProps } from 'fresh';
 import ConnectionStatus from '../islands/ConnectionStatus.tsx';
@@ -423,21 +453,22 @@ import NotificationTrigger from '../islands/NotificationTrigger.tsx';
 import MessageViewer from '../islands/MessageViewer.tsx';
 
 export default function Console(props: PageProps) {
-  const wsUrl = Deno.env.get('MCP_SERVER_WS_URL') || 'ws://localhost:3000/ws/console';
-  
+  const wsUrl = Deno.env.get('MCP_SERVER_WS_URL') ||
+    'ws://localhost:3000/ws/console';
+
   return (
-    <div class="container mx-auto p-4">
-      <header class="mb-6">
-        <h1 class="text-3xl font-bold">MCP Client Inspector</h1>
+    <div class='container mx-auto p-4'>
+      <header class='mb-6'>
+        <h1 class='text-3xl font-bold'>MCP Client Inspector</h1>
         <ConnectionStatus wsUrl={wsUrl} />
       </header>
-      
-      <div class="grid grid-cols-12 gap-4">
-        <div class="col-span-8">
+
+      <div class='grid grid-cols-12 gap-4'>
+        <div class='col-span-8'>
           <MessageViewer wsUrl={wsUrl} />
         </div>
-        
-        <div class="col-span-4 space-y-4">
+
+        <div class='col-span-4 space-y-4'>
           <ClientSelector wsUrl={wsUrl} />
           <SamplingForm wsUrl={wsUrl} />
           <ElicitationForm wsUrl={wsUrl} />
@@ -452,6 +483,7 @@ export default function Console(props: PageProps) {
 #### 3. Islands (Interactive Components)
 
 **Structure**:
+
 ```
 islands/
 ├── ConnectionStatus.tsx    # WebSocket connection status
@@ -463,6 +495,7 @@ islands/
 ```
 
 **WebSocket Client Pattern** (shared across islands):
+
 ```typescript
 import { useEffect, useState } from 'preact/hooks';
 
@@ -470,20 +503,20 @@ function useWebSocket(url: string) {
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [connected, setConnected] = useState(false);
   const [messages, setMessages] = useState<ConsoleMessage[]>([]);
-  
+
   useEffect(() => {
     const socket = new WebSocket(url);
-    
+
     socket.onopen = () => {
       setConnected(true);
       setWs(socket);
     };
-    
+
     socket.onmessage = (event) => {
       const message = JSON.parse(event.data) as ConsoleMessage;
-      setMessages(prev => [...prev, message]);
+      setMessages((prev) => [...prev, message]);
     };
-    
+
     socket.onclose = () => {
       setConnected(false);
       setWs(null);
@@ -492,18 +525,18 @@ function useWebSocket(url: string) {
         // Trigger reconnect
       }, 2000);
     };
-    
+
     return () => {
       socket.close();
     };
   }, [url]);
-  
+
   const sendCommand = (command: ConsoleCommand) => {
     if (ws && ws.readyState === WebSocket.OPEN) {
       ws.send(JSON.stringify(command));
     }
   };
-  
+
   return { ws, connected, messages, sendCommand };
 }
 ```
@@ -613,22 +646,23 @@ Terminal 1: MCP Server          Terminal 2: Fresh UI
 ### WebSocket Security (Roadmap)
 
 **Token-based Authentication**:
+
 ```typescript
 class ConsoleManager {
   handleWebSocket(request: Request): Response {
     // Extract token from query params or headers
     const url = new URL(request.url);
     const token = url.searchParams.get('token');
-    
+
     // Validate token (if authentication enabled)
     if (this.authEnabled && !this.validateToken(token)) {
       return new Response('Unauthorized', { status: 401 });
     }
-    
+
     // Proceed with WebSocket upgrade
     // ...
   }
-  
+
   private validateToken(token: string | null): boolean {
     // Token validation logic (future implementation)
     return true;
@@ -639,6 +673,7 @@ class ConsoleManager {
 ### CORS Configuration
 
 **MCP Server** (for HTTP transport):
+
 ```typescript
 // In dependency helper or HTTP setup
 const corsHeaders = {
@@ -715,16 +750,16 @@ try {
       payload: {
         code: error.code,
         message: error.message,
-        data: error.data
-      }
+        data: error.data,
+      },
     });
   } else {
     // Unexpected error
     consoleManager.broadcastMessage({
       type: 'error',
       payload: {
-        message: 'Internal server error'
-      }
+        message: 'Internal server error',
+      },
     });
   }
 }
@@ -738,13 +773,13 @@ socket.onerror = (event) => {
   console.error('WebSocket error:', event);
   setConnectionError({
     message: 'Connection error',
-    timestamp: Date.now()
+    timestamp: Date.now(),
   });
 };
 
 socket.onclose = (event) => {
   setConnected(false);
-  
+
   // Attempt reconnection
   if (!event.wasClean) {
     setTimeout(() => {
@@ -782,6 +817,5 @@ See TESTING_STRATEGY.md for detailed test specifications.
 
 ---
 
-**Document Version**: 1.0
-**Last Updated**: 2025-10-22
-**Status**: Design Complete - Ready for Implementation
+**Document Version**: 1.0 **Last Updated**: 2025-10-22 **Status**: Design
+Complete - Ready for Implementation

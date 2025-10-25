@@ -1,12 +1,12 @@
 /**
  * Common Utility Types
- * 
+ *
  * Shared utility types and helpers used across the project.
  */
 
 /**
  * Generic result type for error handling
- * 
+ *
  * @example
  * ```ts
  * function divide(a: number, b: number): Result<number> {
@@ -15,7 +15,7 @@
  *   }
  *   return { success: true, data: a / b };
  * }
- * 
+ *
  * const result = divide(10, 2);
  * if (result.success) {
  *   console.log(result.data); // 5
@@ -73,19 +73,19 @@ export type JsonValue =
 
 /**
  * Branded type helper for type safety
- * 
+ *
  * Creates a nominal type that prevents accidental mixing of different ID types.
- * 
+ *
  * @example
  * ```ts
  * type UserId = Brand<string, "UserId">;
  * type SessionId = Brand<string, "SessionId">;
- * 
+ *
  * function getUser(id: UserId) { ... }
- * 
+ *
  * const userId: UserId = "user-123" as UserId;
  * const sessionId: SessionId = "session-456" as SessionId;
- * 
+ *
  * getUser(userId); // OK
  * getUser(sessionId); // Type error!
  * ```
@@ -95,48 +95,48 @@ export type Brand<T, B> = T & { __brand: B };
 /**
  * Session ID (branded string)
  */
-export type SessionId = Brand<string, "SessionId">;
+export type SessionId = Brand<string, 'SessionId'>;
 
 /**
  * Client ID (branded string)
  */
-export type ClientId = Brand<string, "ClientId">;
+export type ClientId = Brand<string, 'ClientId'>;
 
 /**
  * Connection ID (branded string)
  */
-export type ConnectionId = Brand<string, "ConnectionId">;
+export type ConnectionId = Brand<string, 'ConnectionId'>;
 
 /**
  * Message ID (branded string)
  */
-export type MessageId = Brand<string, "MessageId">;
+export type MessageId = Brand<string, 'MessageId'>;
 
 /**
  * Transport type enumeration
  */
 export enum TransportType {
-  STDIO = "stdio",
-  HTTP = "http",
+  STDIO = 'stdio',
+  HTTP = 'http',
 }
 
 /**
  * Message direction enumeration
  */
 export enum MessageDirection {
-  INCOMING = "incoming",
-  OUTGOING = "outgoing",
+  INCOMING = 'incoming',
+  OUTGOING = 'outgoing',
 }
 
 /**
  * Connection status enumeration
  */
 export enum ConnectionStatus {
-  DISCONNECTED = "disconnected",
-  CONNECTING = "connecting",
-  CONNECTED = "connected",
-  RECONNECTING = "reconnecting",
-  ERROR = "error",
+  DISCONNECTED = 'disconnected',
+  CONNECTING = 'connecting',
+  CONNECTED = 'connected',
+  RECONNECTING = 'reconnecting',
+  ERROR = 'error',
 }
 
 /**

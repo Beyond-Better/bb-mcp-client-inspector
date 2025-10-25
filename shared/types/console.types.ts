@@ -1,11 +1,11 @@
 /**
  * Console WebSocket Protocol Types
- * 
+ *
  * Type definitions for WebSocket communication between MCP server and Fresh UI console.
  */
 
-import type { ConnectionId, SessionId, ClientId, Timestamp, JsonValue } from "./common.types.ts";
-import type { McpMessage } from "./mcp.types.ts";
+import type { ClientId, ConnectionId, JsonValue, SessionId, Timestamp } from './common.types.ts';
+import type { McpMessage } from './mcp.types.ts';
 
 /**
  * Message sent from MCP server to console UI
@@ -20,19 +20,19 @@ export interface ConsoleMessage {
  * All console message types
  */
 export type ConsoleMessageType =
-  | "connection_established"
-  | "client_list"
-  | "message_history"
-  | "mcp_message"
-  | "tool_call"
-  | "tool_response"
-  | "sampling_response"
-  | "sampling_error"
-  | "elicitation_response"
-  | "elicitation_error"
-  | "notification_sent"
-  | "notification_error"
-  | "error";
+  | 'connection_established'
+  | 'client_list'
+  | 'message_history'
+  | 'mcp_message'
+  | 'tool_call'
+  | 'tool_response'
+  | 'sampling_response'
+  | 'sampling_error'
+  | 'elicitation_response'
+  | 'elicitation_error'
+  | 'notification_sent'
+  | 'notification_error'
+  | 'error';
 
 /**
  * Command sent from console UI to MCP server
@@ -46,11 +46,11 @@ export interface ConsoleCommand {
  * All console command types
  */
 export type ConsoleCommandType =
-  | "trigger_notification"
-  | "request_sampling"
-  | "request_elicitation"
-  | "get_clients"
-  | "get_message_history";
+  | 'trigger_notification'
+  | 'request_sampling'
+  | 'request_elicitation'
+  | 'get_clients'
+  | 'get_message_history';
 
 /**
  * Connection established payload
@@ -76,7 +76,7 @@ export interface ClientInfo {
   sessionId: SessionId;
   connectedAt: Timestamp;
   lastSeen: Timestamp;
-  transport: "stdio" | "http";
+  transport: 'stdio' | 'http';
   metadata?: Record<string, JsonValue>;
 }
 
@@ -96,7 +96,7 @@ export interface MessageEntry {
   id: string;
   timestamp: Timestamp;
   sessionId: SessionId;
-  direction: "incoming" | "outgoing";
+  direction: 'incoming' | 'outgoing';
   message: McpMessage;
 }
 
@@ -127,14 +127,14 @@ export interface NotificationPayload {
  * Notification levels
  */
 export type NotificationLevel =
-  | "debug"
-  | "info"
-  | "notice"
-  | "warning"
-  | "error"
-  | "critical"
-  | "alert"
-  | "emergency";
+  | 'debug'
+  | 'info'
+  | 'notice'
+  | 'warning'
+  | 'error'
+  | 'critical'
+  | 'alert'
+  | 'emergency';
 
 /**
  * Sampling request payload
@@ -143,7 +143,7 @@ export interface SamplingPayload {
   messages: SamplingMessage[];
   modelPreferences?: ModelPreferences;
   systemPrompt?: string;
-  includeContext?: "none" | "thisServer" | "allServers";
+  includeContext?: 'none' | 'thisServer' | 'allServers';
   temperature?: number;
   maxTokens: number;
   stopSequences?: string[];
@@ -158,7 +158,7 @@ export interface SamplingPayload {
  * Sampling message
  */
 export interface SamplingMessage {
-  role: "user" | "assistant";
+  role: 'user' | 'assistant';
   content: SamplingContent;
 }
 
@@ -166,8 +166,8 @@ export interface SamplingMessage {
  * Sampling content types
  */
 export type SamplingContent =
-  | { type: "text"; text: string }
-  | { type: "image"; data: string; mimeType: string };
+  | { type: 'text'; text: string }
+  | { type: 'image'; data: string; mimeType: string };
 
 /**
  * Model preferences for sampling
@@ -192,7 +192,7 @@ export interface ModelHint {
 export interface SamplingResponsePayload {
   content: SamplingContent;
   model?: string;
-  stopReason?: "endTurn" | "stopSequence" | "maxTokens";
+  stopReason?: 'endTurn' | 'stopSequence' | 'maxTokens';
 }
 
 /**
@@ -211,7 +211,7 @@ export interface ElicitationPayload {
  * Elicitation schema for structured input
  */
 export interface ElicitationSchema {
-  type: "object" | "string" | "number" | "boolean" | "array";
+  type: 'object' | 'string' | 'number' | 'boolean' | 'array';
   properties?: Record<string, ElicitationSchemaProperty>;
   required?: string[];
   description?: string;
@@ -221,7 +221,7 @@ export interface ElicitationSchema {
  * Elicitation schema property
  */
 export interface ElicitationSchemaProperty {
-  type: "string" | "number" | "boolean" | "array" | "object";
+  type: 'string' | 'number' | 'boolean' | 'array' | 'object';
   description?: string;
   enum?: unknown[];
   enumNames?: string[];
@@ -233,7 +233,7 @@ export interface ElicitationSchemaProperty {
  * Elicitation response payload
  */
 export interface ElicitationResponsePayload {
-  action: "accept" | "decline" | "cancel";
+  action: 'accept' | 'decline' | 'cancel';
   content?: Record<string, unknown>;
 }
 
@@ -264,10 +264,10 @@ export interface MessageHistoryRequestPayload {
  */
 export function isConsoleMessage(value: unknown): value is ConsoleMessage {
   return (
-    typeof value === "object" &&
+    typeof value === 'object' &&
     value !== null &&
-    "type" in value &&
-    "payload" in value
+    'type' in value &&
+    'payload' in value
   );
 }
 
@@ -275,81 +275,81 @@ export function isConsoleMessage(value: unknown): value is ConsoleMessage {
  * Type guard for connection established message
  */
 export function isConnectionEstablished(
-  message: ConsoleMessage
-): message is ConsoleMessage & { type: "connection_established" } {
-  return message.type === "connection_established";
+  message: ConsoleMessage,
+): message is ConsoleMessage & { type: 'connection_established' } {
+  return message.type === 'connection_established';
 }
 
 /**
  * Type guard for client list message
  */
 export function isClientList(
-  message: ConsoleMessage
-): message is ConsoleMessage & { type: "client_list" } {
-  return message.type === "client_list";
+  message: ConsoleMessage,
+): message is ConsoleMessage & { type: 'client_list' } {
+  return message.type === 'client_list';
 }
 
 /**
  * Type guard for message history
  */
 export function isMessageHistory(
-  message: ConsoleMessage
-): message is ConsoleMessage & { type: "message_history" } {
-  return message.type === "message_history";
+  message: ConsoleMessage,
+): message is ConsoleMessage & { type: 'message_history' } {
+  return message.type === 'message_history';
 }
 
 /**
  * Type guard for sampling response
  */
 export function isSamplingResponse(
-  message: ConsoleMessage
-): message is ConsoleMessage & { type: "sampling_response" } {
-  return message.type === "sampling_response";
+  message: ConsoleMessage,
+): message is ConsoleMessage & { type: 'sampling_response' } {
+  return message.type === 'sampling_response';
 }
 
 /**
  * Type guard for sampling error
  */
 export function isSamplingError(
-  message: ConsoleMessage
-): message is ConsoleMessage & { type: "sampling_error" } {
-  return message.type === "sampling_error";
+  message: ConsoleMessage,
+): message is ConsoleMessage & { type: 'sampling_error' } {
+  return message.type === 'sampling_error';
 }
 
 /**
  * Type guard for elicitation response
  */
 export function isElicitationResponse(
-  message: ConsoleMessage
-): message is ConsoleMessage & { type: "elicitation_response" } {
-  return message.type === "elicitation_response";
+  message: ConsoleMessage,
+): message is ConsoleMessage & { type: 'elicitation_response' } {
+  return message.type === 'elicitation_response';
 }
 
 /**
  * Type guard for elicitation error
  */
 export function isElicitationError(
-  message: ConsoleMessage
-): message is ConsoleMessage & { type: "elicitation_error" } {
-  return message.type === "elicitation_error";
+  message: ConsoleMessage,
+): message is ConsoleMessage & { type: 'elicitation_error' } {
+  return message.type === 'elicitation_error';
 }
 
 /**
  * Type guard for notification sent
  */
 export function isNotificationSent(
-  message: ConsoleMessage
-): message is ConsoleMessage & { type: "notification_sent" } {
-  return message.type === "notification_sent";
+  message: ConsoleMessage,
+): message is ConsoleMessage & { type: 'notification_sent' } {
+  return message.type === 'notification_sent';
 }
 
 /**
  * Type guard for error message
  */
 export function isErrorMessage(
-  message: ConsoleMessage
-): message is ConsoleMessage & { type: "error" } {
-  return message.type === "error";
+  message: ConsoleMessage,
+): message is ConsoleMessage & { type: 'error' } {
+  return message.type === 'error';
 }
 
 // ============================================================================
@@ -362,7 +362,7 @@ export function isErrorMessage(
 export function createConsoleMessage<T extends ConsoleMessageType>(
   type: T,
   payload: unknown,
-  timestamp?: Timestamp
+  timestamp?: Timestamp,
 ): ConsoleMessage {
   return {
     type,
@@ -376,7 +376,7 @@ export function createConsoleMessage<T extends ConsoleMessageType>(
  */
 export function createConsoleCommand<T extends ConsoleCommandType>(
   type: T,
-  payload?: unknown
+  payload?: unknown,
 ): ConsoleCommand {
   return {
     type,

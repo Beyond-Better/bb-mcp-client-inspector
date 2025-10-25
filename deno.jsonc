@@ -1,27 +1,68 @@
 {
-  "nodeModulesDir": "auto",
+  "$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
+  "name": "@beyondbetter/mcp-client-inspector",
+  "version": "0.1.0",
+  "exports": {
+    ".": "./main.ts",
+    "./mcp-server": "./mcp-server/main.ts",
+    "./fresh-ui": "./fresh-ui/main.ts"
+  },
   "tasks": {
-    "check": "deno fmt --check . && deno lint . && deno check",
-    "dev": "vite",
-    "build": "vite build",
-    "start": "deno serve -A _fresh/server.js",
-    "update": "deno run -A -r jsr:@fresh/update ."
+    "update-version": "deno run --allow-read --allow-write scripts/update-version.ts",
+    "start": "deno run --allow-net --allow-read --allow-write --allow-env main.ts",
+    "dev:mcp": "cd mcp-server && deno task dev",
+    "dev:ui": "cd fresh-ui && deno task dev",
+    "dev": "deno task dev:mcp & deno task dev:ui",
+    "start:mcp": "cd mcp-server && deno task start",
+    "start:ui": "cd fresh-ui && deno task start",
+    "test": "deno task -c tests/deno.jsonc test",
+    "test:all": "deno task -c tests/deno.jsonc test",
+    "test:coverage": "deno task -c tests/deno.jsonc test:coverage",
+    "coverage": "deno task -c tests/deno.jsonc coverage",
+    "check": "deno check main.ts mcp-server/main.ts fresh-ui/main.ts",
+    "lint": "deno lint -c tests/deno.jsonc tests/ && deno lint -c mcp-server/deno.jsonc mcp-server/ && deno lint -c fresh-ui/deno.jsonc fresh-ui/",
+    "fmt": "deno fmt",
+    "fmt:check": "deno fmt --check",
     "mcp-inspector": "npx @modelcontextprotocol/inspector",
     "check-types": "deno task -c mcp-server/deno.jsonc check && deno task -c fresh-ui/deno.jsonc check",
     "tool:check-types": "deno task -c mcp-server/deno.jsonc check && deno task -c fresh-ui/deno.jsonc check",
     "tool:check-types:mcp-server": "deno task -c mcp-server/deno.jsonc check",
     "tool:check-types:fresh-ui": "deno task -c fresh-ui/deno.jsonc check",
-    "tool:test": "deno task -c mcp-server/deno.jsonc test && deno task -c fresh-ui/deno.jsonc test",
-    "tool:test:all": "deno task -c mcp-server/deno.jsonc --check test && deno task -c fresh-ui/deno.jsonc --check test",
+    "tool:test": "deno task -c tests/deno.jsonc test",
+    "tool:test:all": "deno task -c tests/deno.jsonc test",
     "tool:test:mcp-server": "deno task -c mcp-server/deno.jsonc test",
     "tool:test:fresh-ui": "deno task -c fresh-ui/deno.jsonc test",
     "tool:test:file": "deno test ",
-    "tool:format": "deno task -c mcp-server/deno.jsonc format && deno task -c fresh-ui/deno.jsonc format",
+    "tool:format": "deno task -c mcp-server/deno.jsonc format && deno task -c fresh-ui/deno.jsonc format"
+  },
+  "lint": {
+    "exclude": [
+      "mcp-server/data/",
+      "fresh-ui/_fresh/",
+      "tests/coverage/",
+      "**/.git/**",
+      "**/node_modules/**"
+    ]
+  },
+  "fmt": {
+    "useTabs": false,
+    "lineWidth": 100,
+    "indentWidth": 2,
+    "semiColons": true,
+    "singleQuote": true,
+    "proseWrap": "preserve",
+    "exclude": [
+      "mcp-server/data/",
+      "fresh-ui/_fresh/",
+      "tests/coverage/",
+      "**/.git/**",
+      "**/node_modules/**"
+    ]
   },
   // Local development: use import_map.dev.json (points to local bb-mcp-server)
-  "importMap": "./import_map.dev.json",
+  // "importMap": "./import_map.dev.json",
   // Production: use import_map.json (points to jsr:@beyondbetter/bb-mcp-server)
-  // "importMap": "./import_map.json",
+  "importMap": "./import_map.json",
   "compilerOptions": {
     "lib": [
       "dom",
@@ -32,5 +73,21 @@
     ],
     "jsx": "precompile",
     "jsxImportSource": "preact"
+  },
+  "publish": {
+    "exclude": [
+      "**/.DS_Store",
+      "**/.env",
+      "**/.env.*",
+      "!**/.env.example",
+      "mcp-server/data/",
+      "tests/coverage/",
+      "**/*.test.ts",
+      "**/test_*.ts",
+      "screenshot*.png",
+      "docs/**",
+      "GUIDELINES.md",
+      "TEST_SUMMARY.md"
+    ]
   }
 }

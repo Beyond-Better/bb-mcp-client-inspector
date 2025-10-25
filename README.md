@@ -1,20 +1,96 @@
-# MCP Server Client Inspector
+# Beyond MCP Client Inspector
 
-**A comprehensive testing platform for MCP (Model Context Protocol) client implementations**
+[![Beyond Better](https://img.shields.io/badge/Beyond-Better-blue?style=flat&labelColor=6FD99C&color=0C1F3E)](https://beyondbetter.app)
+![MCP Server](https://img.shields.io/badge/MCP-Server-blue?style=flat&logo=modelcontextprotocol&logoSize=auto&logoColor=black&labelColor=beige)
+![MCP Client](https://img.shields.io/badge/MCP-Client-blue?style=flat&logo=modelcontextprotocol&logoSize=auto&logoColor=black&labelColor=beige)
+[![MCP Server](https://img.shields.io/badge/MCP-Beyond%20Better-blue?style=flat&logo=modelcontextprotocol&logoSize=auto&logoColor=black&labelColor=beige)](https://github.com/Beyond-Better/bb-mcp-server)
+
+[![JSR](https://jsr.io/badges/@beyondbetter/bb-mcp-client-inspector)](https://jsr.io/@beyondbetter/bb-mcp-client-inspector)
+[![JSR Score](https://jsr.io/badges/@beyondbetter/bb-mcp-client-inspector/score)](https://jsr.io/@beyondbetter/bb-mcp-client-inspector)
+[![JSR Scope](https://jsr.io/badges/@beyondbetter)](https://jsr.io/@beyondbetter)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+**A comprehensive testing platform for MCP (Model Context Protocol) client
+implementations**
 
 ## Overview
 
-The MCP Server Client Inspector provides an interactive web console for testing and validating MCP client implementations. While the [MCP Inspector](https://github.com/modelcontextprotocol/inspector) exists as an MCP client for testing servers, this project fills the inverse need - an MCP server for testing clients.
+The MCP Server Client Inspector provides an interactive web console for testing
+and validating MCP client implementations. While the
+[MCP Inspector](https://github.com/modelcontextprotocol/inspector) exists as an
+MCP client for testing servers, this project fills the inverse need - an MCP
+server for testing clients.
 
 ### Key Features
 
-- 🔍 **Protocol Message Inspection**: View all MCP JSON-RPC messages in real-time
+- 🔍 **Protocol Message Inspection**: View all MCP JSON-RPC messages in
+  real-time
 - 🧠 **Sampling Testing**: Test client LLM completion capabilities
 - ❓ **Elicitation Testing**: Test client user input request handling
 - 🔔 **Notification Testing**: Trigger and verify list change notifications
 - 🛠️ **Inspector Tools**: Six utility tools for testing scenarios
 - 📊 **Multi-Client Support**: Test multiple clients simultaneously (HTTP mode)
 - 🌐 **Web Console**: Interactive Fresh UI for testing
+
+![Inspector Console](./screenshot.png)
+
+## Installation
+
+### Prerequisites
+
+- **Deno 2.5+** - [Install Deno](https://deno.land/)
+- **Git** - For cloning the repository
+
+### Quick Setup
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Beyond-Better/bb-mcp-server-client-inspector.git
+   cd bb-mcp-server-client-inspector
+   ```
+
+2. **Set up the MCP Server:**
+   ```bash
+   cd mcp-server
+   cp .env.example .env
+   # Edit .env if needed (defaults work for local development)
+   ```
+
+3. **Set up the Fresh UI:**
+   ```bash
+   cd ../fresh-ui
+   cp .env.example .env
+   # Edit .env if needed (defaults work for local development)
+   ```
+
+### Running the Servers
+
+You'll need two terminal windows:
+
+**Terminal 1 - MCP Server:**
+```bash
+cd mcp-server
+deno task dev
+```
+
+The MCP server will start on `http://localhost:3000`
+
+**Terminal 2 - Fresh UI:**
+```bash
+cd fresh-ui
+deno task dev
+```
+
+The Fresh UI will start on `http://localhost:8000`
+
+### Verification
+
+1. Open your browser to `http://localhost:8000`
+2. You should see the MCP Client Inspector interface
+3. The console should show "WebSocket connected" when the connection is established
+4. Try the inspector tools to verify everything is working
+
+> **📖 Detailed Instructions:** For configuration options, troubleshooting, and advanced setup, see [INSTALLATION.md](./INSTALLATION.md)
 
 ## Architecture
 
@@ -42,6 +118,7 @@ The MCP Server Client Inspector provides an interactive web console for testing 
 ### Technology Stack
 
 **MCP Server**:
+
 - Runtime: Deno 2.5+
 - Framework: bb-mcp-server library
 - MCP SDK: @modelcontextprotocol/sdk v1.18.2
@@ -49,9 +126,10 @@ The MCP Server Client Inspector provides an interactive web console for testing 
 - Language: TypeScript
 
 **Fresh UI**:
+
 - Framework: Deno Fresh
 - UI: Preact Islands
-- Styling: Tailwind CSS
+- Styling: Tailwind CSS + DaisyUI
 - Language: TypeScript + JSX
 
 ## Project Structure
@@ -91,14 +169,22 @@ bb-mcp-server-client-inspector/
 
 Read the design documents in this order:
 
-1. **[PROJECT_OVERVIEW.md](docs/01-PROJECT_OVERVIEW.md)** - Start here for context and goals
-2. **[ARCHITECTURE.md](docs/02-ARCHITECTURE.md)** - Understand the system architecture
-3. **[MCP_SERVER_DESIGN.md](docs/03-MCP_SERVER_DESIGN.md)** - MCP server implementation details
-4. **[FRESH_UI_DESIGN.md](docs/04-FRESH_UI_DESIGN.md)** - Fresh UI implementation details
-5. **[DATA_MODELS.md](docs/05-DATA_MODELS.md)** - Type definitions and interfaces
-6. **[WEBSOCKET_PROTOCOL.md](docs/06-WEBSOCKET_PROTOCOL.md)** - Console communication protocol
-7. **[TESTING_STRATEGY.md](docs/07-TESTING_STRATEGY.md)** - Testing approach and examples
-8. **[IMPLEMENTATION_PHASES.md](docs/08-IMPLEMENTATION_PHASES.md)** - Phased development plan
+1. **[PROJECT_OVERVIEW.md](docs/01-PROJECT_OVERVIEW.md)** - Start here for
+   context and goals
+2. **[ARCHITECTURE.md](docs/02-ARCHITECTURE.md)** - Understand the system
+   architecture
+3. **[MCP_SERVER_DESIGN.md](docs/03-MCP_SERVER_DESIGN.md)** - MCP server
+   implementation details
+4. **[FRESH_UI_DESIGN.md](docs/04-FRESH_UI_DESIGN.md)** - Fresh UI
+   implementation details
+5. **[DATA_MODELS.md](docs/05-DATA_MODELS.md)** - Type definitions and
+   interfaces
+6. **[WEBSOCKET_PROTOCOL.md](docs/06-WEBSOCKET_PROTOCOL.md)** - Console
+   communication protocol
+7. **[TESTING_STRATEGY.md](docs/07-TESTING_STRATEGY.md)** - Testing approach and
+   examples
+8. **[IMPLEMENTATION_PHASES.md](docs/08-IMPLEMENTATION_PHASES.md)** - Phased
+   development plan
 
 ### Quick Start Guide
 
@@ -125,6 +211,7 @@ The server includes six utility tools for testing:
 ### Sampling
 
 Test client LLM completion capabilities:
+
 - Simple text prompts
 - Model preferences
 - Temperature and max tokens
@@ -133,6 +220,7 @@ Test client LLM completion capabilities:
 ### Elicitation
 
 Test client user input requests:
+
 - Simple text input
 - Structured data (with JSON schema)
 - Accept/decline/cancel responses
@@ -141,6 +229,7 @@ Test client user input requests:
 ### Notifications
 
 Trigger and verify notifications:
+
 - `notifications/tools/list_changed`
 - `notifications/resources/list_changed`
 - `notifications/prompts/list_changed`
@@ -149,27 +238,32 @@ Trigger and verify notifications:
 
 ### Version 1.0 (Initial Release)
 
-**Phase 1: Foundation** (Week 1)
+**Phase 1: Foundation** (Day 1)
+
 - ✅ MCP server with bb-mcp-server
 - ✅ Basic inspector tools
 - ✅ Message storage (Deno KV)
 - ✅ Fresh UI foundation
 
-**Phase 2: Core Features** (Week 2)
+**Phase 2: Core Features** (Day 2)
+
 - ✅ WebSocket communication
 - ✅ Sampling request/response
 - ✅ Elicitation request/response
 - ✅ Notification triggering
 - ✅ Message viewer
 
-**Phase 3: Polish** (Week 3)
+**Phase 3: Polish** (Day 3)
+
 - ✅ Multi-client support
 - ✅ UI refinement
 - ✅ Error handling
 - ✅ Performance optimization
 
-**Phase 4: Release** (Week 4)
+**Phase 4: Release** (Day 4)
+
 - ✅ Complete documentation
+- ✅ Message filtering in UI
 - ✅ Comprehensive testing
 - ✅ Example scenarios
 - ✅ Deployment preparation
@@ -177,8 +271,8 @@ Trigger and verify notifications:
 ### Roadmap (Future Versions)
 
 - 🔄 Multi-turn sampling conversations
+- 🔄 Full suite of MCP features (prompts/roots/resources)
 - 🔄 Streaming response support
-- 🔄 Message filtering in UI
 - 🔄 Pre-configured test scenarios
 - 🔄 Session export/import
 - 🔄 Client metrics and analytics
@@ -247,7 +341,8 @@ deno task test
 
 ### 1. Separate Processes
 
-**Why**: Clean separation of concerns, independent development, Fresh hot reload works naturally
+**Why**: Clean separation of concerns, independent development, Fresh hot reload
+works naturally
 
 **Alternative Considered**: Embedded Fresh app in MCP server (too complex)
 
@@ -261,7 +356,8 @@ deno task test
 
 **Why**: Proven infrastructure, plugin system, built-in session management
 
-**Alternative Considered**: Raw MCP SDK (more boilerplate, reinventing infrastructure)
+**Alternative Considered**: Raw MCP SDK (more boilerplate, reinventing
+infrastructure)
 
 ### 4. Deno KV Storage
 
@@ -278,6 +374,7 @@ deno task test
 ## Success Metrics
 
 ### Functionality
+
 - ✅ Successfully tests sampling requests and responses
 - ✅ Successfully tests elicitation flows (accept/decline/cancel)
 - ✅ Successfully triggers and verifies notifications
@@ -285,12 +382,14 @@ deno task test
 - ✅ Handles multiple connected clients (HTTP mode)
 
 ### Usability
+
 - ✅ Simple setup (< 5 minutes from clone to running)
 - ✅ Intuitive UI (minimal learning curve)
 - ✅ Clear error messages and feedback
 - ✅ Responsive real-time updates
 
 ### Quality
+
 - ✅ Comprehensive test coverage (>80%)
 - ✅ Clear documentation for LLM consumption
 - ✅ Example test scenarios included
@@ -298,7 +397,8 @@ deno task test
 
 ## Contributing
 
-This project is designed for implementation by LLMs following the comprehensive design documentation. When contributing:
+This project is designed for implementation by LLMs following the comprehensive
+design documentation. When contributing:
 
 1. Read the relevant design documents first
 2. Follow the implementation phases
@@ -333,17 +433,15 @@ For implementers:
 
 ## Repository
 
-**GitHub**: `beyond-better/bb-mcp-server-client-inspector` (planned)
+**GitHub**: `beyond-better/bb-mcp-server-client-inspector`
 
 **JSR Package**: `@beyondbetter/mcp-client-inspector` (planned)
 
 ---
 
-**Project Version**: 1.0.0 (Design)
-**Documentation Version**: 1.0
-**Last Updated**: 2025-10-22
-**Status**: Design Complete - Ready for Implementation
+**Project Version**: 0.1.0 (Design) **Documentation Version**: 1.0 **Last
+Updated**: 2025-10-22 **Status**: Design Complete - Ready for Implementation
 
 ---
 
-*Built with ❤️ for the MCP community*
+_Built with ❤️ for the MCP community_

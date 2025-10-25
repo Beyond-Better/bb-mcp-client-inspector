@@ -5,22 +5,22 @@
  * Useful for validating client error handling and recovery mechanisms.
  */
 
-import { z } from "zod";
+import { z } from 'zod';
 import type {
   InferZodSchema,
   ToolDependencies,
   ToolRegistration,
-} from "@beyondbetter/bb-mcp-server";
-import { toError } from "@beyondbetter/bb-mcp-server";
+} from '@beyondbetter/bb-mcp-server';
+import { toError } from '@beyondbetter/bb-mcp-server';
 
 // Input schema
 const triggerErrorInputSchema = {
-  errorType: z.enum(["validation", "runtime", "timeout", "custom"])
-    .describe("Type of error to trigger"),
+  errorType: z.enum(['validation', 'runtime', 'timeout', 'custom'])
+    .describe('Type of error to trigger'),
   message: z.string().optional()
-    .describe("Custom error message"),
+    .describe('Custom error message'),
   delay: z.number().int().min(0).max(5000).optional()
-    .describe("Delay before throwing error (ms)"),
+    .describe('Delay before throwing error (ms)'),
 } as const;
 
 export function getTools(dependencies: ToolDependencies): ToolRegistration[] {
@@ -28,17 +28,16 @@ export function getTools(dependencies: ToolDependencies): ToolRegistration[] {
 
   return [
     {
-      name: "trigger_error",
+      name: 'trigger_error',
       definition: {
-        title: "Trigger Error",
-        description:
-          "Intentionally trigger an error for testing error handling",
-        category: "Testing",
+        title: 'Trigger Error',
+        description: 'Intentionally trigger an error for testing error handling',
+        category: 'Testing',
         inputSchema: triggerErrorInputSchema,
       },
       handler: async (args: InferZodSchema<typeof triggerErrorInputSchema>) => {
         try {
-          logger.debug("Trigger error tool called", { args });
+          logger.debug('Trigger error tool called', { args });
 
           // Apply delay if specified
           if (args.delay && args.delay > 0) {
@@ -49,32 +48,32 @@ export function getTools(dependencies: ToolDependencies): ToolRegistration[] {
             `Triggered ${args.errorType} error`;
 
           switch (args.errorType) {
-            case "validation":
+            case 'validation':
               return {
                 content: [
                   {
-                    type: "text",
+                    type: 'text',
                     text: `Validation Error: ${customMessage}`,
                   },
                 ],
                 isError: true,
               };
 
-            case "runtime":
+            case 'runtime':
               throw new Error(`Runtime Error: ${customMessage}`);
 
-            case "timeout":
+            case 'timeout':
               // Simulate timeout by waiting indefinitely
               // In practice, the tool executor should have a timeout
-              logger.warn("Timeout error triggered - waiting indefinitely");
+              logger.warn('Timeout error triggered - waiting indefinitely');
               await new Promise(() => {}); // Never resolves
               break;
 
-            case "custom":
+            case 'custom':
               return {
                 content: [
                   {
-                    type: "text",
+                    type: 'text',
                     text: customMessage,
                   },
                 ],
@@ -82,20 +81,20 @@ export function getTools(dependencies: ToolDependencies): ToolRegistration[] {
               };
 
             default:
-              throw new Error("Unknown error type");
+              throw new Error('Unknown error type');
           }
 
           // Should never reach here (except for timeout which never resolves)
           return {
             content: [
               {
-                type: "text",
-                text: "Error not triggered",
+                type: 'text',
+                text: 'Error not triggered',
               },
             ],
           };
         } catch (error) {
-          logger.error("Trigger error tool execution failed:", toError(error));
+          logger.error('Trigger error tool execution failed:', toError(error));
           // Re-throw for runtime errors
           throw error;
         }

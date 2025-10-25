@@ -35,11 +35,11 @@ To add a new inspector tool:
 1. Create tool file: `src/plugins/inspector.plugin/tools/myTool.ts`
 2. Follow the pattern:
    ```typescript
-   import { z } from "zod";
-   import type { ToolConfig } from "@beyondbetter/bb-mcp-server";
+   import { z } from 'zod';
+   import type { ToolConfig } from '@beyondbetter/bb-mcp-server';
 
    const myToolInputSchema = {
-     param1: z.string().describe("Description"),
+     param1: z.string().describe('Description'),
    } as const;
 
    type MyToolArgs = { param1: string };
@@ -47,17 +47,17 @@ To add a new inspector tool:
    export function getTools(dependencies: any): ToolConfig<any>[] {
      const { logger } = dependencies;
      return [{
-       name: "my_tool",
+       name: 'my_tool',
        definition: {
-         title: "My Tool",
-         description: "What it does",
-         category: "Testing",
+         title: 'My Tool',
+         description: 'What it does',
+         category: 'Testing',
          inputSchema: myToolInputSchema,
        },
        handler: async (args: MyToolArgs) => {
-         logger.debug("My tool called", { args });
+         logger.debug('My tool called', { args });
          return {
-           content: [{ type: "text", text: "Result" }],
+           content: [{ type: 'text', text: 'Result' }],
          };
        },
      }];

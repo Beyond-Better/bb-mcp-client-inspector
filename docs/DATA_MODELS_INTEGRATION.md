@@ -7,13 +7,16 @@
 **Location**: `mcp-server/src/console/types.ts`
 
 **Current Types** (working, but minimal):
+
 - `McpMessage` - Basic JSON-RPC structure
 - `MessageEntry` - KV storage format
 - `ClientInfo` - Client metadata
 - `ConsoleMessage` / `ConsoleCommand` - WebSocket messages
-- `NotificationPayload` / `SamplingPayload` / `ElicitationPayload` - Command payloads
+- `NotificationPayload` / `SamplingPayload` / `ElicitationPayload` - Command
+  payloads
 
 **Issues**:
+
 1. Types only in `mcp-server/`, not shared with `fresh-ui/`
 2. No type guards or validation schemas
 3. Less comprehensive than DATA_MODELS.md design
@@ -23,6 +26,7 @@
 ### What DATA_MODELS.md Provides
 
 **Comprehensive Type System**:
+
 - Shared types in `shared/types/` directory
 - Type guards for runtime validation
 - Zod schemas for validation
@@ -37,16 +41,19 @@
 **Goal**: Establish foundation for shared types
 
 **Steps**:
+
 ```bash
 mkdir -p shared/types
 ```
 
 **Files to Create**:
+
 1. `shared/types/console.types.ts` - WebSocket protocol types
-2. `shared/types/mcp.types.ts` - MCP protocol types  
+2. `shared/types/mcp.types.ts` - MCP protocol types
 3. `shared/types/common.types.ts` - Utility types
 
-**Start Simple**: Copy existing types from `mcp-server/src/console/types.ts` and enhance incrementally.
+**Start Simple**: Copy existing types from `mcp-server/src/console/types.ts` and
+enhance incrementally.
 
 ### Phase 2: Enhance Console Types (1 hour)
 
@@ -55,33 +62,35 @@ mkdir -p shared/types
 **Priority Enhancements**:
 
 1. **String Literal Union Types** (instead of plain strings):
+
 ```typescript
 export type ConsoleMessageType =
-  | "connection_established"
-  | "client_list"
-  | "message_history"
-  | "mcp_message"
-  | "tool_call"
-  | "tool_response"
-  | "sampling_response"
-  | "sampling_error"
-  | "elicitation_response"
-  | "elicitation_error"
-  | "notification_sent"
-  | "error";
+  | 'connection_established'
+  | 'client_list'
+  | 'message_history'
+  | 'mcp_message'
+  | 'tool_call'
+  | 'tool_response'
+  | 'sampling_response'
+  | 'sampling_error'
+  | 'elicitation_response'
+  | 'elicitation_error'
+  | 'notification_sent'
+  | 'error';
 ```
 
 2. **Enhanced Elicitation Types**:
+
 ```typescript
 export interface ElicitationSchema {
-  type: "object" | "string" | "number" | "boolean" | "array";
+  type: 'object' | 'string' | 'number' | 'boolean' | 'array';
   properties?: Record<string, ElicitationSchemaProperty>;
   required?: string[];
   description?: string;
 }
 
 export interface ElicitationSchemaProperty {
-  type: "string" | "number" | "boolean" | "array" | "object";
+  type: 'string' | 'number' | 'boolean' | 'array' | 'object';
   description?: string;
   enum?: unknown[];
   enumNames?: string[];
@@ -91,20 +100,21 @@ export interface ElicitationSchemaProperty {
 ```
 
 3. **Type Guards**:
+
 ```typescript
 export function isConsoleMessage(value: unknown): value is ConsoleMessage {
   return (
-    typeof value === "object" &&
+    typeof value === 'object' &&
     value !== null &&
-    "type" in value &&
-    "payload" in value
+    'type' in value &&
+    'payload' in value
   );
 }
 
 export function isElicitationResponse(
-  message: ConsoleMessage
-): message is ConsoleMessage & { type: "elicitation_response" } {
-  return message.type === "elicitation_response";
+  message: ConsoleMessage,
+): message is ConsoleMessage & { type: 'elicitation_response' } {
+  return message.type === 'elicitation_response';
 }
 ```
 
@@ -113,25 +123,26 @@ export function isElicitationResponse(
 **File**: `shared/types/validation.ts`
 
 **Add Zod Schemas**:
+
 ```typescript
-import { z } from "zod";
+import { z } from 'zod';
 
 export const consoleCommandSchema = z.object({
   type: z.enum([
-    "trigger_notification",
-    "request_sampling",
-    "request_elicitation",
-    "get_clients",
-    "get_message_history",
+    'trigger_notification',
+    'request_sampling',
+    'request_elicitation',
+    'get_clients',
+    'get_message_history',
   ]),
   payload: z.unknown().optional(),
 });
 
 export const elicitationPayloadSchema = z.object({
-  message: z.string().min(1, "Message is required"),
+  message: z.string().min(1, 'Message is required'),
   requestedSchema: z
     .object({
-      type: z.enum(["object", "string", "number", "boolean", "array"]),
+      type: z.enum(['object', 'string', 'number', 'boolean', 'array']),
       properties: z.record(z.unknown()).optional(),
       required: z.array(z.string()).optional(),
       description: z.string().optional(),
@@ -141,6 +152,7 @@ export const elicitationPayloadSchema = z.object({
 ```
 
 **Usage in ConsoleManager**:
+
 ```typescript
 private async handleMessage(connectionId: string, data: string): Promise<void> {
   try {
@@ -170,22 +182,28 @@ private async handleMessage(connectionId: string, data: string): Promise<void> {
 ### Phase 4: Update Import Paths (30 minutes)
 
 **MCP Server Updates**:
+
 ```typescript
 // OLD: import { ConsoleMessage } from "./console/types.ts";
 // NEW:
-import type { ConsoleMessage, ConsoleCommand } from "../../../shared/types/console.types.ts";
+import type { ConsoleCommand, ConsoleMessage } from '../../../shared/types/console.types.ts';
 ```
 
 **Fresh UI Updates**:
+
 ```typescript
 // In hooks/useWebSocket.ts
-import type { ConsoleMessage, ConsoleCommand } from "../../../shared/types/console.types.ts";
+import type { ConsoleCommand, ConsoleMessage } from '../../../shared/types/console.types.ts';
 
 // In components
-import type { ElicitationPayload, ElicitationResponsePayload } from "../../../shared/types/console.types.ts";
+import type {
+  ElicitationPayload,
+  ElicitationResponsePayload,
+} from '../../../shared/types/console.types.ts';
 ```
 
 **Deno Import Map** (add to both `deno.json`):
+
 ```json
 {
   "imports": {
@@ -195,8 +213,9 @@ import type { ElicitationPayload, ElicitationResponsePayload } from "../../../sh
 ```
 
 Then imports become:
+
 ```typescript
-import type { ConsoleMessage } from "@shared/types/console.types.ts";
+import type { ConsoleMessage } from '@shared/types/console.types.ts';
 ```
 
 ### Phase 5: Add Utility Types (20 minutes)
@@ -206,6 +225,7 @@ import type { ConsoleMessage } from "@shared/types/console.types.ts";
 **High-Value Additions**:
 
 1. **Result Type** (for error handling):
+
 ```typescript
 export type Result<T, E = Error> =
   | { success: true; data: T }
@@ -225,6 +245,7 @@ async function requestElicitation(payload: ElicitationPayload): AsyncResult<Elic
 ```
 
 2. **Branded Types** (for type safety):
+
 ```typescript
 export type Brand<T, B> = T & { __brand: B };
 
@@ -239,6 +260,7 @@ getClient(sessionId); // Type error! Can't pass SessionId where ClientId expecte
 ```
 
 3. **JSON Types** (for type-safe JSON handling):
+
 ```typescript
 export type JsonValue =
   | string
@@ -311,30 +333,33 @@ function parseMessage(json: string): JsonValue {
 ### Option A: Gradual (Recommended)
 
 **Week 1**: Create shared/types/ directory with basic types
+
 - Copy existing types to shared location
 - Update a few key imports as proof of concept
 - Test that both servers still work
 
 **Week 2**: Add type guards and validation
+
 - Implement type guard functions
 - Add Zod schemas for critical paths
 - Update ConsoleManager to use validation
 
 **Week 3**: Migrate all components
+
 - Update all remaining imports
 - Remove duplicate type definitions
 - Add comprehensive types from DATA_MODELS.md
 
 **Week 4**: Polish and document
+
 - Add JSDoc comments
 - Update documentation
 - Write type usage examples
 
 ### Option B: Big Bang (Higher Risk)
 
-**Day 1**: Create complete shared/types/ structure from DATA_MODELS.md
-**Day 2**: Update all imports in mcp-server
-**Day 3**: Update all imports in fresh-ui
+**Day 1**: Create complete shared/types/ structure from DATA_MODELS.md **Day
+2**: Update all imports in mcp-server **Day 3**: Update all imports in fresh-ui
 **Day 4**: Testing and fixes
 
 **Risk**: More changes at once, harder to debug if issues arise
@@ -344,10 +369,11 @@ function parseMessage(json: string): JsonValue {
 ### Example 1: Type-Safe Message Handling
 
 **Before** (current code):
+
 ```typescript
 socket.onmessage = (event) => {
   const message = JSON.parse(event.data); // any type
-  if (message.type === "elicitation_response") {
+  if (message.type === 'elicitation_response') {
     const payload = message.payload; // any type
     console.log(payload.action); // no type checking
   }
@@ -355,18 +381,19 @@ socket.onmessage = (event) => {
 ```
 
 **After** (with shared types):
+
 ```typescript
-import { isConsoleMessage, isElicitationResponse } from "@shared/types/console.types.ts";
-import type { ElicitationResponsePayload } from "@shared/types/console.types.ts";
+import { isConsoleMessage, isElicitationResponse } from '@shared/types/console.types.ts';
+import type { ElicitationResponsePayload } from '@shared/types/console.types.ts';
 
 socket.onmessage = (event) => {
   const parsed = JSON.parse(event.data);
-  
+
   if (!isConsoleMessage(parsed)) {
-    console.error("Invalid message format");
+    console.error('Invalid message format');
     return;
   }
-  
+
   if (isElicitationResponse(parsed)) {
     const payload = parsed.payload as ElicitationResponsePayload;
     // TypeScript knows: payload.action is "accept" | "decline" | "cancel"
@@ -379,10 +406,11 @@ socket.onmessage = (event) => {
 ### Example 2: Validated Command Sending
 
 **Before** (current code):
+
 ```typescript
 const handleSubmit = () => {
   sendCommand({
-    type: "request_elicitation",
+    type: 'request_elicitation',
     payload: {
       message: message.value,
       requestedSchema: schemaJson.value ? JSON.parse(schemaJson.value) : undefined,
@@ -392,25 +420,26 @@ const handleSubmit = () => {
 ```
 
 **After** (with validation):
+
 ```typescript
-import { elicitationPayloadSchema } from "@shared/types/validation.ts";
-import type { ElicitationPayload } from "@shared/types/console.types.ts";
+import { elicitationPayloadSchema } from '@shared/types/validation.ts';
+import type { ElicitationPayload } from '@shared/types/console.types.ts';
 
 const handleSubmit = () => {
   const payload: ElicitationPayload = {
     message: message.value,
     requestedSchema: schemaJson.value ? JSON.parse(schemaJson.value) : undefined,
   };
-  
+
   // Validate before sending
   const result = elicitationPayloadSchema.safeParse(payload);
   if (!result.success) {
     alert(`Validation error: ${result.error.errors[0].message}`);
     return;
   }
-  
+
   sendCommand({
-    type: "request_elicitation",
+    type: 'request_elicitation',
     payload: result.data, // validated and typed
   });
 };
@@ -419,6 +448,7 @@ const handleSubmit = () => {
 ### Example 3: Result Type Usage
 
 **Before** (throwing errors):
+
 ```typescript
 async function requestElicitation(payload: ElicitationPayload) {
   const response = await fetch(...);
@@ -436,6 +466,7 @@ try {
 ```
 
 **After** (Result type):
+
 ```typescript
 import type { AsyncResult } from "@shared/types/common.types.ts";
 
@@ -470,11 +501,12 @@ if (result.success) {
 **File**: `fresh-ui/components/MessageViewer.tsx`
 
 **Add**:
+
 ```typescript
-import { isElicitationResponse, isElicitationError } from "@shared/types/console.types.ts";
+import { isElicitationError, isElicitationResponse } from '@shared/types/console.types.ts';
 
 const filteredMessages = messages.filter((msg) => {
-  if (filter === "elicitation") {
+  if (filter === 'elicitation') {
     return isElicitationResponse(msg) || isElicitationError(msg);
   }
   // ... other filters
@@ -504,12 +536,14 @@ const filteredMessages = messages.filter((msg) => {
 ### Should You Implement Full DATA_MODELS.md Now?
 
 **YES, if**:
+
 - Planning to add more features soon
 - Team is growing (need consistency)
 - Bugs from type mismatches are occurring
 - Want to improve code quality score
 
 **NO (defer), if**:
+
 - Just need to ship v1.0 quickly
 - Team is familiar with current structure
 - No type-related bugs so far
@@ -525,9 +559,12 @@ const filteredMessages = messages.filter((msg) => {
 
 ## Summary
 
-DATA_MODELS.md provides an **aspirational target** for comprehensive type safety. Current implementation is **good enough for v1.0**, but implementing shared types would:
+DATA_MODELS.md provides an **aspirational target** for comprehensive type
+safety. Current implementation is **good enough for v1.0**, but implementing
+shared types would:
 
 **Benefits**:
+
 - ✅ Better type safety across both servers
 - ✅ Reduced code duplication
 - ✅ Easier maintenance
@@ -535,14 +572,15 @@ DATA_MODELS.md provides an **aspirational target** for comprehensive type safety
 - ✅ Catch bugs earlier
 
 **Costs**:
+
 - ⏰ ~3-4 hours initial implementation
 - 🐛 Risk of breaking existing code during migration
 - 📚 Learning curve for team
 
-**Recommendation**: Implement incrementally starting with Phase 1-2 after v1.0 launches.
+**Recommendation**: Implement incrementally starting with Phase 1-2 after v1.0
+launches.
 
 ---
 
-**Document Version**: 1.0
-**Created**: 2025-10-23
-**Status**: Recommendations for Future Enhancement
+**Document Version**: 1.0 **Created**: 2025-10-23 **Status**: Recommendations
+for Future Enhancement

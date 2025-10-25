@@ -1,6 +1,6 @@
 /**
  * MCP Protocol Types
- * 
+ *
  * Type definitions for MCP (Model Context Protocol) JSON-RPC messages.
  */
 
@@ -8,7 +8,7 @@
  * MCP JSON-RPC message (base type)
  */
 export interface McpMessage {
-  jsonrpc: "2.0";
+  jsonrpc: '2.0';
   id?: string | number;
   method?: string;
   params?: unknown;
@@ -46,8 +46,8 @@ export enum McpErrorCode {
 /**
  * MCP protocol constants
  */
-export const MCP_PROTOCOL_VERSION = "1.0.0";
-export const JSONRPC_VERSION = "2.0";
+export const MCP_PROTOCOL_VERSION = '1.0.0';
+export const JSONRPC_VERSION = '2.0';
 
 // ============================================================================
 // Type Guards
@@ -58,10 +58,10 @@ export const JSONRPC_VERSION = "2.0";
  */
 export function isMcpMessage(value: unknown): value is McpMessage {
   return (
-    typeof value === "object" &&
+    typeof value === 'object' &&
     value !== null &&
-    "jsonrpc" in value &&
-    (value as McpMessage).jsonrpc === "2.0"
+    'jsonrpc' in value &&
+    (value as McpMessage).jsonrpc === '2.0'
   );
 }
 
@@ -70,12 +70,12 @@ export function isMcpMessage(value: unknown): value is McpMessage {
  */
 export function isMcpError(value: unknown): value is McpError {
   return (
-    typeof value === "object" &&
+    typeof value === 'object' &&
     value !== null &&
-    "code" in value &&
-    "message" in value &&
-    typeof (value as McpError).code === "number" &&
-    typeof (value as McpError).message === "string"
+    'code' in value &&
+    'message' in value &&
+    typeof (value as McpError).code === 'number' &&
+    typeof (value as McpError).message === 'string'
   );
 }
 
@@ -83,20 +83,21 @@ export function isMcpError(value: unknown): value is McpError {
  * Type guard for notification messages (no id)
  */
 export function isNotificationMessage(
-  message: McpMessage
+  message: McpMessage,
 ): message is McpMessage & { method: string } {
-  return "method" in message && !("id" in message) && message.method !== undefined;
+  return 'method' in message && !('id' in message) &&
+    message.method !== undefined;
 }
 
 /**
  * Type guard for request messages (has id and method)
  */
 export function isRequestMessage(
-  message: McpMessage
+  message: McpMessage,
 ): message is McpMessage & { id: string | number; method: string } {
   return (
-    "method" in message &&
-    "id" in message &&
+    'method' in message &&
+    'id' in message &&
     message.method !== undefined &&
     message.id !== undefined
   );
@@ -106,12 +107,12 @@ export function isRequestMessage(
  * Type guard for response messages (has id and result or error)
  */
 export function isResponseMessage(
-  message: McpMessage
+  message: McpMessage,
 ): message is McpMessage & { id: string | number } {
   return (
-    "id" in message &&
+    'id' in message &&
     message.id !== undefined &&
-    ("result" in message || "error" in message)
+    ('result' in message || 'error' in message)
   );
 }
 
@@ -119,11 +120,11 @@ export function isResponseMessage(
  * Type guard for error response
  */
 export function isErrorResponse(
-  message: McpMessage
+  message: McpMessage,
 ): message is McpMessage & { id: string | number; error: McpError } {
   return (
-    "id" in message &&
-    "error" in message &&
+    'id' in message &&
+    'error' in message &&
     message.id !== undefined &&
     message.error !== undefined
   );
@@ -133,11 +134,11 @@ export function isErrorResponse(
  * Type guard for success response
  */
 export function isSuccessResponse(
-  message: McpMessage
+  message: McpMessage,
 ): message is McpMessage & { id: string | number; result: unknown } {
   return (
-    "id" in message &&
-    "result" in message &&
+    'id' in message &&
+    'result' in message &&
     message.id !== undefined &&
     message.result !== undefined
   );

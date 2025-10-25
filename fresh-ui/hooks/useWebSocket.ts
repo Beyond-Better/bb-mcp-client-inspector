@@ -6,16 +6,9 @@
  * Call initWebSocket() once from Console.tsx to establish connection.
  */
 
-import { signal } from "@preact/signals";
-import type {
-  ConnectionId,
-  ConsoleCommand,
-  ConsoleMessage,
-} from "@shared/types/index.ts";
-import {
-  isConnectionEstablished,
-  isConsoleMessage,
-} from "@shared/types/index.ts";
+import { signal } from '@preact/signals';
+import type { ConnectionId, ConsoleCommand, ConsoleMessage } from '@shared/types/index.ts';
+import { isConnectionEstablished, isConsoleMessage } from '@shared/types/index.ts';
 
 // Module-level signals (shared singleton state)
 export const wsConnected = signal(false);
@@ -36,13 +29,13 @@ let currentUrl: string | null = null;
 export function initWebSocket(url: string): void {
   // Prevent double initialization
   if (ws && ws.readyState === WebSocket.OPEN && currentUrl === url) {
-    console.log("[WebSocket] Already connected");
+    console.log('[WebSocket] Already connected');
     return;
   }
 
   // Close existing connection if URL changed
   if (ws && currentUrl !== url) {
-    console.log("[WebSocket] URL changed, closing existing connection");
+    console.log('[WebSocket] URL changed, closing existing connection');
     closeWebSocket();
   }
 
@@ -55,7 +48,7 @@ export function initWebSocket(url: string): void {
  * Call this from Console.tsx cleanup
  */
 export function closeWebSocket(): void {
-  console.log("[WebSocket] Closing connection...");
+  console.log('[WebSocket] Closing connection...');
 
   if (reconnectTimeout) {
     clearTimeout(reconnectTimeout);
@@ -77,7 +70,7 @@ export function closeWebSocket(): void {
  */
 function connect(): void {
   if (!currentUrl) {
-    console.error("[WebSocket] No URL configured");
+    console.error('[WebSocket] No URL configured');
     return;
   }
 
@@ -86,7 +79,7 @@ function connect(): void {
     ws = new WebSocket(currentUrl);
 
     ws.onopen = () => {
-      console.log("[WebSocket] Connected");
+      console.log('[WebSocket] Connected');
       wsConnected.value = true;
       wsError.value = null;
       reconnectAttempts = 0;
@@ -98,12 +91,12 @@ function connect(): void {
 
         // Validate message format
         if (!isConsoleMessage(parsed)) {
-          console.error("[WebSocket] Invalid message format:", parsed);
+          console.error('[WebSocket] Invalid message format:', parsed);
           return;
         }
 
         const message = parsed;
-        console.log("[WebSocket] Message received:", message.type);
+        console.log('[WebSocket] Message received:', message.type);
 
         // Handle connection established message with type guard
         if (isConnectionEstablished(message)) {
@@ -114,7 +107,7 @@ function connect(): void {
         // Add message to history
         wsMessages.value = [...wsMessages.value, message];
       } catch (error) {
-        console.error("[WebSocket] Error parsing message:", error);
+        console.error('[WebSocket] Error parsing message:', error);
       }
     };
 
@@ -136,12 +129,12 @@ function connect(): void {
     };
 
     ws.onerror = (error) => {
-      console.error("[WebSocket] Error:", error);
-      wsError.value = "WebSocket connection error";
+      console.error('[WebSocket] Error:', error);
+      wsError.value = 'WebSocket connection error';
     };
   } catch (error) {
-    console.error("[WebSocket] Error creating WebSocket:", error);
-    wsError.value = "Failed to create WebSocket connection";
+    console.error('[WebSocket] Error creating WebSocket:', error);
+    wsError.value = 'Failed to create WebSocket connection';
   }
 }
 
@@ -151,15 +144,15 @@ function connect(): void {
 export function sendCommand(command: ConsoleCommand): void {
   if (ws && ws.readyState === WebSocket.OPEN) {
     try {
-      console.log("[WebSocket] Sending command:", command.type);
+      console.log('[WebSocket] Sending command:', command.type);
       ws.send(JSON.stringify(command));
     } catch (error) {
-      console.error("[WebSocket] Error sending command:", error);
-      wsError.value = "Failed to send command";
+      console.error('[WebSocket] Error sending command:', error);
+      wsError.value = 'Failed to send command';
     }
   } else {
-    console.warn("[WebSocket] Not connected, cannot send command");
-    wsError.value = "Not connected to server";
+    console.warn('[WebSocket] Not connected, cannot send command');
+    wsError.value = 'Not connected to server';
   }
 }
 
