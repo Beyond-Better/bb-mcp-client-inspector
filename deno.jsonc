@@ -24,6 +24,7 @@
     "fmt": "deno fmt",
     "fmt:check": "deno fmt --check",
     "mcp-inspector": "npx @modelcontextprotocol/inspector",
+    "check-publish": "deno publish --dry-run --allow-dirty"
     "check-types": "deno task -c mcp-server/deno.jsonc check && deno task -c fresh-ui/deno.jsonc check",
     "tool:check-types": "deno task -c mcp-server/deno.jsonc check && deno task -c fresh-ui/deno.jsonc check",
     "tool:check-types:mcp-server": "deno task -c mcp-server/deno.jsonc check",
