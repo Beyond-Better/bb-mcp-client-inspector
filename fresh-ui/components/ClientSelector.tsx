@@ -11,15 +11,30 @@ import { selectedClientId } from '../hooks/useConsoleState.ts';
 import type { ClientInfo, SessionId } from '@shared/types/index.ts';
 import { isClientList } from '@shared/types/index.ts';
 
+/**
+ * Format a timestamp to a readable date/time string
+ */
+function formatTimestamp(timestamp: number): string {
+  const date = new Date(timestamp);
+  return date.toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+}
+
 export default function ClientSelector() {
   const detailsRef = useRef<HTMLDetailsElement>(null);
   const dropdownContentRef = useRef<HTMLDivElement>(null);
   const summaryRef = useRef<HTMLElement>(null);
 
-  // Extract clients from messages
+  // Extract clients from messages and sort by most recently seen
   const clientListMessage = wsMessages.value.find(isClientList);
   const clients = clientListMessage
     ? (clientListMessage.payload as { clients: ClientInfo[] }).clients
+      .sort((a, b) => b.lastSeen - a.lastSeen) // Sort by most recent first
     : [];
 
   // Auto-select first client if none selected and clients available
@@ -206,6 +221,18 @@ export default function ClientSelector() {
                                 {client.sessionId.slice(0, 8)}...
                               </div>
 
+                              {/* Connection Times */}
+                              <div class='mt-2 text-xs opacity-60 space-y-0.5'>
+                                <div>
+                                  <span class='opacity-70'>Connected:</span>{' '}
+                                  {formatTimestamp(client.connectedAt)}
+                                </div>
+                                <div>
+                                  <span class='opacity-70'>Last Seen:</span>{' '}
+                                  {formatTimestamp(client.lastSeen)}
+                                </div>
+                              </div>
+
                               {/* Last Meta Indicator */}
                               {metadata?.lastMeta && (
                                 <div class='mt-1'>
@@ -246,9 +273,23 @@ export default function ClientSelector() {
           )}
 
         {/* Selection Info */}
-        {selectedClientId.value && (
-          <div class='text-xs opacity-60 mt-2'>
-            Selected: <span class='font-mono'>{selectedClientId.value}</span>
+        {selectedClient && (
+          <div class='mt-4 p-3 bg-base-200 rounded-lg'>
+            <div class='text-xs font-semibold opacity-70 mb-2'>Selected Client</div>
+            <div class='text-xs space-y-1'>
+              <div>
+                <span class='opacity-70'>Session ID:</span>{' '}
+                <span class='font-mono'>{selectedClient.sessionId}</span>
+              </div>
+              <div>
+                <span class='opacity-70'>Connected:</span>{' '}
+                {formatTimestamp(selectedClient.connectedAt)}
+              </div>
+              <div>
+                <span class='opacity-70'>Last Seen:</span>{' '}
+                {formatTimestamp(selectedClient.lastSeen)}
+              </div>
+            </div>
           </div>
         )}
       </div>

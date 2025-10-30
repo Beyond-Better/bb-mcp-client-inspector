@@ -235,7 +235,7 @@ export class ConsoleManager {
           logger: payload.logger,
           data: payload.data,
         },
-        payload.sessionId,
+        payload.options,
       );
 
       this.broadcastMessage({
@@ -273,7 +273,7 @@ export class ConsoleManager {
   ): Promise<void> {
     try {
       this.logger.info('ConsoleManager: Requesting sampling from client', {
-        sessionId: payload.sessionId,
+        options: payload.options,
       });
 
       // Convert to library's CreateMessageRequest format
@@ -289,7 +289,7 @@ export class ConsoleManager {
         maxTokens: payload.maxTokens,
         temperature: payload.temperature,
         stopSequences: payload.stopSequences,
-      }, payload.sessionId); // Pass sessionId for client targeting
+      }, payload.options); // Pass options for client targeting
 
       this.broadcastMessage({
         type: 'sampling_response',
@@ -321,24 +321,24 @@ export class ConsoleManager {
   ): Promise<void> {
     try {
       this.logger.info('ConsoleManager: Requesting elicitation from client', {
-        sessionId: payload.sessionId,
+        options: payload.options,
       });
       this.logger.debug('ConsoleManager: Elicitation request payload:', {
         message: payload.message,
         requestedSchema: payload.requestedSchema,
-        sessionId: payload.sessionId,
+        options: payload.options,
       });
 
       const response = await beyondMcpServer.elicitInput({
         message: payload.message,
         requestedSchema: payload.requestedSchema,
-      }, payload.sessionId);
+      }, payload.options);
 
       this.logger.debug('ConsoleManager: Elicitation response received:', {
         response: JSON.stringify(response, null, 2),
         responseType: typeof response,
         responseKeys: response ? Object.keys(response) : [],
-      }); // Pass sessionId for client targeting
+      }); // Pass options for client targeting
 
       this.broadcastMessage({
         type: 'elicitation_response',
@@ -355,7 +355,7 @@ export class ConsoleManager {
           payloadSent: {
             message: payload.message,
             requestedSchema: payload.requestedSchema,
-            sessionId: payload.sessionId,
+            sessionId: payload.options.sessionId,
           },
         },
       );
@@ -476,7 +476,7 @@ export class ConsoleManager {
   ): Promise<void> {
     try {
       const messages = await this.messageTracker.getMessages(
-        payload.sessionId || 'default',
+        payload.options.sessionId || 'default',
         payload.limit || 100,
       );
 

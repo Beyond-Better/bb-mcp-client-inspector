@@ -20,7 +20,7 @@ export default function NotificationForm() {
       level: notificationLevel.value,
       logger: notificationLogger.value || undefined,
       data: notificationMessage.value,
-      sessionId: selectedClientId.value || undefined, // Target specific client
+      options: { sessionId: selectedClientId.value || undefined }, // Target specific client
     };
 
     sendCommand({

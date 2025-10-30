@@ -36,7 +36,10 @@ export const notificationPayloadSchema = z.object({
   ]),
   logger: z.string().optional(),
   data: z.unknown(),
-  sessionId: z.string().optional(),
+  options: z.object({
+    sessionId: z.string().optional(),
+    meta: z.record(z.unknown()).optional(),
+  }),
 });
 
 /**
@@ -125,6 +128,10 @@ const elicitationSchemaSchema = z.object({
 export const elicitationPayloadSchema = z.object({
   message: z.string().min(1, 'Message is required'),
   requestedSchema: elicitationSchemaSchema,
+  options: z.object({
+    sessionId: z.string().optional(),
+    meta: z.record(z.unknown()).optional(),
+  }),
 });
 
 /**
