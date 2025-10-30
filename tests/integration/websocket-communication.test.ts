@@ -109,7 +109,7 @@ describe('WebSocket Communication Integration', () => {
         },
       };
 
-      await mockServer.sendNotification(command.payload as any);
+      await mockServer.sendNotification(command.payload as any, {});
 
       const notifications = mockServer.getNotifications();
       assertEquals(notifications.length, 1);
@@ -133,7 +133,7 @@ describe('WebSocket Communication Integration', () => {
       const response = await mockServer.createMessage({
         messages: (command.payload as any).messages,
         maxTokens: (command.payload as any).maxTokens,
-      });
+      }, {});
 
       assertExists(response);
       assertEquals(response.content[0].type, 'text');
@@ -156,7 +156,7 @@ describe('WebSocket Communication Integration', () => {
         },
       };
 
-      const response = await mockServer.elicitInput(command.payload as any);
+      const response = await mockServer.elicitInput(command.payload as any, {});
 
       assertExists(response);
       assertEquals(response.action, 'accept');

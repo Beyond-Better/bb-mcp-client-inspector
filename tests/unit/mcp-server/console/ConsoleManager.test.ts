@@ -79,7 +79,7 @@ describe('ConsoleManager', () => {
         level: payload.level,
         logger: payload.logger,
         data: payload.data,
-      });
+      }, {});
 
       const notifications = mockServer.getNotifications();
       assertEquals(notifications.length, 1);
@@ -100,12 +100,12 @@ describe('ConsoleManager', () => {
           logger: payload.logger,
           data: payload.data,
         },
-        sessionId,
+        { sessionId },
       );
 
       const notifications = mockServer.getNotifications();
       assertEquals(notifications.length, 1);
-      assertEquals(notifications[0].sessionId, sessionId);
+      assertEquals(notifications[0].options.sessionId, sessionId);
     });
   });
 
@@ -116,7 +116,7 @@ describe('ConsoleManager', () => {
       const response = await mockServer.createMessage({
         messages: payload.messages,
         maxTokens: payload.maxTokens,
-      });
+      }, {});
 
       assertExists(response);
       assertExists(response.content);
@@ -132,12 +132,12 @@ describe('ConsoleManager', () => {
           messages: payload.messages,
           maxTokens: payload.maxTokens,
         },
-        sessionId,
+        { sessionId },
       );
 
       const requests = mockServer.getSamplingRequests();
       assertEquals(requests.length, 1);
-      assertEquals(requests[0].sessionId, sessionId);
+      assertEquals(requests[0].options.sessionId, sessionId);
     });
 
     it('should include model preferences in request', async () => {
@@ -154,7 +154,7 @@ describe('ConsoleManager', () => {
         model: payload.modelPreferences.hints[0].name,
         messages: payload.messages,
         maxTokens: payload.maxTokens,
-      });
+      }, {});
 
       const requests = mockServer.getSamplingRequests();
       assertEquals(requests.length, 1);
@@ -168,7 +168,7 @@ describe('ConsoleManager', () => {
       const response = await mockServer.elicitInput({
         message: payload.message,
         requestedSchema: payload.requestedSchema,
-      });
+      }, {});
 
       assertExists(response);
       assertEquals(response.action, 'accept');
@@ -183,12 +183,12 @@ describe('ConsoleManager', () => {
           message: payload.message,
           requestedSchema: payload.requestedSchema,
         },
-        sessionId,
+        { sessionId },
       );
 
       const requests = mockServer.getElicitationRequests();
       assertEquals(requests.length, 1);
-      assertEquals(requests[0].sessionId, sessionId);
+      assertEquals(requests[0].options.sessionId, sessionId);
     });
 
     it('should include requested schema', async () => {
@@ -205,7 +205,7 @@ describe('ConsoleManager', () => {
         },
       };
 
-      await mockServer.elicitInput(payload);
+      await mockServer.elicitInput(payload, {});
 
       const requests = mockServer.getElicitationRequests();
       assertEquals(requests.length, 1);

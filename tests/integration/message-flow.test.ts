@@ -99,13 +99,13 @@ describe('Message Flow Integration', () => {
           logger: 'test',
           data: 'Test notification',
         },
-        sessionId,
+        { sessionId },
       );
 
       const notifications = mockServer.getNotifications();
       assertEquals(notifications.length, 1);
       assertEquals(notifications[0].level, 'info');
-      assertEquals(notifications[0].sessionId, sessionId);
+      assertEquals(notifications[0].options.sessionId, sessionId);
     });
 
     it('should handle multiple notifications', async () => {
@@ -116,7 +116,7 @@ describe('Message Flow Integration', () => {
       for (const level of levels) {
         await mockServer.sendNotification(
           { level, logger: 'test', data: `${level} message` },
-          sessionId,
+        { sessionId },
         );
       }
 
@@ -140,7 +140,7 @@ describe('Message Flow Integration', () => {
           ],
           maxTokens: 100,
         },
-        sessionId,
+        { sessionId },
       );
 
       assertExists(response);
@@ -149,7 +149,7 @@ describe('Message Flow Integration', () => {
 
       const requests = mockServer.getSamplingRequests();
       assertEquals(requests.length, 1);
-      assertEquals(requests[0].sessionId, sessionId);
+      assertEquals(requests[0].options.sessionId, sessionId);
     });
 
     it('should handle sampling with model preferences', async () => {
@@ -159,7 +159,7 @@ describe('Message Flow Integration', () => {
           { role: 'user', content: { type: 'text', text: 'test' } },
         ],
         maxTokens: 50,
-      });
+      }, {});
 
       assertEquals(response.model, 'test-model');
     });
@@ -175,7 +175,7 @@ describe('Message Flow Integration', () => {
             ],
             maxTokens: 100,
           },
-          sessionId,
+        { sessionId },
         );
       }
 
@@ -198,7 +198,7 @@ describe('Message Flow Integration', () => {
             },
           },
         },
-        sessionId,
+        { sessionId },
       );
 
       assertExists(response);
@@ -207,13 +207,13 @@ describe('Message Flow Integration', () => {
 
       const requests = mockServer.getElicitationRequests();
       assertEquals(requests.length, 1);
-      assertEquals(requests[0].sessionId, sessionId);
+      assertEquals(requests[0].options.sessionId, sessionId);
     });
 
     it('should handle elicitation without schema', async () => {
       const response = await mockServer.elicitInput({
         message: 'Simple confirmation',
-      });
+      }, {});
 
       assertEquals(response.action, 'accept');
     });
@@ -261,8 +261,8 @@ describe('Message Flow Integration', () => {
           jsonrpc: '2.0' as const,
           method: 'test2',
         }),
-        mockServer.sendNotification({ level: 'info', data: 'test' }, session1),
-        mockServer.sendNotification({ level: 'info', data: 'test' }, session2),
+        mockServer.sendNotification({ level: 'info', data: 'test' }, {sessionId: session1}),
+        mockServer.sendNotification({ level: 'info', data: 'test' }, {sessionId: session2}),
       ]);
 
       const messages1 = await messageTracker.getMessages(session1);

@@ -101,6 +101,7 @@ export const samplingPayload: SamplingPayload = {
   ],
   maxTokens: 100,
   temperature: 0.7,
+  options: {},
 };
 
 /**
@@ -154,6 +155,7 @@ export const elicitationPayload: ElicitationPayload = {
     },
     required: ['confirmed'],
   },
+  options: {},
 };
 
 /**
