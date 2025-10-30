@@ -13,23 +13,23 @@ import type { ClientId, SessionId } from '@shared/types/index.ts';
  */
 export class MockBeyondMcpServer implements Partial<BeyondMcpServer> {
   private notifications: Array<
-    { level: string; logger?: string; data: unknown; sessionId?: string }
+    { level: string; logger?: string; data: unknown; options: { sessionId?: string; meta?: Record<string, unknown> }}
   > = [];
-  private samplingRequests: Array<{ messages: unknown[]; sessionId?: string }> = [];
-  private elicitationRequests: Array<{ message: string; sessionId?: string }> = [];
+  private samplingRequests: Array<{ messages: unknown[]; options: { sessionId?: string; meta?: Record<string, unknown> } }> = [];
+  private elicitationRequests: Array<{ message: string; options: { sessionId?: string; meta?: Record<string, unknown> } }> = [];
 
   // deno-lint-ignore require-await
   async sendNotification(
     params: { level: string; logger?: string; data: unknown },
-    sessionId?: string,
+    options: { sessionId?: string; meta?: Record<string, unknown> },
   ): Promise<void> {
-    this.notifications.push({ ...params, sessionId });
+    this.notifications.push({ ...params, options });
   }
 
   // deno-lint-ignore require-await
   async createMessage(
     request: { model?: string; messages: unknown[]; maxTokens?: number },
-    sessionId?: string,
+    options: { sessionId?: string; meta?: Record<string, unknown> },
   ): Promise<
     {
       content: { type: 'text'; text: string }[];
@@ -37,7 +37,7 @@ export class MockBeyondMcpServer implements Partial<BeyondMcpServer> {
       stopReason: string;
     }
   > {
-    this.samplingRequests.push({ messages: request.messages, sessionId });
+    this.samplingRequests.push({ messages: request.messages, options });
     return {
       content: [{ type: 'text', text: 'Mock response' }],
       model: request.model || 'mock-model',
@@ -48,9 +48,9 @@ export class MockBeyondMcpServer implements Partial<BeyondMcpServer> {
   // deno-lint-ignore require-await
   async elicitInput(
     request: { message: string; requestedSchema?: unknown },
-    sessionId?: string,
+    options: { sessionId?: string; meta?: Record<string, unknown> },
   ): Promise<{ action: 'accept' | 'reject'; content?: unknown }> {
-    this.elicitationRequests.push({ message: request.message, sessionId });
+    this.elicitationRequests.push({ message: request.message, options });
     return {
       action: 'accept' as const,
       content: { confirmed: true },

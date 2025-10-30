@@ -112,7 +112,7 @@ export default function ElicitationForm() {
         type: 'object',
         properties: {}, // Empty properties for approval mode
       },
-      sessionId: selectedClientId.value || undefined, // Target specific client
+      options: { sessionId: selectedClientId.value || undefined} , // Target specific client
     };
 
     // Add schema if in form mode and schema provided
@@ -127,6 +127,7 @@ export default function ElicitationForm() {
       }
     }
 
+    //console.log('[ElicitationForm] Validating payload:', payload);
     // Validate payload with Zod
     const validation = validateElicitationPayload(payload);
     if (!validation.success) {
@@ -134,7 +135,7 @@ export default function ElicitationForm() {
       return;
     }
 
-    console.log('[ElicitationForm] Sending request:', payload);
+    console.log('[ElicitationForm] Sending request:', validation.data);
     sendCommand({
       type: 'request_elicitation',
       payload: validation.data,

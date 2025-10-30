@@ -1,7 +1,6 @@
 {
   "version": "5",
   "specifiers": {
-    "jsr:@beyondbetter/bb-mcp-server@~0.1.17": "0.1.17",
     "jsr:@std/datetime@~0.225.4": "0.225.5",
     "jsr:@std/dotenv@~0.225.3": "0.225.5",
     "jsr:@std/fmt@^1.0.6": "1.0.8",
@@ -17,22 +16,6 @@
     "npm:zod@^3.22.4": "3.25.76"
   },
   "jsr": {
-    "@beyondbetter/bb-mcp-server@0.1.17": {
-      "integrity": "63c7dfd5591c24e3a999fa5d687707a4a5a52ee6d0b67c1aee4bc8362d219feb",
-      "dependencies": [
-        "jsr:@std/datetime",
-        "jsr:@std/dotenv",
-        "jsr:@std/fmt",
-        "jsr:@std/path",
-        "npm:@modelcontextprotocol/sdk",
-        "npm:gray-matter",
-        "npm:highlight.js",
-        "npm:marked",
-        "npm:marked-highlight",
-        "npm:zod",
-        "npm:zod-to-json-schema"
-      ]
-    },
     "@std/datetime@0.225.5": {
       "integrity": "9f650f6caec546b80172e95a4edb8478d5fe060c4c937f7ede242ffceab6efc9"
     },
@@ -628,7 +611,6 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@beyondbetter/bb-mcp-server@~0.1.17",
       "jsr:@fresh/core@^2.1.2",
       "jsr:@fresh/plugin-vite@^1.0.5",
       "jsr:@std/assert@^1.0.12",

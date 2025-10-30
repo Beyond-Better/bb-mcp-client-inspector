@@ -62,6 +62,7 @@ export const notificationPayload: NotificationPayload = {
   level: 'info',
   logger: 'test',
   data: 'Test notification message',
+  options: {},
 };
 
 /**

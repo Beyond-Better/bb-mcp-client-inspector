@@ -120,7 +120,7 @@ export interface NotificationPayload {
   /**
    * Optional session ID for targeting specific client
    */
-  sessionId?: SessionId;
+  options: { sessionId?: SessionId; meta?: Record<string, unknown> };
 }
 
 /**
@@ -151,7 +151,7 @@ export interface SamplingPayload {
   /**
    * Optional session ID for targeting specific client
    */
-  sessionId?: SessionId;
+  options: { sessionId?: SessionId; meta?: Record<string, unknown> };
 }
 
 /**
@@ -204,7 +204,7 @@ export interface ElicitationPayload {
   /**
    * Optional session ID for targeting specific client
    */
-  sessionId?: SessionId;
+  options: { sessionId?: SessionId; meta?: Record<string, unknown> };
 }
 
 /**
