@@ -116,7 +116,7 @@ describe('Message Flow Integration', () => {
       for (const level of levels) {
         await mockServer.sendNotification(
           { level, logger: 'test', data: `${level} message` },
-        { sessionId },
+          { sessionId },
         );
       }
 
@@ -175,7 +175,7 @@ describe('Message Flow Integration', () => {
             ],
             maxTokens: 100,
           },
-        { sessionId },
+          { sessionId },
         );
       }
 
@@ -261,8 +261,8 @@ describe('Message Flow Integration', () => {
           jsonrpc: '2.0' as const,
           method: 'test2',
         }),
-        mockServer.sendNotification({ level: 'info', data: 'test' }, {sessionId: session1}),
-        mockServer.sendNotification({ level: 'info', data: 'test' }, {sessionId: session2}),
+        mockServer.sendNotification({ level: 'info', data: 'test' }, { sessionId: session1 }),
+        mockServer.sendNotification({ level: 'info', data: 'test' }, { sessionId: session2 }),
       ]);
 
       const messages1 = await messageTracker.getMessages(session1);

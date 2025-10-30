@@ -112,7 +112,7 @@ export default function ElicitationForm() {
         type: 'object',
         properties: {}, // Empty properties for approval mode
       },
-      options: { sessionId: selectedClientId.value || undefined} , // Target specific client
+      options: { sessionId: selectedClientId.value || undefined }, // Target specific client
     };
 
     // Add schema if in form mode and schema provided

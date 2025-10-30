@@ -13,10 +13,19 @@ import type { ClientId, SessionId } from '@shared/types/index.ts';
  */
 export class MockBeyondMcpServer implements Partial<BeyondMcpServer> {
   private notifications: Array<
-    { level: string; logger?: string; data: unknown; options: { sessionId?: string; meta?: Record<string, unknown> }}
+    {
+      level: string;
+      logger?: string;
+      data: unknown;
+      options: { sessionId?: string; meta?: Record<string, unknown> };
+    }
   > = [];
-  private samplingRequests: Array<{ messages: unknown[]; options: { sessionId?: string; meta?: Record<string, unknown> } }> = [];
-  private elicitationRequests: Array<{ message: string; options: { sessionId?: string; meta?: Record<string, unknown> } }> = [];
+  private samplingRequests: Array<
+    { messages: unknown[]; options: { sessionId?: string; meta?: Record<string, unknown> } }
+  > = [];
+  private elicitationRequests: Array<
+    { message: string; options: { sessionId?: string; meta?: Record<string, unknown> } }
+  > = [];
 
   // deno-lint-ignore require-await
   async sendNotification(

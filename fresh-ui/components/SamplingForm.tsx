@@ -40,7 +40,7 @@ export default function SamplingForm() {
         : undefined,
       temperature: temperature.value,
       maxTokens: maxTokens.value,
-      options: {sessionId: selectedClientId.value || undefined}, // Target specific client
+      options: { sessionId: selectedClientId.value || undefined }, // Target specific client
     };
 
     console.log('[SamplingForm] Sending request:', payload);
